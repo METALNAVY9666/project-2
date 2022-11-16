@@ -17,4 +17,6 @@ clock.delay(3000)
 game_music.fadeout(2000)
 
 input()
+
+#exit the system
 sys.exit()
