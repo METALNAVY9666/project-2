@@ -21,13 +21,13 @@ WIN = True
 levels_options = {
             "NeoTokyo": {
                 "scale": (1280, 720),
-                "background": "data/gfx/levels/neo_tokyo.png",
+                "bg": "data/gfx/levels/neo_tokyo.png",
                 "music": "data/sfx/music/neo_tokyo.mp3"}
                 }
 
 level = levels_options["NeoTokyo"]
 
-current_map = levels.BaseLevel(pack_pygame,level)
+current_map = levels.BaseLevel(pack_pygame, level)
 
 while WIN:
     # dt est le temps qui s'écoule entre chaque image,
