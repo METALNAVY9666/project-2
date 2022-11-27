@@ -1,6 +1,6 @@
-"""this module contains the launcher of Moissan Fighter Z"""
+"""ce module contient le lanceur de jeu"""
 import pygame
-from data.levels import neo_tokyo
+from data.modules import levels
 
 pack_pygame = {
     "pygame": pygame,
@@ -8,7 +8,8 @@ pack_pygame = {
     "display": pygame.display,
     "surface": pygame.display.set_mode([1280, 720]),
     "mixer": pygame.mixer,
-    "clock": pygame.time.Clock()
+    "clock": pygame.time.Clock(),
+    "time": pygame.time
 }
 
 pygame.init()
@@ -17,7 +18,16 @@ pygame.mixer.init()
 FPS = pack_pygame["FPS"]
 WIN = True
 
-current_map = neo_tokyo.NeoTokyo(pack_pygame)
+levels_options = {
+            "NeoTokyo": {
+                "scale": (1280, 720),
+                "background": "data/gfx/levels/neo_tokyo.png",
+                "music": "data/sfx/music/neo_tokyo.mp3"}
+                }
+
+level = levels_options["NeoTokyo"]
+
+current_map = levels.BaseLevel(pack_pygame,level)
 
 while WIN:
     # dt est le temps qui s'écoule entre chaque image,
