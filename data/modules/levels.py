@@ -1,15 +1,13 @@
 """ce module contient les différents niveaux"""
 
+
 class BaseLevel:
     """niveau dans une ville futuriste"""
     def __init__(self, pygame_pack, level_prop):
         """mettre pack_pygme en parametres afin de
         pouvoir modifier la scène sans recharger"""
         self.level_prop = level_prop
-        self.pygame = pygame_pack["pygame"]
-        self.surface = pygame_pack["surface"]
-        self.display = pygame_pack["display"]
-        self.mixer = pygame_pack["mixer"]
+        self.pgpck = pygame_pack
 
         self.init_ui()
         self.init_audio()
@@ -28,8 +26,8 @@ class BaseLevel:
 
     def init_audio(self):
         """initialise l'audio du niveau"""
-        self.bg_music = self.mixer.Sound(self.level_prop["music"])
-        # self.bg_music.play()
+        self.bg_music = self.pgpck["mixer"].Sound(self.level_prop["music"])
+        self.bg_music.play()
 
     def check_keys(self):
         """vérifie quelles touches sont appuyées"""
