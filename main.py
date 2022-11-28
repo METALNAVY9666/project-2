@@ -1,33 +1,42 @@
 """ce module contient le lanceur de jeu"""
 import pygame
 from data.modules import levels
+from data.modules.settings import read_settings
+
+game_settings = read_settings()
+x = game_settings["display"]["horizontal"]
+y = game_settings["display"]["vertical"]
+dimensions = (x, y)
 
 pack_pygame = {
     "pygame": pygame,
     "FPS": 60,
     "display": pygame.display,
-    "surface": pygame.display.set_mode([1280, 720]),
+    "surface": pygame.display.set_mode(dimensions),
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
     "time": pygame.time
 }
 
+icon = pygame.image.load("data/gfx/icon.png")
+
 pygame.init()
 pygame.mixer.init()
+pygame.display.set_icon(icon)
 
 FPS = pack_pygame["FPS"]
 WIN = True
 
 levels_options = {
             "NeoTokyo": {
-                "scale": (1280, 720),
-                "background": "data/gfx/levels/neo_tokyo.png",
+                "scale": dimensions,
+                "bg": "data/gfx/levels/neo_tokyo.png",
                 "music": "data/sfx/music/neo_tokyo.mp3"}
                 }
 
 level = levels_options["NeoTokyo"]
 
-current_map = levels.BaseLevel(pack_pygame,level)
+current_map = levels.BaseLevel(pack_pygame, level, game_settings)
 
 while WIN:
     # dt est le temps qui s'écoule entre chaque image,
