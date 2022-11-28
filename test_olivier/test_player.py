@@ -83,26 +83,21 @@ def perso():
 def main_window():
     pg.init()
     clock = pg.time.Clock()
-    '''
     joysticks = button_pressed()
     button_keys = button_dict()
-    analog_key = {}
+    analog_key = {0: 0, 1: 0, 3: 0, 4: -1, 5: -1}
     for joystick in joysticks:
-        joystick.init()'''
+        joystick.init()
     # Elements de la fenêtre
     screen = pg.display.set_mode((1080, 720))
     background = pg.image.load('test_olivier/gfx/images/map_tuto.jpg')
     background = pg.transform.scale(background, (1080, 720))
     pg.display.set_caption('Moissan FIghters Z')
-    lines = 0
-    column = 0
-    menu = False
+    lines, column, menu = 0, 0, False
     square = Menu()
     jeu = Jeu()
     # Boucle du jeu
     test = True
-    # temp écoulé entre chaque frame
-    dt = clock.tick(jeu.fps)
     while test:
         choice = pg.key.get_pressed()
         EVENTS = pg.event.get()
@@ -115,7 +110,7 @@ def main_window():
                     column = choice_column(column, event, square)
                     menu = choice_perso(lines, column, event, menu)
         elif jeu.is_playing:
-            jeu.update(screen, EVENTS, dt)
+            jeu.update(screen, EVENTS)
         pg.display.flip()
         for event in EVENTS:
             if event.type == pg.QUIT or choice[pg.K_ESCAPE]:
@@ -129,7 +124,7 @@ def main_window():
             elif choice[pg.K_e] and not jeu.is_playing:
                 jeu.is_playing = True
                 print('vous allez rentrer dans le jeu.')
-        dt = clock.tick(jeu.fps)
+        clock.tick(jeu.fps)
 
     pg.quit()
 
