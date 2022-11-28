@@ -2,6 +2,7 @@ import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
 
+
 def button_pressed():
     joy = []
     for i in range(pg.joystick.get_count()):
