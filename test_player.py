@@ -1,7 +1,6 @@
 import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
-print('test')
 
 def button_pressed():
     joy = []
