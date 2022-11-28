@@ -22,7 +22,7 @@ class Jeu:
         elif choice[pg.K_LEFT]:
             self.player.move_left()
         else:
-            self.player.image = pg.image.load('gfx/goku/hero_base/goku.png')
+            self.player.image = pg.image.load('test_olivier/gfx/goku/hero_base/goku.png')
             self.player.frame, self.player.column = 111, 890
             self.player.line, self.player.cadre = 97, 120
 

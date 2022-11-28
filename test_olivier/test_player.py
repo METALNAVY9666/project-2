@@ -91,7 +91,7 @@ def main_window():
         joystick.init()'''
     # Elements de la fenêtre
     screen = pg.display.set_mode((1080, 720))
-    background = pg.image.load('gfx/images/map_tuto.jpg')
+    background = pg.image.load('test_olivier/gfx/images/map_tuto.jpg')
     background = pg.transform.scale(background, (1080, 720))
     pg.display.set_caption('Moissan FIghters Z')
     lines = 0

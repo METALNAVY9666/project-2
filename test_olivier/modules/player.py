@@ -8,7 +8,7 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.sprite = pg.image.load('gfx/base/goku_base.png')
+        self.sprite = pg.image.load('test_olivier/gfx/base/goku_base.png')
         self.rect = self.sprite.get_rect()
         self.rect.x, self.rect.y = 800, 500
         self.sprite_x, self.frame = 50, 111
@@ -26,7 +26,7 @@ class Player(pg.sprite.Sprite):
             self.column = 1990
             self.cadre = 100
             self.line = 140
-            self.rect.x -= 15
+            self.rect.x -= 20
 
     def blit_sprite(self, screen):
         '''Cette fonction sert à afficher le sprite du joueur en continu
