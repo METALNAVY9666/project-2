@@ -101,6 +101,8 @@ def main_window():
     jeu = Jeu()
     # Boucle du jeu
     test = True
+    # temp écoulé entre chaque frame
+    dt = clock.tick(jeu.fps)
     while test:
         choice = pg.key.get_pressed()
         EVENTS = pg.event.get()
@@ -113,7 +115,7 @@ def main_window():
                     column = choice_column(column, event, square)
                     menu = choice_perso(lines, column, event, menu)
         elif jeu.is_playing:
-            jeu.update(screen, EVENTS)
+            jeu.update(screen, EVENTS, dt)
         pg.display.flip()
         for event in EVENTS:
             if event.type == pg.QUIT or choice[pg.K_ESCAPE]:
@@ -127,7 +129,7 @@ def main_window():
             elif choice[pg.K_e] and not jeu.is_playing:
                 jeu.is_playing = True
                 print('vous allez rentrer dans le jeu.')
-        clock.tick(jeu.fps)
+        dt = clock.tick(jeu.fps)
 
     pg.quit()
 
