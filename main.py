@@ -18,8 +18,11 @@ pack_pygame = {
     "time": pygame.time
 }
 
+icon = pygame.image.load("data/gfx/icon.png")
+
 pygame.init()
 pygame.mixer.init()
+pygame.display.set_icon(icon)
 
 FPS = pack_pygame["FPS"]
 WIN = True
