@@ -5,10 +5,10 @@ import pygame as pg
 class Player(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur, ainsi que son apparence.'''
 
-    def __init__(self, game):
+    def __init__(self, game, name):
         super().__init__()
         self.game = game
-        self.sprite = pg.image.load('test_olivier/gfx/base/goku_base.png')
+        self.sprite = pg.image.load(f'test_olivier/gfx/base/{name}_base.png')
         self.rect = self.sprite.get_rect()
         self.rect.x, self.rect.y = 800, 500
         self.sprite_x, self.frame = 50, 111

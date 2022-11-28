@@ -73,7 +73,7 @@ def button_dict():
 
 
 def perso():
-    tab = [['Perso 1', 'Perso 2', 'Perso 3', 'Perso 4'],
+    tab = [['goku', 'vegeta', 'Perso 3', 'Perso 4'],
            ['Perso 5', 'Perso 5(bis)', 'Perso 6', 'Perso 7'],
            ['Perso 8', 'Perso 9', 'Perso 10', 'Perso 11']
            ]
@@ -125,6 +125,9 @@ def main_window():
                 menu = True
             elif choice[pg.K_e] and not jeu.is_playing:
                 jeu.is_playing = True
+                tab = perso()
+                jeu.name = tab[lines][column]
+                print(jeu.name)
                 print('vous allez rentrer dans le jeu.')
         dt = clock.tick(jeu.fps)
 

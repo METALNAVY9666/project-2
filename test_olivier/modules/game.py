@@ -9,7 +9,8 @@ class Jeu:
     les dessins, les dégats etc...'''
 
     def __init__(self):
-        self.player = Player(self)
+        self.name = 'goku'
+        self.player = Player(self, self.name)
         self.is_playing = False
         self.fps = 18
 
@@ -23,7 +24,7 @@ class Jeu:
             self.player.move_left()
         else:
             self.player.image = pg.image.load(
-                'test_olivier/gfx/goku/hero_base/goku.png')
+                f'test_olivier/gfx/{self.name}/hero_base/{self.name}.png')
             self.player.frame, self.player.column = 111, 890
             self.player.line, self.player.cadre = 97, 120
 
