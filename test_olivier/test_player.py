@@ -127,6 +127,7 @@ def main_window():
                 jeu.is_playing = True
                 tab = perso()
                 jeu.name = tab[column][lines]
+                print(jeu.name)
                 print('vous allez rentrer dans le jeu.')
         dt = clock.tick(jeu.fps)
 
