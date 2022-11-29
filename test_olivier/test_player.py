@@ -126,8 +126,7 @@ def main_window():
             elif choice[pg.K_e] and not jeu.is_playing:
                 jeu.is_playing = True
                 tab = perso()
-                jeu.name = tab[lines][column]
-                print(jeu.name)
+                jeu.name = tab[column][lines]
                 print('vous allez rentrer dans le jeu.')
         dt = clock.tick(jeu.fps)
 
