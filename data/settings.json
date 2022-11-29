@@ -6,6 +6,7 @@
     "display": {
         "horizontal": 1280,
         "vertical": 720,
-        "fullscreen": false
+        "fullscreen": false,
+        "FPS" : 60
     }
 }

@@ -1,4 +1,5 @@
 """ce module contient les différents niveaux"""
+from data.modules.texture_loader import TEXTURES as GFX
 
 
 class BaseLevel:
@@ -23,18 +24,8 @@ class BaseLevel:
         self.update_list = []
 
     def init_ui(self):
-        """initialise l'interface grapgique du niveau"""
-        ui_path = "data/gfx/ui/"
-        loading = self.pkg["pygame"].image.load(ui_path+"loading.png")
-        loading_scale = self.level_prop["scale"]
-        loading = self.pkg["pygame"].transform.scale(loading, loading_scale)
-        self.pkg["display"].update(self.pkg["surface"].blit(loading, (0, 0)))
-        self.exit_btn = self.pkg["pygame"].image.load(ui_path+"exit_btn.png")
-        self.bckg = self.pkg["pygame"].image.load(self.level_prop["bg"])
-        bg_scale = self.level_prop["scale"]
-        self.bckg = self.pkg["pygame"].transform.scale(self.bckg, bg_scale)
-        self.blur = self.pkg["pygame"].image.load(ui_path+"blur.png")
-        self.blur = self.pkg["pygame"].transform.scale(self.blur, bg_scale)
+        """initialise l'interface graphique du niveau"""
+        self.pkg["display"].update(self.pkg["surface"].blit(GFX["loading"], (0, 0)))
 
     def init_audio(self):
         """initialise l'audio du niveau"""
@@ -75,18 +66,18 @@ class BaseLevel:
     def pause_menu_update(self):
         """met à jour le menu pause"""
         if self.pause:
-            self.pkg["time"].wait(5)
-            blur_rect = self.pkg["surface"].blit(self.blur, (0, 0))
+            blur_rect = self.pkg["surface"].blit(GFX["blur"], (0, 0))
             self.update_list.append(blur_rect)
 
     def update(self):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
         self.check_keys()
-        bg_rect = self.pkg["surface"].blit(self.bckg, (0, 0))
+        bg_rect = self.pkg["surface"].blit(GFX[self.level_prop["bg"]]["bg"], (0, 0))
         self.update_list.append(bg_rect)
         self.update_list.reverse()
         self.pause_menu_update()
         self.pkg["display"].update(self.update_list)
+        print("FPS : ", int(self.pkg["clock"].get_fps()))
         self.update_list = []
         return "continue"
