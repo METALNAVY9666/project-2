@@ -7,16 +7,20 @@ class BaseLevel:
         """mettre pack_pygame, les propriétés du niveau et les paramètres
         du jeu en parametres afin de pouvoir modifier la scène sans recharger
         """
-        self.level_prop = level_prop
-        self.pkg = pygame_pack
-        self.settings = game_settings
-        self.pause = False
-
+        self.init_prop(pygame_pack, level_prop, game_settings)
         self.init_ui()
         self.init_audio()
 
         self.keys = {}
         self.keys["new"] = self.pkg["pygame"].key.get_pressed()
+
+    def init_prop(self, pygame_pack, level_prop, game_settings):
+        """initlialise les variables et les propriétés de la classe BaseLevel"""
+        self.level_prop = level_prop
+        self.pkg = pygame_pack
+        self.settings = game_settings
+        self.pause = False
+        self.update_list = []
 
     def init_ui(self):
         """initialise l'interface grapgique du niveau"""
@@ -24,8 +28,8 @@ class BaseLevel:
         loading = self.pkg["pygame"].image.load(ui_path+"loading.png")
         loading_scale = self.level_prop["scale"]
         loading = self.pkg["pygame"].transform.scale(loading, loading_scale)
-        self.exit_btn = self.pkg["pygame"].image.load(ui_path+"exit_btn.png")
         self.pkg["display"].update(self.pkg["surface"].blit(loading, (0, 0)))
+        self.exit_btn = self.pkg["pygame"].image.load(ui_path+"exit_btn.png")
         self.bckg = self.pkg["pygame"].image.load(self.level_prop["bg"])
         bg_scale = self.level_prop["scale"]
         self.bckg = self.pkg["pygame"].transform.scale(self.bckg, bg_scale)
@@ -71,14 +75,18 @@ class BaseLevel:
     def pause_menu_update(self):
         """met à jour le menu pause"""
         if self.pause:
-            blur_rect = self.pkg["surface"].blit(self.exit_btn, (0, 0))
-            self.pkg["display"].update(blur_rect)
+            self.pkg["time"].wait(5)
+            blur_rect = self.pkg["surface"].blit(self.blur, (0, 0))
+            self.update_list.append(blur_rect)
 
     def update(self):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
         self.check_keys()
         bg_rect = self.pkg["surface"].blit(self.bckg, (0, 0))
-        self.pkg["display"].update(bg_rect)
+        self.update_list.append(bg_rect)
+        self.update_list.reverse()
         self.pause_menu_update()
+        self.pkg["display"].update(self.update_list)
+        self.update_list = []
         return "continue"
