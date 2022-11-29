@@ -16,7 +16,9 @@ pack_pygame = {
     "surface": pygame.display.set_mode(dimensions),
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
-    "time": pygame.time
+    "time": pygame.time,
+    "mouse" : pygame.mouse,
+    "rect" : pygame.Rect
 }
 
 icon = pygame.image.load("data/gfx/icon.png")
@@ -31,7 +33,6 @@ levels_options = {
             "neo_tokyo": {
                 "scale": dimensions,
                 "bg" : "neo_tokyo",
-                "bg_path": "data/gfx/levels/neo_tokyo.png",
                 "music": "data/sfx/music/neo_tokyo.mp3"}
                 }
 
@@ -47,8 +48,12 @@ while WIN:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             WIN = False
+        if event.type == pygame.KEYDOWN:
+            # vérifie si la touche F11 est enfoncée et met en plein écran
+            if event.key == pygame.K_F11:
+                current_map.pkg["display"].toggle_fullscreen()
     # actualise la map, si elle renvoie "quit", alors quitter
-    if current_map.update() == "quit":
+    if current_map.update() == "exit":
         WIN = False
 
 pygame.quit()

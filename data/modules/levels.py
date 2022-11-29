@@ -1,5 +1,6 @@
 """ce module contient les différents niveaux"""
-from data.modules.texture_loader import TEXTURES as GFX
+from data.modules.texture_loader import GFX
+from data.modules.texture_loader import X,Y
 
 
 class BaseLevel:
@@ -25,6 +26,7 @@ class BaseLevel:
 
     def init_ui(self):
         """initialise l'interface graphique du niveau"""
+        self.pkg["mouse"].set_visible(False)
         self.pkg["display"].update(self.pkg["surface"].blit(GFX["loading"], (0, 0)))
 
     def init_audio(self):
@@ -60,24 +62,47 @@ class BaseLevel:
         """active ou désactive le menu pause"""
         if self.pause:
             self.pkg["mixer"].music.pause()
+            self.pkg["mouse"].set_visible(True)
         else:
             self.pkg["mixer"].music.unpause()
+            self.pkg["mouse"].set_visible(False)
 
     def pause_menu_update(self):
         """met à jour le menu pause"""
         if self.pause:
-            blur_rect = self.pkg["surface"].blit(GFX["blur"], (0, 0))
+            mouse = self.pkg["mouse"]
+            blit_surface = self.pkg["surface"].blit
+            blur_rect = blit_surface(GFX["blur"], (0, 0))
             self.update_list.append(blur_rect)
+            exit_rect = blit_surface(GFX["exit"], (20, 20))
+            self.update_list.append(exit_rect)
+            rects = [["exit", exit_rect]]
+            next_op = None
+            on_button = self.pause_menu_clicks(rects)
+            if on_button is not None:
+                if mouse.get_pressed()[0]:
+                    next_op = on_button
+            return next_op
+
+
+    def pause_menu_clicks(self, rects):
+        """vérifie les boutons cliqués par la souris"""
+        mouse_pos = self.pkg["mouse"].get_pos()
+        for rect in rects:
+            if rect[1].collidepoint(mouse_pos):
+                return rect[0]
+        return None
 
     def update(self):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
+        next_op = None
         self.check_keys()
         bg_rect = self.pkg["surface"].blit(GFX[self.level_prop["bg"]]["bg"], (0, 0))
         self.update_list.append(bg_rect)
         self.update_list.reverse()
-        self.pause_menu_update()
+        next_op = self.pause_menu_update()
         self.pkg["display"].update(self.update_list)
-        print("FPS : ", int(self.pkg["clock"].get_fps()))
+        # print("FPS : ", int(self.pkg["clock"].get_fps()))
         self.update_list = []
-        return "continue"
+        return next_op 
