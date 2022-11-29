@@ -8,15 +8,23 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.sprite = pg.image.load(f'test_olivier/gfx/base/{self.game.name}_base.png')
+        self.sprite = pg.image.load(
+            f'test_olivier/gfx/base/{self.game.name}_base.png')
         self.rect = self.sprite.get_rect()
         self.rect.x, self.rect.y = 800, 500
-        self.sprite_x, self.frame = 50, 111
-        self.column, self.line, self.cadre = 890, 97, 120
+        self.sprite_x = 50
+        self.propertie = self.properties()
         # temps entre chaque sprite de l'animation idle en ms
-        self.idle_speed = 300
+        self.idle_speed = 150
         # somme des temps entres chaque frame
         self.delta_sum = 0
+
+    def properties(self):
+        tab = [111, 890, 113, 120]
+        if self.game.name == 'vegeta':
+            self.sprite = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
+            tab = [200, 1210, 100, 120]
+        return tab
 
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
@@ -26,23 +34,27 @@ class Player(pg.sprite.Sprite):
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
         if self.rect.x > 0:
-            self.frame = 0.5
-            self.column = 1990
-            self.cadre = 100
-            self.line = 140
+            if self.game.name == 'vegeta':
+                self.propertie[1] = 1970
+                self.propertie[2] = 120
+            else:
+                self.propertie[1] = 1990
+                self.propertie[2] = 140
+            self.propertie[0] = 1
+            self.propertie[3] = 105
             self.rect.x -= 20
 
-    def blit_sprite(self, screen, dt):
+    def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         screen.blit(self.sprite, (self.rect.x, self.rect.y),
-                   (self.sprite_x * self.frame, self.column, self.line, self.cadre))
-        self.delta_sum += dt
+                    (self.sprite_x * self.propertie[0], self.propertie[1], self.propertie[2], self.propertie[3]))
+        self.delta_sum += dlt
         # si la somme des temps entre les frames est plus grande que 300ms
         if self.delta_sum >= self.idle_speed:
             # changer le sprite
             self.sprite_x += 1
             # remettre la somme des temps à 0
             self.delta_sum = 0
-        if self.sprite_x > 5:
+        if self.sprite_x > 2:
             self.sprite_x = 0

@@ -1,135 +1,63 @@
+'''Ce module gère la fenêtre afin de tester les personnages etc...'''
 import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
 
 
-def button_pressed():
-    joy = []
-    for i in range(pg.joystick.get_count()):
-        joy.append(pg.joystick.Joystick(i))
-    return joy
+def image_maker(name, height, width):
+    '''Cette fonction permet de renvoyer une image redimensionnée.
+    Pour ce faire, l'utilisateur affecte le chemin d'une
+    image à la place de la variable name. Ensuite il y entre les valeurs
+    pour la nouvelle hauteur et largeur de la future image.
+    Image.load charge l'image, et transform.scale redimensionne l'image.
+    Pour finir, on renvoie l'image finale.'''
+    image = pg.image.load(name)
+    image = pg.transform.scale(image, (height, width))
+    return image
 
 
-def choice_lines(lines, event, square):
-    '''Cette fonction permet de renvoyer le numéro de la ligne
-    sur laquelle le joueur est.'''
-    if event.key == pg.K_RIGHT and lines < 3:
-        lines += 1
-        square.rect.x += 110
-        print(lines)
-    elif event.key == pg.K_LEFT and lines >= 0:
-        if lines < 0:
-            lines = 0
-        else:
-            print(lines)
-            square.rect.x -= 110
-            lines -= 1
-    return lines
+def screen_win():
+    '''Fonction qui renvoie l'écran.'''
+    screen = pg.display.set_mode((1080, 720))
+    pg.display.set_caption('Moissan Figg')
+    return screen
 
 
-def choice_column(column, event, square):
-    '''Cette fonction permet de renvoyer le numéro de la colonne
-    sur laquelle le joueur est.'''
-    if event.key == pg.K_DOWN and column < 2:
-        square.rect.y += 100
-        column += 1
-        print(column)
-    elif event.key == pg.K_UP and column > 0:
-        square.rect.y -= 100
-        column -= 1
-        print(column)
-    return column
-
-
-def choice_perso(lines, column, event, menu):
-    if event.key == pg.K_RETURN:
-        menu = False
-        tab = perso()
-        print('Vous êtes sortis du menu.')
-        print('Vous avez choisis le', tab[column][lines])
-    return menu
-
-
-def button_dict():
-    dico = {
-        'x': 0,
-        'circle': 1,
-        'square': 2,
-        'triangle': 3,
-        "share": 4,
-        'PS': 5,
-        'options': 6,
-        'left_stick_click': 7,
-        'right_stick_click': 8,
-        'L1': 9,
-        'R1': 10,
-        'up_arrow': 11,
-        'down_arrow': 12,
-        'left_arrow': 13,
-        'right_arrow': 14,
-        'touchepad': 15
-    }
-    return dico
-
-
-def perso():
-    tab = [['goku', 'vegeta', 'Perso 3', 'Perso 4'],
-           ['Perso 5', 'Perso 5(bis)', 'Perso 6', 'Perso 7'],
-           ['Perso 8', 'Perso 9', 'Perso 10', 'Perso 11']
-           ]
-    return tab
+def quit_game(EVENTS, test):
+    '''Fonction qui vérifie si l'on appuie sur le bouton pour quitter.'''
+    for event in EVENTS:
+        if event.type == pg.QUIT:
+            print('Vous êtes sortis du jeu.')
+            test = False
+    return test
 
 
 def main_window():
+    '''Fonction qui lance la fenêtre principale.'''
     pg.init()
     clock = pg.time.Clock()
-    joysticks = button_pressed()
-    button_keys = button_dict()
-    analog_key = {0: 0, 1: 0, 3: 0, 4: -1, 5: -1}
-    for joystick in joysticks:
-        joystick.init()
     # Elements de la fenêtre
-    screen = pg.display.set_mode((1080, 720))
-    background = pg.image.load('test_olivier/gfx/images/map_tuto.jpg')
-    background = pg.transform.scale(background, (1080, 720))
-    pg.display.set_caption('Moissan FIghters Z')
-    lines, column, menu = 0, 0, False
+    screen = screen_win()
+    # Redimensionne le fond d'écran
+    background = image_maker('test_olivier/gfx/images/map_tuto.jpg', 1080, 720)
     square = Menu()
-    jeu = Jeu()
+    jeu = Jeu(name='hello')
     # Boucle du jeu
     test = True
-    # dt est le delta time: càd le temps entre 2 frames
-    dt = clock.tick(jeu.fps)
+    # dlt est le delta time: càd le temps entre 2 frames
+    dlt = clock.tick(jeu.fps)
     while test:
-        choice = pg.key.get_pressed()
         EVENTS = pg.event.get()
         screen.blit(background, (0, 0))
-        if menu:
-            screen.blit(square.image, (square.rect))
-            for event in EVENTS:
-                if event.type == pg.KEYDOWN:
-                    lines = choice_lines(lines, event, square)
-                    column = choice_column(column, event, square)
-                    menu = choice_perso(lines, column, event, menu)
-        elif jeu.is_playing:
-            jeu.update(screen, EVENTS, dt)
+        if square.name == 'hello':
+            # On change par le nom du perso choisi
+            jeu.name = square.menu_update(screen, EVENTS)
+        elif jeu.name != 'hello':
+            jeu.update(screen, EVENTS, dlt)
         pg.display.flip()
-        for event in EVENTS:
-            if event.type == pg.QUIT or choice[pg.K_ESCAPE]:
-                print('Vous êtes sortis du jeu.')
-                test = False
-            elif choice[pg.K_a]:
-                print('Le jeu va commencer.')
-            elif choice[pg.K_z] and not menu:
-                print('Vous rentrez dans le menu.')
-                menu = True
-            elif choice[pg.K_e] and not jeu.is_playing:
-                jeu.is_playing = True
-                tab = perso()
-                jeu.name = tab[column][lines]
-                print(jeu.name)
-                print('vous allez rentrer dans le jeu.')
-        dt = clock.tick(jeu.fps)
+        # On vérifie si le test est sur True ou False constemment
+        test = quit_game(EVENTS, test)
+        dlt = clock.tick(jeu.fps)
 
     pg.quit()
 

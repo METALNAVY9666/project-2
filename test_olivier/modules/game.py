@@ -8,11 +8,12 @@ class Jeu:
     '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les collisions,
     les dessins, les dégats etc...'''
 
-    def __init__(self):
-        self.name = 'goku'
-        self.player = Player(self)
+    def __init__(self, name):
+        # On récupère le nom du perso choisi.
+        self.name = name
         self.is_playing = False
-        self.fps = 18
+        self.fps = 20
+        self.player = Player(self)
 
     def handle_input(self, EVENTS):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -23,8 +24,8 @@ class Jeu:
         elif choice[pg.K_LEFT]:
             self.player.move_left()
         else:
-            self.player.frame, self.player.column = 111, 890
-            self.player.line, self.player.cadre = 97, 120
+            # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
+            self.player.propertie = self.player.properties()
 
     def collison(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -41,13 +42,15 @@ class Jeu:
         self.player.blit_sprite(screen, dt)
         self.handle_input(EVENTS)
 
-    def button_pressed():
+    def button_pressed(self):
+        '''A rajouter'''
         joy = []
         for i in range(pg.joystick.get_count()):
             joy.append(pg.joystick.Joystick(i))
         return joy
 
-    def button_dict():
+    def button_dict(self):
+        '''En faire un fichier Json'''
         dico = {
             'x': 0,
             'circle': 1,
@@ -68,6 +71,16 @@ class Jeu:
         }
         return dico
 
-    def analog_keys():
+    def analog_keys(self):
+        '''A rajouter'''
         dict = {0: 0, 1: 0, 3: 0, 4: -1, 5: -1}
         return dict
+
+    def joy(self):
+        '''
+        A rajouter
+        joysticks = button_pressed()
+        button_keys = button_dict()
+        analog_key = {0: 0, 1: 0, 3: 0, 4: -1, 5: -1}
+        for joystick in joysticks:
+            joystick.init()'''
