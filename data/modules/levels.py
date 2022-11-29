@@ -1,6 +1,5 @@
 """ce module contient les différents niveaux"""
 from data.modules.texture_loader import GFX
-from data.modules.texture_loader import X,Y
 
 
 class BaseLevel:
@@ -9,25 +8,25 @@ class BaseLevel:
         """mettre pack_pygame, les propriétés du niveau et les paramètres
         du jeu en parametres afin de pouvoir modifier la scène sans recharger
         """
+        self.pause = False
+        self.update_list = []
+        self.keys = {}
         self.init_prop(pygame_pack, level_prop, game_settings)
         self.init_ui()
         self.init_audio()
 
-        self.keys = {}
-        self.keys["new"] = self.pkg["pygame"].key.get_pressed()
-
     def init_prop(self, pygame_pack, level_prop, game_settings):
-        """initlialise les variables et les propriétés de la classe BaseLevel"""
+        """initlialise les variables et propriétés de la classe BaseLevel"""
         self.level_prop = level_prop
         self.pkg = pygame_pack
         self.settings = game_settings
-        self.pause = False
-        self.update_list = []
+        self.keys["new"] = self.pkg["pygame"].key.get_pressed()
 
     def init_ui(self):
         """initialise l'interface graphique du niveau"""
         self.pkg["mouse"].set_visible(False)
-        self.pkg["display"].update(self.pkg["surface"].blit(GFX["loading"], (0, 0)))
+        surface_blit = self.pkg["surface"].blit
+        self.pkg["display"].update(surface_blit(GFX["loading"], (0, 0)))
 
     def init_audio(self):
         """initialise l'audio du niveau"""
@@ -70,20 +69,17 @@ class BaseLevel:
     def pause_menu_update(self):
         """met à jour le menu pause"""
         if self.pause:
-            mouse = self.pkg["mouse"]
+            mouse = self.pkg["mouse"].get_pressed()[0]
             blit_surface = self.pkg["surface"].blit
             blur_rect = blit_surface(GFX["blur"], (0, 0))
             self.update_list.append(blur_rect)
             exit_rect = blit_surface(GFX["exit"], (20, 20))
             self.update_list.append(exit_rect)
             rects = [["exit", exit_rect]]
-            next_op = None
             on_button = self.pause_menu_clicks(rects)
-            if on_button is not None:
-                if mouse.get_pressed()[0]:
-                    next_op = on_button
-            return next_op
-
+            if mouse and on_button is not None:
+                return on_button
+        return "continue"
 
     def pause_menu_clicks(self, rects):
         """vérifie les boutons cliqués par la souris"""
@@ -98,11 +94,12 @@ class BaseLevel:
         non, et le score"""
         next_op = None
         self.check_keys()
-        bg_rect = self.pkg["surface"].blit(GFX[self.level_prop["bg"]]["bg"], (0, 0))
+        background = GFX[self.level_prop["bg"]]["bg"]
+        bg_rect = self.pkg["surface"].blit(background, (0, 0))
         self.update_list.append(bg_rect)
         self.update_list.reverse()
         next_op = self.pause_menu_update()
         self.pkg["display"].update(self.update_list)
         # print("FPS : ", int(self.pkg["clock"].get_fps()))
         self.update_list = []
-        return next_op 
+        return next_op

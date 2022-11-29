@@ -9,6 +9,7 @@ def load_image(path, dimensions):
     temp = pygame.transform.scale(temp, dimensions)
     return temp
 
+
 prop = read_settings()
 X = prop["display"]["horizontal"]
 Y = prop["display"]["vertical"]
@@ -33,8 +34,9 @@ pygame.display.update(loading_rect)
 
 # chargements des texures de menu
 GFX["blur"] = load_image(UI_PATH+"blur", win_scale).convert_alpha()
-GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8,Y//10)).convert()
+GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 
 # chargement des GFX de neo_tokyo
 GFX["neo_tokyo"] = {}
-GFX["neo_tokyo"]["bg"] = load_image(LEVELS_PATH+"neo_tokyo", win_scale).convert()
+TEMP = LEVELS_PATH+"neo_tokyo"
+GFX["neo_tokyo"]["bg"] = load_image(TEMP, win_scale).convert()
