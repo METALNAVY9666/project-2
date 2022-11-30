@@ -1,6 +1,7 @@
 '''Ce module gère le menu.'''
 import pygame as pg
 from modules.game import Jeu
+from modules.texture_loader import images
 
 
 class Menu:
@@ -8,8 +9,7 @@ class Menu:
     on pourra choisir son personnage.'''
 
     def __init__(self):
-        self.image = pg.image.load('test_olivier/gfx/images/square.png')
-        self.image = pg.transform.scale(self.image, (150, 150))
+        self.image = images["square"]
         self.rect = self.image.get_rect()
         self.rect.x = 120
         self.rect.y = 70
