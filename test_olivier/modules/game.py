@@ -12,8 +12,10 @@ class Jeu:
         # On récupère le nom du perso choisi.
         self.name = name
         self.is_playing = False
-        self.fps = 20
+        self.fps = 60
         self.player = Player(self)
+        # opti
+        self.rect = None
 
     def handle_input(self, EVENTS):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -39,8 +41,10 @@ class Jeu:
     def update(self, screen, EVENTS, dt):
         '''Cette fonction petrmet de mettre à jour le jeu.'''
         # screen.blit(self.player.image, self.player.rect)
-        self.player.blit_sprite(screen, dt)
+        self.rect = self.player.blit_sprite(screen, dt)
         self.handle_input(EVENTS)
+        # Renvoi le rectangle du joueur
+        return self.rect
 
     def button_pressed(self):
         '''A rajouter'''

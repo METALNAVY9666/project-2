@@ -1,5 +1,6 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
+from modules.texture_loader import persos
 
 
 class Player(pg.sprite.Sprite):
@@ -8,22 +9,20 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.sprite = pg.image.load(
-            f'test_olivier/gfx/base/{self.game.name}_base.png')
+        self.sprite = persos[self.game.name]
         self.rect = self.sprite.get_rect()
         self.rect.x, self.rect.y = 800, 500
         self.sprite_x = 50
         self.propertie = self.properties()
         # temps entre chaque sprite de l'animation idle en ms
-        self.idle_speed = 150
+        self.idle_speed = 300
         # somme des temps entres chaque frame
         self.delta_sum = 0
 
     def properties(self):
         tab = [111, 890, 113, 120]
         if self.game.name == 'vegeta':
-            self.sprite = pg.image.load(
-                'test_olivier/gfx/base/vegeta_base.png')
+            self.sprite = persos[self.game.name]
             tab = [200, 1210, 100, 120]
         return tab
 
