@@ -22,7 +22,8 @@ class Player(pg.sprite.Sprite):
     def properties(self):
         tab = [111, 890, 113, 120]
         if self.game.name == 'vegeta':
-            self.sprite = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
+            self.sprite = pg.image.load(
+                'test_olivier/gfx/base/vegeta_base.png')
             tab = [200, 1210, 100, 120]
         return tab
 
@@ -48,7 +49,8 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         screen.blit(self.sprite, (self.rect.x, self.rect.y),
-                    (self.sprite_x * self.propertie[0], self.propertie[1], self.propertie[2], self.propertie[3]))
+                    (self.sprite_x * self.propertie[0],
+                    self.propertie[1], self.propertie[2], self.propertie[3]))
         self.delta_sum += dlt
         # si la somme des temps entre les frames est plus grande que 300ms
         if self.delta_sum >= self.idle_speed:
