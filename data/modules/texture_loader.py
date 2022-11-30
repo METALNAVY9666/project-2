@@ -40,3 +40,8 @@ GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 GFX["neo_tokyo"] = {}
 TEMP = LEVELS_PATH+"neo_tokyo"
 GFX["neo_tokyo"]["bg"] = load_image(TEMP, win_scale).convert()
+
+# textures test
+GFX["players"] = {}
+TEMP = "data/gfx/test/"
+GFX["players"]["nyan"] = load_image(TEMP+"nyan_cat", (100, 100)).convert()

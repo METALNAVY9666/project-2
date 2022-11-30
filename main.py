@@ -1,5 +1,4 @@
 """ce module contient le lanceur de jeu"""
-import os
 import pygame
 from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings
@@ -17,8 +16,8 @@ pack_pygame = {
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
     "time": pygame.time,
-    "mouse" : pygame.mouse,
-    "rect" : pygame.Rect
+    "mouse": pygame.mouse,
+    "rect": pygame.Rect
 }
 
 icon = pygame.image.load("data/gfx/icon.png")
@@ -32,7 +31,7 @@ WIN = True
 levels_options = {
             "neo_tokyo": {
                 "scale": dimensions,
-                "bg" : "neo_tokyo",
+                "bg": "neo_tokyo",
                 "music": "data/sfx/music/neo_tokyo.mp3"}
                 }
 
@@ -44,6 +43,7 @@ while WIN:
     # dt est le temps qui s'écoule entre chaque image,
     # important pour que le jeu reste fluide
     dt = pack_pygame["clock"].tick(pack_pygame["FPS"])
+    current_map.dt = dt
     # vérifie les évènements
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -57,4 +57,4 @@ while WIN:
         WIN = False
 
 pygame.quit()
-os.system("clear")
+# os.system("clear")

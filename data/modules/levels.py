@@ -1,6 +1,39 @@
 """ce module contient les différents niveaux"""
 from data.modules.texture_loader import GFX
 
+class TestPlayer:
+    """créée un joueur test"""
+    def __init__(self, iden, pkg):
+        self.iden = iden
+        self.pkg = pkg
+        self.pos = [0, 0]
+        self.dt = 1
+        pg = pkg["pygame"]
+        self.player_texture = GFX["players"]["nyan"]
+        self.controls = [
+            [pg.K_LEFT, pg.K_UP, pg.K_RIGHT, pg.K_DOWN],
+            [pg.K_q, pg.K_z, pg.K_d, pg.K_s]
+        ]
+    
+    def move(self):
+        """bouge le joueur"""
+        keys = self.pkg["pygame"].key.get_pressed()
+        controls = self.controls[self.iden]
+        speed = self.pkg["FPS"] // self.dt
+        print(self.pos)
+        if keys[controls[0]]:
+            self.pos[0] += 5 * speed
+        if keys[controls[1]]:
+            self.pos[1] -= 5 * speed
+        if keys[controls[2]]:
+            self.pos[0] -= 5 * speed
+        if keys[controls[3]]:
+            self.pos[1] += 5 * speed
+        rect = self.pkg["surface"].blit(self.player_texture, self.pos)
+        print(rect)
+        return rect
+            
+
 
 class BaseLevel:
     """générateur de niveaux"""
@@ -11,9 +44,16 @@ class BaseLevel:
         self.pause = False
         self.update_list = []
         self.keys = {}
+        self.dt = 0
         self.init_prop(pygame_pack, level_prop, game_settings)
         self.init_ui()
         self.init_audio()
+        self.init_players()
+
+    def init_players(self):
+        """initialise les joueurs"""
+        self.player0 = TestPlayer(0, self.pkg)
+        self.player1 = TestPlayer(1, self.pkg)
 
     def init_prop(self, pygame_pack, level_prop, game_settings):
         """initlialise les variables et propriétés de la classe BaseLevel"""
@@ -94,12 +134,25 @@ class BaseLevel:
         non, et le score"""
         next_op = None
         self.check_keys()
+
+        
+        self.player0.dt = self.dt
+        self.player1.dt = self.dt
+        
+        rect1 = self.player0.move()
+        rect2 = self.player1.move()
+
+        self.update_list.append(rect1)
+        self.update_list.append(rect2)
+
+        next_op = self.pause_menu_update()
+
         background = GFX[self.level_prop["bg"]]["bg"]
         bg_rect = self.pkg["surface"].blit(background, (0, 0))
         self.update_list.append(bg_rect)
+
         self.update_list.reverse()
-        next_op = self.pause_menu_update()
         self.pkg["display"].update(self.update_list)
-        # print("FPS : ", int(self.pkg["clock"].get_fps()))
         self.update_list = []
+        # print("FPS : ", int(self.pkg["clock"].get_fps()))
         return next_op
