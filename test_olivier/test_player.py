@@ -2,24 +2,13 @@
 import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
-
-
-def image_maker(name, height, width):
-    '''Cette fonction permet de renvoyer une image redimensionnée.
-    Pour ce faire, l'utilisateur affecte le chemin d'une
-    image à la place de la variable name. Ensuite il y entre les valeurs
-    pour la nouvelle hauteur et largeur de la future image.
-    Image.load charge l'image, et transform.scale redimensionne l'image.
-    Pour finir, on renvoie l'image finale.'''
-    image = pg.image.load(name)
-    image = pg.transform.scale(image, (height, width))
-    return image
+from modules.texture_loader import images
 
 
 def screen_win():
     '''Fonction qui renvoie l'écran.'''
+    pg.display.set_caption('Moissan Fighter Z')
     screen = pg.display.set_mode((1080, 720))
-    pg.display.set_caption('Moissan Figg')
     return screen
 
 
@@ -39,22 +28,28 @@ def main_window():
     # Elements de la fenêtre
     screen = screen_win()
     # Redimensionne le fond d'écran
-    background = image_maker('test_olivier/gfx/images/map_tuto.jpg', 1080, 720)
+    background = images["background"]
     square = Menu()
     jeu = Jeu(name='hello')
+    # Création d'une liste afin de la mettre à jour
+    liste_update = square.liste_rect
     # Boucle du jeu
     test = True
     # dlt est le delta time: càd le temps entre 2 frames
     dlt = clock.tick(jeu.fps)
     while test:
         EVENTS = pg.event.get()
-        screen.blit(background, (0, 0))
+        # Ajout du fond dans la liste de chose à mettre à update
+        liste_update.append(screen.blit(background, (0, 0)))
         if square.name == 'hello':
             # On change par le nom du perso choisi
             jeu.name = square.menu_update(screen, EVENTS)
         elif jeu.name != 'hello':
-            jeu.update(screen, EVENTS, dlt)
-        pg.display.flip()
+            # Mise à jour du jeu
+            liste_update.append(jeu.update(screen, EVENTS, dlt))
+        pg.display.update(liste_update)
+        liste_update = []
+        print(clock.get_fps())
         # On vérifie si le test est sur True ou False constemment
         test = quit_game(EVENTS, test)
         dlt = clock.tick(jeu.fps)

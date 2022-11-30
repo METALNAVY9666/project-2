@@ -1,6 +1,7 @@
 '''Ce module gère le menu.'''
 import pygame as pg
 from modules.game import Jeu
+from modules.texture_loader import images
 
 
 class Menu:
@@ -8,8 +9,7 @@ class Menu:
     on pourra choisir son personnage.'''
 
     def __init__(self):
-        self.image = pg.image.load('test_olivier/gfx/images/square.png')
-        self.image = pg.transform.scale(self.image, (150, 150))
+        self.image = images["square"]
         self.rect = self.image.get_rect()
         self.rect.x = 120
         self.rect.y = 70
@@ -18,6 +18,7 @@ class Menu:
         self.name = 'hello'
         self.lines, self.column = 0, 0
         self.game = None
+        self.liste_rect = []
 
     def perso(self):
         '''Tableau qui renvoie les personnages, à modifier si inutile.'''
@@ -70,20 +71,21 @@ class Menu:
         '''Affiche les noms des persos que l'on peut choisir.'''
         tab = self.perso()
         txt = self.font.render(tab[self.column][self.lines], 0, (0, 0, 0))
-        screen.blit(txt, (self.rect))
+        # Renvoi le rectangle du texte
+        return screen.blit(txt, (self.rect))
 
     def menu_update(self, screen, EVENTS):
         '''Cette fonction met à jour le menu.'''
-        # Affiche le carré pour le menu
-        screen.blit(self.image, (self.rect))
-        self.txt_blit(screen)
+        # Affiche le carré pour le menu et l'ajoute dans la liste de chose à updates
+        self.liste_rect.append(screen.blit(self.image, (self.rect)))
+        self.liste_rect.append(self.txt_blit(screen))
         for event in EVENTS:
             if event.type == pg.KEYDOWN:
                 # Récupère le numéro de ligne et colonne
                 self.lines = self.choice_lines(event)
                 self.column = self.choice_column(event)
                 self.choice_perso(EVENTS)
-        # Si le joueur a choisi un perso, on initialise la classe Jeu et renvoie son nom
+        # Si le joueur a choisi un perso, initialise la classe Jeu et renvoie son nom
         if self.name != 'hello':
             self.game = Jeu(self.name)
         return self.name
