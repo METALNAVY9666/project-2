@@ -1,6 +1,7 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from modules.texture_loader import persos
+from modules.texture_loader import coordinates_list
 
 
 class Player(pg.sprite.Sprite):

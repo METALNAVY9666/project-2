@@ -12,6 +12,18 @@ def load_image(path, dimensions):
     return temp
 
 
+def coordinates_list(name, tab):
+    '''Coordonées du spritesheet'''
+    tab = [1, 2, 3, 4]
+    if name == 'goku':
+        tab = [[111, 890, 113, 120],
+               [1, 1990, 140, 105]]
+    elif name == 'vegeta':
+        tab = [[200, 1210, 100, 120],
+               [1, 1970, 120, 105]]
+    return tab
+
+
 # Chargements des images pour le fond d'écran
 BG_PATH = 'test_olivier/gfx/images/'
 images = {}
