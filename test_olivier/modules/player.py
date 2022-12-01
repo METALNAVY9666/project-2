@@ -21,13 +21,6 @@ class Player(pg.sprite.Sprite):
         # somme des temps entres chaque frame
         self.delta_sum = 0
 
-    def properties(self):
-        tab = [111, 890, 113, 120]
-        if self.game.name == 'vegeta':
-            self.sprite = persos[self.game.name]
-            tab = [200, 1210, 100, 120]
-        return tab
-
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
         if self.rect.x <= 980:
@@ -36,8 +29,10 @@ class Player(pg.sprite.Sprite):
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
         if self.rect.x > 0:
-            self.propertie = self.coord[1]
             self.rect.x -= 20
+            # Change les coordonnées du perso
+            self.coord = self.coordinates_list()
+            self.propertie = self.coord[1]
 
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
@@ -58,6 +53,7 @@ class Player(pg.sprite.Sprite):
     def coordinates_list(self):
         '''Coordonées du spritesheet'''
         self.tab = [[1, 2, 3, 4], [1, 3, 4, 5]]
+        self.sprite = persos[self.game.name]
         if self.game.name == 'goku':
             self.tab = [[111, 890, 113, 120],
                         [1, 1990, 140, 105]]

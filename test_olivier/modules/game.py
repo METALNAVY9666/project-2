@@ -27,7 +27,9 @@ class Jeu:
             self.player.move_left()
         else:
             # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
-            self.player.propertie = self.player.properties()
+            self.player.coord = self.player.coordinates_list()
+            self.player.propertie = self.player.coord[0]
+            print(self.player.propertie)
 
     def collison(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
