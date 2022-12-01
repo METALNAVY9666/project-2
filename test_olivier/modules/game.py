@@ -14,22 +14,19 @@ class Jeu:
         self.is_playing = False
         self.fps = 60
         self.player = Player(self)
-        # opti
-        self.rect = None
+        
 
     def handle_input(self, EVENTS):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.'''
         choice = pg.key.get_pressed()
+        # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
+        self.player.coord = self.player.coordinates_list()
+        self.player.propertie = self.player.coord[0]
         if choice[pg.K_RIGHT]:
             self.player.move_right()
         elif choice[pg.K_LEFT]:
             self.player.move_left()
-        else:
-            # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
-            self.player.coord = self.player.coordinates_list()
-            self.player.propertie = self.player.coord[0]
-            print(self.player.propertie)
 
     def collison(self, sprite, group):
         '''Cette fonction renvoi un bouléen,

@@ -11,11 +11,16 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.sprite = persos[self.game.name]
         self.rect = self.sprite.get_rect()
-        self.rect.x, self.rect.y = 800, 500
-        self.sprite_x = 50
         self.tab = []
         self.coord = self.coordinates_list()
         self.propertie = self.coord[0]
+        self.init_plus()
+
+    def init_plus(self):
+        '''Cette fonction permet d'initialiser des élements
+        suplémentaires.'''
+        self.rect.x, self.rect.y = 800, 500
+        self.sprite_x = 50
         # temps entre chaque sprite de l'animation idle en ms
         self.idle_speed = 300
         # somme des temps entres chaque frame
@@ -23,17 +28,19 @@ class Player(pg.sprite.Sprite):
 
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
-        if self.rect.x <= 980:
+        if self.rect.x <= 950:
             self.rect.x += 15
 
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
-        if self.rect.x > 0:
-            self.rect.x -= 20
+        if self.rect.x > 5:
+            self.rect.x -= 15
             # Change les coordonnées du perso
-            self.coord = self.coordinates_list()
+            self.sprite = persos[self.game.name]
             self.propertie = self.coord[1]
-
+    def attack(self):
+        self.sprite = persos[self.game.name]
+        self.propertie = self.coord[2]
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
@@ -56,8 +63,10 @@ class Player(pg.sprite.Sprite):
         self.sprite = persos[self.game.name]
         if self.game.name == 'goku':
             self.tab = [[111, 890, 113, 120],
-                        [1, 1990, 140, 105]]
+                        [1, 1990, 140, 105],
+                        [111, 890, 114, 120]]
         elif self.game.name == 'vegeta':
             self.tab = [[200, 1210, 100, 120],
-                        [1, 1970, 120, 105]]
+                        [1, 1970, 120, 105],
+                        [111, 1500, 100, 120]]
         return self.tab

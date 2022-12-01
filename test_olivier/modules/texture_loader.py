@@ -25,3 +25,5 @@ persos = {}
 persos["goku"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
 persos["vegeta"] = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
 persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
+persos["goku_right"] = pg.image.load('test_olivier/gfx/base/goku_base_right.png')
+persos["vegeta_right"] = pg.image.load('test_olivier/gfx/base/vegeta_base_right.png')
