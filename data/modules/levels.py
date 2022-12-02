@@ -37,7 +37,21 @@ class TestPlayer:
         rect = self.move()
         return self.move()
 
+class Background:
+    """créée un fond qui s'adapte à la position des 2 joueurs"""
+    def __init__(self, pkg, prop):
+        self.pkg = pkg
+        self.prop = prop
+        self.bg = GFX[self.prop["bg"]]["bg"]
 
+    def update(self, player_rects):
+        """met à jour la position du fond en fonction de
+        la position des joueurs"""
+        for rect in player_rects:
+            print((rect.centerx, rect.centery))
+        bg_rect = self.pkg["surface"].blit(self.bg, (0, 0))
+        return bg_rect
+    
 class BaseLevel:
     """générateur de niveaux"""
     def __init__(self, pygame_pack, level_prop, game_settings):
@@ -57,6 +71,7 @@ class BaseLevel:
         """initialise les joueurs"""
         self.player0 = TestPlayer(0, self.pkg)
         self.player1 = TestPlayer(1, self.pkg)
+        self.player_rects = [self.player0.update(1), self.player1.update(1)]
 
     def init_prop(self, pygame_pack, level_prop, game_settings):
         """initlialise les variables et propriétés de la classe BaseLevel"""
@@ -70,6 +85,7 @@ class BaseLevel:
         self.pkg["mouse"].set_visible(False)
         surface_blit = self.pkg["surface"].blit
         self.pkg["display"].update(surface_blit(GFX["loading"], (0, 0)))
+        self.background = Background(self.pkg, self.level_prop)
 
     def init_audio(self):
         """initialise l'audio du niveau"""
@@ -138,14 +154,13 @@ class BaseLevel:
         next_op = None
         self.check_keys()
 
-        background = GFX[self.level_prop["bg"]]["bg"]
-        bg_rect = self.pkg["surface"].blit(background, (0, 0))
-        self.update_list.append(bg_rect)
+        self.update_list.append(self.background.update(self.player_rects))
 
-        rect0 = self.player0.update(self.dt)
-        rect1 = self.player1.update(self.dt)
-        self.update_list.append(rect0)
-        self.update_list.append(rect1)
+        self.player_rects = [None, None]
+        self.player_rects[0] = self.player0.update(self.dt)
+        self.player_rects[1] = self.player1.update(self.dt)
+        self.update_list.append(self.player_rects[0])
+        self.update_list.append(self.player_rects[1])
 
         next_op = self.pause_menu_update()
         
