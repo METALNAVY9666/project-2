@@ -6,7 +6,8 @@ from data.modules.settings import read_settings
 def load_image(path, dimensions):
     """charge l'image et modifie les dimensions de cette dernière"""
     temp = pygame.image.load(path+".png")
-    temp = pygame.transform.scale(temp, dimensions)
+    if dimensions is not None:
+        temp = pygame.transform.scale(temp, dimensions)
     return temp
 
 
@@ -39,7 +40,7 @@ GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 # chargement des GFX de neo_tokyo
 GFX["neo_tokyo"] = {}
 TEMP = LEVELS_PATH+"neo_tokyo"
-GFX["neo_tokyo"]["bg"] = load_image(TEMP, win_scale).convert()
+GFX["neo_tokyo"]["bg"] = load_image(TEMP, None).convert()
 
 # textures test
 GFX["players"] = {}

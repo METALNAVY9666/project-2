@@ -1,4 +1,5 @@
 """ce module contient les différents niveaux"""
+import os
 from data.modules.texture_loader import GFX
 
 class TestPlayer:
@@ -8,6 +9,7 @@ class TestPlayer:
         self.pkg = pkg
         self.pos = [0, 0]
         self.dt = 1
+        self.velocity = 1
         pg = pkg["pygame"]
         self.player_texture = GFX["players"]["nyan"]
         self.controls = [
@@ -19,7 +21,7 @@ class TestPlayer:
         """bouge le joueur"""
         keys = self.pkg["pygame"].key.get_pressed()
         controls = self.controls[self.iden]
-        speed = self.pkg["FPS"] // self.dt
+        speed = self.dt * self.velocity * 0.01
         if keys[controls[0]]:
             self.pos[0] -= 5 * speed
         if keys[controls[1]]:
@@ -31,10 +33,13 @@ class TestPlayer:
         rect = self.pkg["surface"].blit(self.player_texture, self.pos)
         return rect
 
-    def update(self, dt):
+    def update(self, dt, pause):
         """met à jour le joueur"""
         self.dt = dt
-        rect = self.move()
+        if pause:
+            self.velocity = 0
+        else:
+            self.velocity = 20
         return self.move()
 
 class Background:
@@ -47,8 +52,11 @@ class Background:
     def update(self, player_rects):
         """met à jour la position du fond en fonction de
         la position des joueurs"""
-        for rect in player_rects:
-            print((rect.centerx, rect.centery))
+        screen = self.prop["scale"]
+        pos = [player_rects[0].center, player_rects[1].center]
+        if pos[0][0] + screen[0]//4 < pos[1][0]:
+            print("1 à gauche")
+            os.system("clear")
         bg_rect = self.pkg["surface"].blit(self.bg, (0, 0))
         return bg_rect
     
@@ -71,7 +79,9 @@ class BaseLevel:
         """initialise les joueurs"""
         self.player0 = TestPlayer(0, self.pkg)
         self.player1 = TestPlayer(1, self.pkg)
-        self.player_rects = [self.player0.update(1), self.player1.update(1)]
+        payload0 = self.player0.update(1, self.pause)
+        payload1 = self.player1.update(1, self.pause)
+        self.player_rects = [payload0, payload1]
 
     def init_prop(self, pygame_pack, level_prop, game_settings):
         """initlialise les variables et propriétés de la classe BaseLevel"""
@@ -157,8 +167,8 @@ class BaseLevel:
         self.update_list.append(self.background.update(self.player_rects))
 
         self.player_rects = [None, None]
-        self.player_rects[0] = self.player0.update(self.dt)
-        self.player_rects[1] = self.player1.update(self.dt)
+        self.player_rects[0] = self.player0.update(self.dt, self.pause)
+        self.player_rects[1] = self.player1.update(self.dt, self.pause)
         self.update_list.append(self.player_rects[0])
         self.update_list.append(self.player_rects[1])
 
