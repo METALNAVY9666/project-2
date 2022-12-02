@@ -57,7 +57,7 @@ class Player(pg.sprite.Sprite):
             self.sprite_x += 1
             # remettre la somme des temps à 0
             self.delta_sum = 0
-        if self.sprite_x > 5:
+        if self.sprite_x > 2:
             self.sprite_x = 0
 
     def coordinates_list(self):
@@ -67,9 +67,9 @@ class Player(pg.sprite.Sprite):
         if self.game.name == 'goku':
             self.tab = [[111, 890, 113, 120],
                         [1, 1990, 140, 105],
-                        [125, 3565, 135, 150]]
+                        [150, 2247, 139, 140]]
         elif self.game.name == 'vegeta':
-            self.tab = [[120, 1210, 100, 120],
+            self.tab = [[100, 1210, 100, 120],
                         [1, 1970, 120, 105],
-                        [111, 1500, 100, 120]]
+                        [150, 4400, 135, 140]]
         return self.tab
