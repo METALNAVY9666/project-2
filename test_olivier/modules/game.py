@@ -27,6 +27,9 @@ class Jeu:
             self.player.move_right()
         elif choice[pg.K_LEFT]:
             self.player.move_left()
+        elif choice[pg.K_q]:
+            print('attack')
+            self.player.attack()
 
     def collison(self, sprite, group):
         '''Cette fonction renvoi un bouléen,

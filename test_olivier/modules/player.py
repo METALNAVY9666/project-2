@@ -38,9 +38,12 @@ class Player(pg.sprite.Sprite):
             # Change les coordonnées du perso
             self.sprite = persos[self.game.name]
             self.propertie = self.coord[1]
+
     def attack(self):
+        '''Cette fonction permet de gérer l'attaque d'un perso.'''
         self.sprite = persos[self.game.name]
         self.propertie = self.coord[2]
+
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
@@ -54,7 +57,7 @@ class Player(pg.sprite.Sprite):
             self.sprite_x += 1
             # remettre la somme des temps à 0
             self.delta_sum = 0
-        if self.sprite_x > 2:
+        if self.sprite_x > 5:
             self.sprite_x = 0
 
     def coordinates_list(self):
@@ -64,9 +67,9 @@ class Player(pg.sprite.Sprite):
         if self.game.name == 'goku':
             self.tab = [[111, 890, 113, 120],
                         [1, 1990, 140, 105],
-                        [111, 890, 114, 120]]
+                        [125, 3565, 135, 150]]
         elif self.game.name == 'vegeta':
-            self.tab = [[200, 1210, 100, 120],
+            self.tab = [[120, 1210, 100, 120],
                         [1, 1970, 120, 105],
                         [111, 1500, 100, 120]]
         return self.tab
