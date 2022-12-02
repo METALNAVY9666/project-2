@@ -20,19 +20,22 @@ class TestPlayer:
         keys = self.pkg["pygame"].key.get_pressed()
         controls = self.controls[self.iden]
         speed = self.pkg["FPS"] // self.dt
-        print(self.pos)
         if keys[controls[0]]:
-            self.pos[0] += 5 * speed
+            self.pos[0] -= 5 * speed
         if keys[controls[1]]:
             self.pos[1] -= 5 * speed
         if keys[controls[2]]:
-            self.pos[0] -= 5 * speed
+            self.pos[0] += 5 * speed
         if keys[controls[3]]:
             self.pos[1] += 5 * speed
         rect = self.pkg["surface"].blit(self.player_texture, self.pos)
-        print(rect)
         return rect
-            
+
+    def update(self, dt):
+        """met à jour le joueur"""
+        self.dt = dt
+        rect = self.move()
+        return self.move()
 
 
 class BaseLevel:
@@ -135,22 +138,17 @@ class BaseLevel:
         next_op = None
         self.check_keys()
 
-        
-        self.player0.dt = self.dt
-        self.player1.dt = self.dt
-        
-        rect1 = self.player0.move()
-        rect2 = self.player1.move()
-
-        self.update_list.append(rect1)
-        self.update_list.append(rect2)
-
-        next_op = self.pause_menu_update()
-
         background = GFX[self.level_prop["bg"]]["bg"]
         bg_rect = self.pkg["surface"].blit(background, (0, 0))
         self.update_list.append(bg_rect)
 
+        rect0 = self.player0.update(self.dt)
+        rect1 = self.player1.update(self.dt)
+        self.update_list.append(rect0)
+        self.update_list.append(rect1)
+
+        next_op = self.pause_menu_update()
+        
         self.update_list.reverse()
         self.pkg["display"].update(self.update_list)
         self.update_list = []
