@@ -53,8 +53,9 @@ class Player(pg.sprite.Sprite):
         self.delta_sum += dlt
         # si la somme des temps entre les frames est plus grande que 300ms
         if self.delta_sum >= self.idle_speed:
-            # changer le sprite
-            self.sprite_x += 1
+            if not self.game.right:
+                # changer le sprite
+                self.sprite_x += 1
             # remettre la somme des temps à 0
             self.delta_sum = 0
         if self.sprite_x > 2:

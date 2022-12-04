@@ -14,19 +14,24 @@ class Jeu:
         self.is_playing = False
         self.fps = 60
         self.player = Player(self)
+        self.right = False
         
 
-    def handle_input(self, EVENTS):
+    def handle_input(self):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.'''
         choice = pg.key.get_pressed()
         # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
         self.player.coord = self.player.coordinates_list()
         self.player.propertie = self.player.coord[0]
+        if self.right:
+            print('je suis retourné')
         if choice[pg.K_RIGHT]:
             self.player.move_right()
+            self.right = True
         elif choice[pg.K_LEFT]:
             self.player.move_left()
+            self.right = False
         elif choice[pg.K_q]:
             print('attack')
             self.player.attack()
@@ -44,7 +49,7 @@ class Jeu:
         '''Cette fonction petrmet de mettre à jour le jeu.'''
         # screen.blit(self.player.image, self.player.rect)
         self.rect = self.player.blit_sprite(screen, dt)
-        self.handle_input(EVENTS)
+        self.handle_input()
         # Renvoi le rectangle du joueur
         return self.rect
 
