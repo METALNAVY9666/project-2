@@ -4,9 +4,9 @@
         "effects": 100
     },
     "display": {
-        "horizontal": 1920,
-        "vertical": 1080,
+        "horizontal": 1280,
+        "vertical": 720,
         "fullscreen": false,
-        "FPS" : 60
+        "FPS" : 10
     }
 }

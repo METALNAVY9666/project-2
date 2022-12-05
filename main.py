@@ -2,6 +2,7 @@
 import pygame
 from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings
+from data.modules.debug import FPS
 
 game_settings = read_settings()
 x = game_settings["display"]["horizontal"]
@@ -17,7 +18,8 @@ pack_pygame = {
     "clock": pygame.time.Clock(),
     "time": pygame.time,
     "mouse": pygame.mouse,
-    "rect": pygame.Rect
+    "rect": pygame.Rect,
+    "dimensions": dimensions
 }
 
 icon = pygame.image.load("data/gfx/icon.png")
@@ -30,7 +32,7 @@ WIN = True
 
 levels_options = {
             "neo_tokyo": {
-                "scale": dimensions,
+                "scale": (2951, 2028),
                 "bg": "neo_tokyo",
                 "music": "data/sfx/music/neo_tokyo.mp3"}
                 }
@@ -38,12 +40,13 @@ levels_options = {
 level = levels_options["neo_tokyo"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
+fps = FPS(pack_pygame)
 
 while WIN:
     # dt est le temps qui s'écoule entre chaque image,
     # important pour que le jeu reste fluide
     dt = pack_pygame["clock"].tick(pack_pygame["FPS"])
-    current_map.dt = dt
+    current_map.delta = dt
     # vérifie les évènements
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -53,8 +56,10 @@ while WIN:
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
     # actualise la map, si elle renvoie "quit", alors quitter
-    if current_map.update() == "exit":
+    if current_map.update(dt) == "exit":
         WIN = False
+    fps.record_fps()
 
+print(fps.end())
 pygame.quit()
 # os.system("clear")

@@ -1,101 +1,71 @@
 """ce module contient les différents niveaux"""
-import os
 from data.modules.texture_loader import GFX
+from data.modules.players import TestPlayer
+from data.modules.gui import PauseMenu
+from data.modules.keyboard import KeyChecker
 
-class TestPlayer:
-    """créée un joueur test"""
-    def __init__(self, iden, pkg):
-        self.iden = iden
-        self.pkg = pkg
-        self.pos = [0, 0]
-        self.dt = 1
-        self.velocity = 1
-        pg = pkg["pygame"]
-        self.player_texture = GFX["players"]["nyan"]
-        self.controls = [
-            [pg.K_LEFT, pg.K_UP, pg.K_RIGHT, pg.K_DOWN],
-            [pg.K_q, pg.K_z, pg.K_d, pg.K_s]
-        ]
-    
-    def move(self):
-        """bouge le joueur"""
-        keys = self.pkg["pygame"].key.get_pressed()
-        controls = self.controls[self.iden]
-        speed = self.dt * self.velocity * 0.01
-        if keys[controls[0]]:
-            self.pos[0] -= 5 * speed
-        if keys[controls[1]]:
-            self.pos[1] -= 5 * speed
-        if keys[controls[2]]:
-            self.pos[0] += 5 * speed
-        if keys[controls[3]]:
-            self.pos[1] += 5 * speed
-        rect = self.pkg["surface"].blit(self.player_texture, self.pos)
-        return rect
-
-    def update(self, dt, pause):
-        """met à jour le joueur"""
-        self.dt = dt
-        if pause:
-            self.velocity = 0
-        else:
-            self.velocity = 20
-        return self.move()
 
 class Background:
     """créée un fond qui s'adapte à la position des 2 joueurs"""
     def __init__(self, pkg, prop):
         self.pkg = pkg
         self.prop = prop
-        self.bg = GFX[self.prop["bg"]]["bg"]
+        self.pos = (0, 0)
+        self.dims = pkg["dimensions"]
+        self.scl = self.prop["scale"]
+        self.scl_ex = []
+        for axe in (0, 1):
+            self.scl_ex.append(self.scl[axe] - self.dims[axe])
 
-    def update(self, player_rects):
+    def clamp(self):
+        """verouille la position du fond"""
+        for axe in [0, 1]:
+            if self.pos[axe] > axe:
+                self.pos[axe] = 0
+            if self.pos[axe] < -self.scl_ex[axe]:
+                self.pos[axe] = -self.scl_ex[axe]
+
+    def move(self, pos):
+        """bouge le fond pour donner un effet de mouvement"""
+        self.pos = pos
+
+    def update(self):
         """met à jour la position du fond en fonction de
         la position des joueurs"""
-        screen = self.prop["scale"]
-        pos = [player_rects[0].center, player_rects[1].center]
-        if pos[0][0] + screen[0]//4 < pos[1][0]:
-            print("1 à gauche")
-            os.system("clear")
-        bg_rect = self.pkg["surface"].blit(self.bg, (0, 0))
+        bg_img = GFX[self.prop["bg"]]["bg"]
+        self.clamp()
+        bg_rect = self.pkg["surface"].blit(bg_img, self.pos)
         return bg_rect
-    
+
+
 class BaseLevel:
     """générateur de niveaux"""
     def __init__(self, pygame_pack, level_prop, game_settings):
         """mettre pack_pygame, les propriétés du niveau et les paramètres
         du jeu en parametres afin de pouvoir modifier la scène sans recharger
         """
-        self.pause = False
         self.update_list = []
-        self.keys = {}
-        self.dt = 0
         self.init_prop(pygame_pack, level_prop, game_settings)
         self.init_ui()
         self.init_audio()
         self.init_players()
-
-    def init_players(self):
-        """initialise les joueurs"""
-        self.player0 = TestPlayer(0, self.pkg)
-        self.player1 = TestPlayer(1, self.pkg)
-        payload0 = self.player0.update(1, self.pause)
-        payload1 = self.player1.update(1, self.pause)
-        self.player_rects = [payload0, payload1]
 
     def init_prop(self, pygame_pack, level_prop, game_settings):
         """initlialise les variables et propriétés de la classe BaseLevel"""
         self.level_prop = level_prop
         self.pkg = pygame_pack
         self.settings = game_settings
-        self.keys["new"] = self.pkg["pygame"].key.get_pressed()
 
     def init_ui(self):
         """initialise l'interface graphique du niveau"""
+        self.cls = {}
         self.pkg["mouse"].set_visible(False)
-        surface_blit = self.pkg["surface"].blit
-        self.pkg["display"].update(surface_blit(GFX["loading"], (0, 0)))
-        self.background = Background(self.pkg, self.level_prop)
+        background = Background(self.pkg, self.level_prop)
+        self.cls["bg"] = background
+        pause_menu = PauseMenu(self.pkg)
+        self.cls["pause"] = pause_menu
+        key_checker = KeyChecker(self.pkg, self.cls["pause"])
+        self.cls["key"] = key_checker
 
     def init_audio(self):
         """initialise l'audio du niveau"""
@@ -105,77 +75,35 @@ class BaseLevel:
         self.pkg["mixer"].music.set_volume(volume)
         self.pkg["mixer"].music.play()
 
-    def check_key(self, key_name):
-        """vérifie si la touche est touchée et relâchée"""
-        pressed = {}
-        pressed["old"] = self.keys["old"][key_name]
-        pressed["new"] = self.keys["new"][key_name]
-        if not pressed["old"] and pressed["new"]:
-            return True
-        return False
+    def init_players(self):
+        """initialise les joueurs"""
+        self.players = []
+        self.players.append([TestPlayer(0, self.pkg), None])
+        self.players.append([TestPlayer(1, self.pkg), None])
+        for element in (0, 1):
+            player = self.players[element][0]
+            temp = player.update(element, self.cls["pause"].bool)
+            self.players[element][1] = temp
 
-    def check_keys(self):
-        """vérifie quelles touches sont appuyées"""
-        self.keys["old"] = self.keys["new"]
-        self.keys["new"] = self.pkg["pygame"].key.get_pressed()
-
-        if self.check_key(self.pkg["pygame"].K_ESCAPE):
-            if self.pause:
-                self.pause = False
-            else:
-                self.pause = True
-            self.pause_menu()
-
-    def pause_menu(self):
-        """active ou désactive le menu pause"""
-        if self.pause:
-            self.pkg["mixer"].music.pause()
-            self.pkg["mouse"].set_visible(True)
-        else:
-            self.pkg["mixer"].music.unpause()
-            self.pkg["mouse"].set_visible(False)
-
-    def pause_menu_update(self):
-        """met à jour le menu pause"""
-        if self.pause:
-            mouse = self.pkg["mouse"].get_pressed()[0]
-            blit_surface = self.pkg["surface"].blit
-            blur_rect = blit_surface(GFX["blur"], (0, 0))
-            self.update_list.append(blur_rect)
-            exit_rect = blit_surface(GFX["exit"], (20, 20))
-            self.update_list.append(exit_rect)
-            rects = [["exit", exit_rect]]
-            on_button = self.pause_menu_clicks(rects)
-            if mouse and on_button is not None:
-                return on_button
-        return "continue"
-
-    def pause_menu_clicks(self, rects):
-        """vérifie les boutons cliqués par la souris"""
-        mouse_pos = self.pkg["mouse"].get_pos()
-        for rect in rects:
-            if rect[1].collidepoint(mouse_pos):
-                return rect[0]
-        return None
-
-    def update(self):
+    def update(self, delta):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
         next_op = None
-        self.check_keys()
+        keys = [self.pkg["pygame"].K_ESCAPE]
+        self.cls["key"].check_keys(keys)
 
-        self.update_list.append(self.background.update(self.player_rects))
+        self.update_list.append(self.cls["bg"].update())
 
-        self.player_rects = [None, None]
-        self.player_rects[0] = self.player0.update(self.dt, self.pause)
-        self.player_rects[1] = self.player1.update(self.dt, self.pause)
-        self.update_list.append(self.player_rects[0])
-        self.update_list.append(self.player_rects[1])
+        player = self.players[1][0]
+        pos, player_rect = player.update(delta, self.cls["pause"].bool)
+        self.cls["bg"].pos = pos
+        self.update_list.append(player_rect)
 
-        next_op = self.pause_menu_update()
-        
-        self.update_list.reverse()
+        next_op, pause_rects = self.cls["pause"].update()
+        if pause_rects is not None:
+            for rect in pause_rects:
+                self.update_list.append(rect)
+
         self.pkg["display"].update(self.update_list)
         self.update_list = []
-        # print("FPS : ", int(self.pkg["clock"].get_fps()))
         return next_op
