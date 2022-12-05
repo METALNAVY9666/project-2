@@ -10,7 +10,7 @@ class Background:
     def __init__(self, pkg, prop):
         self.pkg = pkg
         self.prop = prop
-        self.pos = (0, 0)
+        self.pos = [0, 0]
         self.dims = pkg["dimensions"]
         self.scl = self.prop["scale"]
         self.scl_ex = []
@@ -19,21 +19,25 @@ class Background:
 
     def clamp(self):
         """verouille la position du fond"""
+        clamps = [[False, False], [False, False]]
         for axe in [0, 1]:
-            if self.pos[axe] > axe:
+            if self.pos[axe] >= 0:
                 self.pos[axe] = 0
-            if self.pos[axe] < -self.scl_ex[axe]:
+                clamps[axe][0] = True
+            if self.pos[axe] <= -self.scl_ex[axe]:
                 self.pos[axe] = -self.scl_ex[axe]
+                clamps[axe][1] = True
+        return clamps
 
     def move(self, pos):
         """bouge le fond pour donner un effet de mouvement"""
         self.pos = pos
 
-    def update(self):
+    def update(self, player):
         """met à jour la position du fond en fonction de
         la position des joueurs"""
         bg_img = GFX[self.prop["bg"]]["bg"]
-        self.clamp()
+        player.clamps = self.clamp()
         bg_rect = self.pkg["surface"].blit(bg_img, self.pos)
         return bg_rect
 
@@ -82,7 +86,8 @@ class BaseLevel:
         self.players.append([TestPlayer(1, self.pkg), None])
         for element in (0, 1):
             player = self.players[element][0]
-            temp = player.update(element, self.cls["pause"].bool)
+            pos = self.cls["bg"].pos
+            temp = player.update(element, self.cls["pause"].bool, pos)
             self.players[element][1] = temp
 
     def update(self, delta):
@@ -91,14 +96,19 @@ class BaseLevel:
         next_op = None
         keys = [self.pkg["pygame"].K_ESCAPE]
         self.cls["key"].check_keys(keys)
-
-        self.update_list.append(self.cls["bg"].update())
-
         player = self.players[1][0]
-        pos, player_rect = player.update(delta, self.cls["pause"].bool)
+
+        # met à jour le fond
+        self.update_list.append(self.cls["bg"].update(player))
+
+        # met à jour le joueur
+        pause = self.cls["pause"].bool
+        pos = self.cls["bg"].pos
+        pos, player_rect = player.update(delta, pause, pos)
         self.cls["bg"].pos = pos
         self.update_list.append(player_rect)
 
+        # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
         if pause_rects is not None:
             for rect in pause_rects:
