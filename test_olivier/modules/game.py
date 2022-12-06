@@ -13,8 +13,8 @@ class Jeu:
         self.name = name
         self.is_playing = False
         self.fps = 60
-        self.player = Player(self)
         self.right = False
+        self.player = Player(self)
         
 
     def handle_input(self):
@@ -24,8 +24,7 @@ class Jeu:
         # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
         self.player.coord = self.player.coordinates_list()
         self.player.propertie = self.player.coord[0]
-        if self.right:
-            print('je suis retourné')
+        # Modifie les animations en fonction dde l'input
         if choice[pg.K_RIGHT]:
             self.player.move_right()
             self.right = True
