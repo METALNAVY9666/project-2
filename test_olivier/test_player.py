@@ -5,7 +5,7 @@ from modules.game import Jeu
 from modules.texture_loader import images
 
 
-def screen_win():
+def screen_menu():
     '''Fonction qui renvoie l'écran.'''
     pg.display.set_caption('Moissan Fighter Z')
     screen = pg.display.set_mode((1080, 720))
@@ -26,7 +26,7 @@ def main_window():
     pg.init()
     clock = pg.time.Clock()
     # Elements de la fenêtre
-    screen = screen_win()
+    screen = screen_menu()
     # Redimensionne le fond d'écran
     background = images["background"]
     square = Menu()
