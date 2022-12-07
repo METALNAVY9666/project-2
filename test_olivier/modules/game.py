@@ -44,7 +44,7 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, EVENTS, dt):
+    def update(self, screen, dt):
         '''Cette fonction petrmet de mettre à jour le jeu.'''
         # screen.blit(self.player.image, self.player.rect)
         self.rect = self.player.blit_sprite(screen, dt)

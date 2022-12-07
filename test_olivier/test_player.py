@@ -46,7 +46,7 @@ def main_window():
             jeu.name = square.menu_update(screen, EVENTS)
         elif jeu.name != 'hello':
             # Mise à jour du jeu
-            liste_update.append(jeu.update(screen, EVENTS, dlt))
+            liste_update.append(jeu.update(screen, dlt))
         pg.display.update(liste_update)
         liste_update = []
         print(clock.get_fps())
