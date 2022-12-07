@@ -19,7 +19,7 @@ class Player(pg.sprite.Sprite):
     def init_plus(self):
         '''Cette fonction permet d'initialiser des élements
         suplémentaires.'''
-        self.rect.x, self.rect.y = 800, 500
+        self.rect.x, self.rect.y = 900, 500
         self.sprite_x = 50
         # temps entre chaque sprite de l'animation idle en ms
         self.idle_speed = 300
@@ -48,8 +48,9 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         screen.blit(self.sprite, (self.rect.x, self.rect.y),
-                    (self.sprite_x * self.propertie[0],
-                    self.propertie[1], self.propertie[2], self.propertie[3]))
+                    (self.sprite_x * self.propertie[0] + 5898,
+                    self.propertie[1], self.propertie[2],
+                    self.propertie[3]))
         self.delta_sum += dlt
         # si la somme des temps entre les frames est plus grande que 300ms
         if self.delta_sum >= self.idle_speed:
