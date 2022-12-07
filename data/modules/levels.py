@@ -3,6 +3,7 @@ from data.modules.texture_loader import GFX
 from data.modules.players import TestPlayer
 from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
+from data.modules.audio import Music
 
 
 class Background:
@@ -73,11 +74,9 @@ class BaseLevel:
 
     def init_audio(self):
         """initialise l'audio du niveau"""
-        bg_music_path = self.level_prop["music"]
-        volume = self.settings["audio"]["music"]/100
-        self.pkg["mixer"].music.load(bg_music_path)
-        self.pkg["mixer"].music.set_volume(volume)
-        self.pkg["mixer"].music.play()
+        bg_music = Music(self.pkg, self.level_prop, self.settings)
+        bg_music.play()
+        self.cls["pause"].bg_music = bg_music
 
     def init_players(self):
         """initialise les joueurs"""

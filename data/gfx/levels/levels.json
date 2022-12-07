@@ -1,0 +1,16 @@
+{
+    "neo_tokyo": {
+        "scale": [2951, 2028],
+        "bg": "neo_tokyo",
+        "music": "data/sfx/music/neo_tokyo.mp3",
+        "animated": false,
+        "music_folder": false 
+    },
+    "tenkaichi_budokai": {
+        "scale": [1920, 1080],
+        "bg": "tenkaichi_budokai",
+        "music": "data/sfx/music/tenkaichi_budokai/",
+        "animated": false,
+        "music_folder": true 
+    }
+}

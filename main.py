@@ -1,7 +1,7 @@
 """ce module contient le lanceur de jeu"""
 import pygame
 from data.modules.levels import BaseLevel
-from data.modules.settings import read_settings
+from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
 
 game_settings = read_settings()
@@ -30,14 +30,7 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-levels_options = {
-            "neo_tokyo": {
-                "scale": (2951, 2028),
-                "bg": "neo_tokyo",
-                "music": "data/sfx/music/neo_tokyo.mp3"}
-                }
-
-level = levels_options["neo_tokyo"]
+level = read_levels()["tenkaichi_budokai"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
 fps = FPS(pack_pygame)

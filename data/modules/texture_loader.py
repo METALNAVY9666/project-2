@@ -1,6 +1,6 @@
 """stocke toutes les textures afin de ne pas faire beuger pygame"""
 import pygame
-from data.modules.settings import read_settings
+from data.modules.settings import read_settings, read_levels
 
 
 def load_image(path, dimensions):
@@ -10,7 +10,7 @@ def load_image(path, dimensions):
         temp = pygame.transform.scale(temp, dimensions)
     return temp
 
-
+levels = read_levels()
 prop = read_settings()
 X = prop["display"]["horizontal"]
 Y = prop["display"]["vertical"]
@@ -37,10 +37,11 @@ pygame.display.update(loading_rect)
 GFX["blur"] = load_image(UI_PATH+"blur", win_scale).convert_alpha()
 GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 
-# chargement des GFX de neo_tokyo
-GFX["neo_tokyo"] = {}
-TEMP = LEVELS_PATH+"neo_tokyo"
-GFX["neo_tokyo"]["bg"] = load_image(TEMP, None).convert()
+# chargement des niveaux
+for level in list(levels.keys()):
+    GFX[level] = {}
+    TEMP = LEVELS_PATH + level
+    GFX[level]["bg"] = load_image(TEMP, levels[level]["scale"]).convert()
 
 # textures test
 GFX["players"] = {}

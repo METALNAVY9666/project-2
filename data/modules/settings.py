@@ -8,3 +8,10 @@ def read_settings():
         data = json.load(file)
         file.close()
     return data
+
+def read_levels():
+    """lis les niveaux"""
+    with open("data/gfx/levels/levels.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+        file.close()
+    return data

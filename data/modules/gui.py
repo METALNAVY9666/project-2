@@ -7,15 +7,16 @@ class PauseMenu:
     def __init__(self, pkg):
         self.bool = False
         self.pkg = pkg
+        self.bg_music = None
 
     def switch(self):
         """active ou désactive le menu pause"""
         if self.bool:
-            self.pkg["mixer"].music.pause()
             self.pkg["mouse"].set_visible(True)
+            self.bg_music.pause(True)
         else:
-            self.pkg["mixer"].music.unpause()
             self.pkg["mouse"].set_visible(False)
+            self.bg_music.pause(False)
 
     def update(self):
         """met à jour le menu pause"""
