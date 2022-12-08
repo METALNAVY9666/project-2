@@ -20,6 +20,7 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction permet d'initialiser des élements
         suplémentaires.'''
         self.rect.x, self.rect.y = 900, 500
+        self.x, self.y = 10, 500
         self.sprite_x = 50
         # temps entre chaque sprite de l'animation idle en ms
         self.idle_speed = 300
@@ -48,7 +49,26 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         screen.blit(self.sprite, (self.rect.x, self.rect.y),
-                    (self.sprite_x * self.propertie[0] + 5898,
+                    (self.sprite_x * self.propertie[0],
+                    self.propertie[1], self.propertie[2],
+                    self.propertie[3]))
+        self.delta_sum += dlt
+        # si la somme des temps entre les frames est plus grande que 300ms
+        if self.delta_sum >= self.idle_speed:
+            if not self.game.right:
+                # changer le sprite
+                self.sprite_x += 1
+            # remettre la somme des temps à 0
+            self.delta_sum = 0
+        if self.sprite_x > 2:
+            self.sprite_x = 0
+
+    def blit_sprite2(self, screen, dlt):
+        # Invertion du sprite
+        self.sprite = persos[self.game.name+"_right"]
+        # Blit du sprite inversé
+        screen.blit(self.sprite, (self.x, self.y),
+                    (self.sprite_x * self.propertie[0]+2020,
                     self.propertie[1], self.propertie[2],
                     self.propertie[3]))
         self.delta_sum += dlt

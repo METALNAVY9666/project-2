@@ -48,6 +48,9 @@ class Jeu:
         '''Cette fonction petrmet de mettre à jour le jeu.'''
         # screen.blit(self.player.image, self.player.rect)
         self.rect = self.player.blit_sprite(screen, dt)
+        # Blit du perso à droite
+        self.player.blit_sprite2(screen, dt)
+        # Gère les inputs
         self.handle_input()
         # Renvoi le rectangle du joueur
         return self.rect
