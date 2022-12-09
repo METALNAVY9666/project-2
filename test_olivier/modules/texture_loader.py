@@ -15,6 +15,7 @@ def load_image(path, dimensions):
 # Chargements des images pour le fond d'écran
 BG_PATH = 'test_olivier/gfx/images/'
 images = {}
+# Images pour le menu
 images["background"] = load_image(
     BG_PATH+'map_tuto.jpg', (1080, 720)).convert()
 images["square"] = load_image(BG_PATH+'square.png', (120, 120))
@@ -23,7 +24,11 @@ images["square"] = load_image(BG_PATH+'square.png', (120, 120))
 PL_PATH = 'test_olivier/gfx/base/'
 persos = {}
 persos["goku"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
-persos["goku_right"] = pg.transform.flip(persos["goku"], True, False)
 persos["vegeta"] = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
 persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
-persos["vegeta_right"] = pg.image.load('test_olivier/gfx/base/vegeta_base_right.png')
+# Images retournées
+persos["vegeta_right"] = pg.transform.flip(persos["vegeta"], True, False)
+persos["goku_right"] = pg.transform.flip(persos["goku"], True, False)
+
+def images_du_perso(name):
+    image_du_perso = {pg.image.load(f"PATH{name}.png")}

@@ -68,7 +68,7 @@ class Player(pg.sprite.Sprite):
         self.sprite = persos[self.game.name+"_right"]
         # Blit du sprite inversé
         screen.blit(self.sprite, (self.x, self.y),
-                    (self.sprite_x * self.propertie[0]+2020,
+                    (self.sprite_x * self.propertie[0] + 2024,
                     self.propertie[1], self.propertie[2],
                     self.propertie[3]))
         self.delta_sum += dlt
