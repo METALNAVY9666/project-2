@@ -5,9 +5,8 @@ from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
 
-
-class Background:
-    """créée un fond qui s'adapte à la position des 2 joueurs"""
+class BackgroundOne:
+    """créée un fond qui s'adapte à la position d'un unique joueur"""
     def __init__(self, pkg, prop):
         self.pkg = pkg
         self.prop = prop
@@ -43,6 +42,27 @@ class Background:
         return bg_rect
 
 
+class BackgroundTwo:
+    """met à jour la position du fond en fonction du joueur"""
+    def __init__(self, pkg, prop):
+        self.pkg = pkg
+        self.bg_pos = [0, 0]
+        self.base_scale = prop["scale"]
+        self.scale = self.base_scale*1
+        self.p_pos = [[0, 0], [0, 0]]
+        self.bg = GFX[prop["bg"]]
+
+    def change_scale(self, img, scl):
+        """renvoie l'image avec taille modifiée"""
+        return self.pkg["pygame"].tansform.scale(img, scl)
+
+    def update(self):
+        """met à jour la position de l'écran en fonction des joueurs"""
+        self.bg_pos[0] = abs(self.p_pos[0][0]-self.p_pos[1][0])
+        self.bg_pos[1] = abs(self.p_pos[0][1]-self.p_pos[1][1])
+        return self.bg, self.bg_pos
+
+
 class BaseLevel:
     """générateur de niveaux"""
     def __init__(self, pygame_pack, level_prop, game_settings):
@@ -65,7 +85,8 @@ class BaseLevel:
         """initialise l'interface graphique du niveau"""
         self.cls = {}
         self.pkg["mouse"].set_visible(False)
-        background = Background(self.pkg, self.level_prop)
+        # background = BackgroundOne(self.pkg, self.level_prop)
+        background = BackgroundTwo(self.pkg, self.level_prop)
         self.cls["bg"] = background
         pause_menu = PauseMenu(self.pkg)
         self.cls["pause"] = pause_menu
@@ -81,13 +102,20 @@ class BaseLevel:
     def init_players(self):
         """initialise les joueurs"""
         self.players = []
-        self.players.append([TestPlayer(0, self.pkg), None])
-        self.players.append([TestPlayer(1, self.pkg), None])
+        self.players.append(TestPlayer(0, self.pkg))
+        self.players.append(TestPlayer(1, self.pkg))
+        self.players[1].player_pos = self.level_prop["scale"]
+        """ version 1 joueur
         for element in (0, 1):
             player = self.players[element][0]
             pos = self.cls["bg"].pos
             temp = player.update(element, self.cls["pause"].bool, pos)
-            self.players[element][1] = temp
+            self.players[element][1] = temp"""
+
+    def display(self, data):
+        """affiche des trucs"""
+        temp = self.pkg["surface"].blit(data[0], data[1])
+        return temp
 
     def update(self, delta):
         """met à jour le niveau, renvoie si le niveau est terminé ou
@@ -95,17 +123,22 @@ class BaseLevel:
         next_op = None
         keys = [self.pkg["pygame"].K_ESCAPE]
         self.cls["key"].check_keys(keys)
-        player = self.players[1][0]
+        """ version 1 joueur player = self.players[1][0]"""
 
         # met à jour le fond
-        self.update_list.append(self.cls["bg"].update(player))
+        pause = self.cls["pause"].bool
+        for elt in (0, 1):
+            self.cls["bg"].p_pos[elt] = self.players[elt].move(delta,pause)
+        rect = self.display(self.cls["bg"].update())
+        self.update_list.append(rect)
+        """self.update_list.append(self.cls["bg"].update(player))"""
 
         # met à jour le joueur
-        pause = self.cls["pause"].bool
-        pos = self.cls["bg"].pos
+        """pos = self.cls["bg"].pos
         pos, player_rect = player.update(delta, pause, pos)
         self.cls["bg"].pos = pos
-        self.update_list.append(player_rect)
+        self.update_list.append(player_rect)"""
+
 
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
@@ -113,6 +146,8 @@ class BaseLevel:
             for rect in pause_rects:
                 self.update_list.append(rect)
 
+        # self.pkg["display"].update(self.pkg["surface"].blit(GFX[self.level_prop["bg"]], (0,0)))
         self.pkg["display"].update(self.update_list)
+        print(self.update_list)
         self.update_list = []
         return next_op

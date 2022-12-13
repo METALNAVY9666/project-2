@@ -39,9 +39,8 @@ GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 
 # chargement des niveaux
 for level in list(levels.keys()):
-    GFX[level] = {}
     TEMP = LEVELS_PATH + level
-    GFX[level]["bg"] = load_image(TEMP, levels[level]["scale"]).convert()
+    GFX[level] = load_image(TEMP, levels[level]["scale"]).convert()
 
 # textures test
 GFX["players"] = {}
