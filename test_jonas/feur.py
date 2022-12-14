@@ -1,5 +1,7 @@
 import sys
 import pygame
+from player import *
+from controllers import *
 from pygame.locals import *
 pygame.init()
 
@@ -8,12 +10,8 @@ pygame.display.set_caption('game base') #Create the name of the game
 screen = pygame.display.set_mode((500, 500), 0, 32) #Create a screen
 clock = pygame.time.Clock() #Create a clock for manage fps
 
-pygame.joystick.init() #initialize joystick module
-joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-#pygame.joystick.get_count() allows to know the number of controllers used
+joysti = joy()
 
-for joystick in joysticks:
-    print(joystick.get_name()) #Allows to know the name of each controller
 
 #Create a square
 my_square = pygame.Rect(50, 50, 50, 50)
@@ -30,18 +28,19 @@ while True:
         motion[0] = 0
     if abs(motion[1]) < 0.1:
         motion[1] = 0
-    my_square.x += motion[0] * 10
-    my_square.y += motion[1] * 10
+    my_square.x += motion[0] * 10 #Modifie les abscisses (déplace l'objet)
+    my_square.y += motion[1] * 10 #Modifie les ordonnées (déplace l'objet)
     print(my_square.x, my_square.y)
 
     for event in pygame.event.get():
         if event.type == JOYBUTTONDOWN:
             print(event)
 
-            if event.button == 0: #If button "0" is pressing:
+            touches(event)
+            """if event.button == 0: #If button "0" is pressing:
                 print(event)
-                my_square_color = (my_square_color + 1) % len(colors) #Change sqare color
-
+                my_square_color = (my_square_color + 1) % len(colors) #Change square color
+            """
             if event.button == 1:
                 pass
             if event.button == 2:
@@ -61,7 +60,7 @@ while True:
         if event.type == JOYAXISMOTION: #If controller joys are moving:
             print(event)
             if event.axis < 2: #If joy left is moving
-                if abs(event.value) > 0.1: #If axis>0.1 (control dead zone)
+                if abs(event.value) > 0.1: #If axis > 0.1 (control dead zone)
                     motion[event.axis] = event.value #modify motion than allows move
                 else:
                     motion[event.axis] = 0 #modify motion than allow don't move
@@ -80,12 +79,13 @@ while True:
         if event.type == JOYHATMOTION:
             print(event)
             
-        
+        #Permet de savoir si une manette a été rajoutée
         if event.type == JOYDEVICEADDED:
             joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
             for joystick in joysticks:
                 print(joystick.get_name())
 
+        #Permet de savoir si une manette a été enlevée
         if event.type == JOYDEVICEREMOVED:
             joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
         
