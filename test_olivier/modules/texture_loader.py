@@ -19,11 +19,12 @@ images = {}
 images["background"] = load_image(
     BG_PATH+'map_tuto.jpg', (1080, 720)).convert()
 images["square"] = load_image(BG_PATH+'square.png', (120, 120))
+images['punchingball'] = load_image(BG_PATH+'image.png', (120, 120))
 
 # Chargement des images pour les joueurs
 persos = {}
 persos["goku"] = pg.image.load('test_olivier/gfx/goku/base_left.png')
-persos["vegeta"] = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
+persos["vegeta"] = pg.image.load('test_olivier/gfx/vegeta/base_left.png')
 persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
 # Images retournées
 persos["vegeta_right"] = pg.transform.flip(persos["vegeta"], True, False)

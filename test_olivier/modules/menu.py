@@ -85,7 +85,7 @@ class Menu:
                 self.lines = self.choice_lines(event)
                 self.column = self.choice_column(event)
                 self.choice_perso(EVENTS)
-        # Si le joueur a choisi un perso, initialise la classe Jeu et renvoie son nom
+        # Si le joueur a choisi un perso, initialise Jeu et renvoie le nom
         if self.name != 'hello':
             self.game = Jeu(self.name)
         return self.name

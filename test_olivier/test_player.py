@@ -47,9 +47,10 @@ def main_window():
         elif jeu.name != 'hello':
             # Mise à jour du jeu
             liste_update.append(jeu.update(screen, dlt))
+            liste_update.append(jeu.update_objects(screen))
         pg.display.update(liste_update)
         liste_update = []
-        pg.display.set_caption(f'{int(clock.get_fps())}')
+        pg.display.set_caption(f'FPS: {int(clock.get_fps())}')
         # On vérifie si le test est sur True ou False constemment
         test = quit_game(EVENTS, test)
         dlt = clock.tick(jeu.fps)

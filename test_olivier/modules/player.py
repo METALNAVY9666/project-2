@@ -10,17 +10,17 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.sprite = persos[self.game.name]
-        self.rect = self.sprite.get_rect()
+        self.image = persos[self.game.name]
+        self.rect = self.image.get_rect()
         self.coord = self.coordinates_list()
         self.propertie = self.coord[0]
         self.init_plus()
+        self.strike = 10
 
     def init_plus(self):
         '''Cette fonction permet d'initialiser des élements
         suplémentaires.'''
         self.rect.x, self.rect.y = 900, 500
-        self.x, self.y = 10, 500
         self.sprite_x = 50
         # temps entre chaque sprite de l'animation idle en ms
         self.idle_speed = 300
@@ -36,31 +36,37 @@ class Player(pg.sprite.Sprite):
         if self.rect.x <= 950:
             self.rect.x += 10
             # On change l'image du joueur
-            self.sprite = self.images_dict['right']
+            self.images_dict = sprites_images(self.game.name)
+            self.image = self.images_dict['right']
             # Le joueur fait une action
             self.pause = False
 
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
         if self.rect.x > 5:
-            self.rect.x -= 10
-            # On change l'image du joueur
-            self.sprite = self.images_dict['left']
-            # Change les coordonnées du perso
-            self.pause = False
+            if not self.game.collision(self, self.game.all_objects):
+                self.rect.x -= 10
+                # On change l'image du joueur
+                self.images_dict = sprites_images(self.game.name)
+                self.image = self.images_dict['left']
+                # Change les coordonnées du perso
+                self.pause = False
+            else:
+                print('hello')
 
     def attack(self):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         # Le joueur fait une action
         self.pause = False
-        self.sprite = self.images_dict['attack']
+        self.images_dict = sprites_images(self.game.name)
+        self.image = self.images_dict['attack']
         self.rect.x -= 1
 
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         if self.pause:
-            screen.blit(self.sprite, (self.rect.x, self.rect.y),
+            screen.blit(self.image, (self.rect.x, self.rect.y),
                         (self.sprite_x * self.propertie[0],
                         self.propertie[1], self.propertie[2],
                         self.propertie[3]))
@@ -75,24 +81,25 @@ class Player(pg.sprite.Sprite):
                 self.sprite_x = 0
         else:
             # On affiche les actions que le joueur fait
-            screen.blit(self.sprite, (self.rect.x, self.rect.y))
+            screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def coordinates_list(self):
         '''Coordonées du spritesheet'''
         self.tab = [[1, 2, 3, 4], [1, 3, 4, 5]]
-        self.sprite = persos[self.game.name]
+        self.image = persos[self.game.name]
         if self.game.name == 'goku':
             if self.game.right:
                 # Inverse le sens du spritesheet
-                self.sprite = persos['goku_right']
+                self.image = persos['goku_right']
             self.tab = [[111, 0, 110, 130],
                         [111, 2, 1, 135],
                         [150, 2247, 139, 140]]
         # Change le personnage en fonction du nom
         elif self.game.name == 'vegeta':
             if self.game.right:
-                self.sprite = persos['vegeta_right']
-            self.tab = [[100, 1210, 100, 120],
+                self.image = persos['vegeta_right']
+                print(self.game.name)
+            self.tab = [[100, 0, 100, 120],
                         [1, 1970, 120, 105],
                         [150, 4400, 135, 140]]
         # Renvoi le tableau des coordonnées
