@@ -21,14 +21,18 @@ images["background"] = load_image(
 images["square"] = load_image(BG_PATH+'square.png', (120, 120))
 
 # Chargement des images pour les joueurs
-PL_PATH = 'test_olivier/gfx/base/'
 persos = {}
-persos["goku"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
+persos["goku"] = pg.image.load('test_olivier/gfx/goku/base_left.png')
 persos["vegeta"] = pg.image.load('test_olivier/gfx/base/vegeta_base.png')
 persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
 # Images retournées
 persos["vegeta_right"] = pg.transform.flip(persos["vegeta"], True, False)
-persos["goku_right"] = pg.transform.flip(persos["goku"], True, False)
+persos["goku_right"] = pg.image.load('test_olivier/gfx/goku/base_right.png')
 
-def images_du_perso(name):
-    image_du_perso = {pg.image.load(f"PATH{name}.png")}
+
+def sprites_images(name):
+    '''Cette fonction récupère les chemins des images des persos.'''
+    dict = {'attack': pg.image.load(f'test_olivier/gfx/{name}/attack.png'),
+            'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
+            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'), }
+    return dict

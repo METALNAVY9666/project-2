@@ -49,7 +49,7 @@ def main_window():
             liste_update.append(jeu.update(screen, dlt))
         pg.display.update(liste_update)
         liste_update = []
-        print(clock.get_fps())
+        pg.display.set_caption(f'{int(clock.get_fps())}')
         # On vérifie si le test est sur True ou False constemment
         test = quit_game(EVENTS, test)
         dlt = clock.tick(jeu.fps)

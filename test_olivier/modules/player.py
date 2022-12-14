@@ -1,6 +1,7 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from modules.texture_loader import persos
+from modules.texture_loader import sprites_images
 
 
 class Player(pg.sprite.Sprite):
@@ -11,7 +12,6 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.sprite = persos[self.game.name]
         self.rect = self.sprite.get_rect()
-        self.tab = []
         self.coord = self.coordinates_list()
         self.propertie = self.coord[0]
         self.init_plus()
@@ -26,72 +26,74 @@ class Player(pg.sprite.Sprite):
         self.idle_speed = 300
         # somme des temps entres chaque frame
         self.delta_sum = 0
+        # Etat pour savoir si le joueur fait rien
+        self.pause = True
+        # Images complémentaires
+        self.images_dict = sprites_images(self.game.name)
 
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
         if self.rect.x <= 950:
-            self.rect.x += 15
+            self.rect.x += 10
+            # On change l'image du joueur
+            self.sprite = self.images_dict['right']
+            # Le joueur fait une action
+            self.pause = False
 
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
         if self.rect.x > 5:
-            self.rect.x -= 15
+            self.rect.x -= 10
+            # On change l'image du joueur
+            self.sprite = self.images_dict['left']
             # Change les coordonnées du perso
-            self.sprite = persos[self.game.name]
-            self.propertie = self.coord[1]
+            self.pause = False
 
     def attack(self):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
-        self.sprite = persos[self.game.name]
-        self.propertie = self.coord[2]
+        # Le joueur fait une action
+        self.pause = False
+        self.sprite = self.images_dict['attack']
+        self.rect.x -= 1
 
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
-        screen.blit(self.sprite, (self.rect.x, self.rect.y),
-                    (self.sprite_x * self.propertie[0],
-                    self.propertie[1], self.propertie[2],
-                    self.propertie[3]))
-        self.delta_sum += dlt
-        # si la somme des temps entre les frames est plus grande que 300ms
-        if self.delta_sum >= self.idle_speed:
-            if not self.game.right:
+        if self.pause:
+            screen.blit(self.sprite, (self.rect.x, self.rect.y),
+                        (self.sprite_x * self.propertie[0],
+                        self.propertie[1], self.propertie[2],
+                        self.propertie[3]))
+            self.delta_sum += dlt
+            # si la somme des temps entre les frames est plus grande que 300ms
+            if self.delta_sum >= self.idle_speed:
                 # changer le sprite
                 self.sprite_x += 1
-            # remettre la somme des temps à 0
-            self.delta_sum = 0
-        if self.sprite_x > 2:
-            self.sprite_x = 0
-
-    def blit_sprite2(self, screen, dlt):
-        # Invertion du sprite
-        self.sprite = persos[self.game.name+"_right"]
-        # Blit du sprite inversé
-        screen.blit(self.sprite, (self.x, self.y),
-                    (self.sprite_x * self.propertie[0] + 2024,
-                    self.propertie[1], self.propertie[2],
-                    self.propertie[3]))
-        self.delta_sum += dlt
-        # si la somme des temps entre les frames est plus grande que 300ms
-        if self.delta_sum >= self.idle_speed:
-            if not self.game.right:
-                # changer le sprite
-                self.sprite_x += 1
-            # remettre la somme des temps à 0
-            self.delta_sum = 0
-        if self.sprite_x > 2:
-            self.sprite_x = 0
+                # remettre la somme des temps à 0
+                self.delta_sum = 0
+            if self.sprite_x > 2:
+                self.sprite_x = 0
+        else:
+            # On affiche les actions que le joueur fait
+            screen.blit(self.sprite, (self.rect.x, self.rect.y))
 
     def coordinates_list(self):
         '''Coordonées du spritesheet'''
         self.tab = [[1, 2, 3, 4], [1, 3, 4, 5]]
         self.sprite = persos[self.game.name]
         if self.game.name == 'goku':
-            self.tab = [[111, 890, 113, 120],
-                        [1, 1990, 140, 105],
+            if self.game.right:
+                # Inverse le sens du spritesheet
+                self.sprite = persos['goku_right']
+            self.tab = [[111, 0, 110, 130],
+                        [111, 2, 1, 135],
                         [150, 2247, 139, 140]]
+        # Change le personnage en fonction du nom
         elif self.game.name == 'vegeta':
+            if self.game.right:
+                self.sprite = persos['vegeta_right']
             self.tab = [[100, 1210, 100, 120],
                         [1, 1970, 120, 105],
                         [150, 4400, 135, 140]]
+        # Renvoi le tableau des coordonnées
         return self.tab

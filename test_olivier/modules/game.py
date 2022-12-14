@@ -15,7 +15,6 @@ class Jeu:
         self.fps = 60
         self.right = False
         self.player = Player(self)
-        
 
     def handle_input(self):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -24,6 +23,7 @@ class Jeu:
         # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
         self.player.coord = self.player.coordinates_list()
         self.player.propertie = self.player.coord[0]
+        self.player.pause = True
         # Modifie les animations en fonction dde l'input
         if choice[pg.K_RIGHT]:
             self.player.move_right()
@@ -32,7 +32,6 @@ class Jeu:
             self.player.move_left()
             self.right = False
         elif choice[pg.K_q]:
-            print('attack')
             self.player.attack()
 
     def collison(self, sprite, group):
@@ -48,8 +47,6 @@ class Jeu:
         '''Cette fonction petrmet de mettre à jour le jeu.'''
         # screen.blit(self.player.image, self.player.rect)
         self.rect = self.player.blit_sprite(screen, dt)
-        # Blit du perso à droite
-        self.player.blit_sprite2(screen, dt)
         # Gère les inputs
         self.handle_input()
         # Renvoi le rectangle du joueur
