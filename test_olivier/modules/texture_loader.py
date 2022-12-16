@@ -1,4 +1,4 @@
-"""stocke toutes les textures afin de ne pas faire beuger pygame"""
+"""stocke toutes les textures avant le lancement du jeu"""
 import pygame as pg
 
 pg.display.init()
@@ -10,6 +10,14 @@ def load_image(path, dimensions):
     temp = pg.image.load(path)
     temp = pg.transform.scale(temp, dimensions)
     return temp
+
+
+def sprites_images(name):
+    '''Cette fonction récupère les chemins des images des persos.'''
+    dict = {'attack': pg.image.load(f'test_olivier/gfx/{name}/attack.png'),
+            'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
+            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'), }
+    return dict
 
 
 # Chargements des images pour le fond d'écran
@@ -29,11 +37,3 @@ persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
 # Images retournées
 persos["vegeta_right"] = pg.transform.flip(persos["vegeta"], True, False)
 persos["goku_right"] = pg.image.load('test_olivier/gfx/goku/base_right.png')
-
-
-def sprites_images(name):
-    '''Cette fonction récupère les chemins des images des persos.'''
-    dict = {'attack': pg.image.load(f'test_olivier/gfx/{name}/attack.png'),
-            'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
-            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'), }
-    return dict

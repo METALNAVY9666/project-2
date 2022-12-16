@@ -51,8 +51,6 @@ class Player(pg.sprite.Sprite):
                 self.image = self.images_dict['left']
                 # Change les coordonnées du perso
                 self.pause = False
-            else:
-                print('hello')
 
     def attack(self):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''

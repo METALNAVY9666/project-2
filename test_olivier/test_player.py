@@ -47,6 +47,7 @@ def main_window():
         elif jeu.name != 'hello':
             # Mise à jour du jeu
             liste_update.append(jeu.update(screen, dlt))
+            # liste_update.append(jeu.update_objects(screen))
             liste_update.append(jeu.update_objects(screen))
         pg.display.update(liste_update)
         liste_update = []

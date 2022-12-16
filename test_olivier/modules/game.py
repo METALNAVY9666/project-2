@@ -16,6 +16,7 @@ class Jeu:
         self.fps = 60
         self.right = False
         self.player = Player(self)
+        self.object = PunchingBall(self)
         # Crée des groupes de sprites vide
         self.all_players = pg.sprite.Group()
         self.all_objects = pg.sprite.Group()
@@ -40,7 +41,6 @@ class Jeu:
             self.right = False
         elif choice[pg.K_q]:
             self.player.attack()
-            self.strike_collision()
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -56,7 +56,9 @@ class Jeu:
         # screen.blit(self.player.image, self.player.rect)
         self.rect = self.player.blit_sprite(screen, dt)
         # Gère les inputs
+        # self.update_objects(screen)
         self.handle_input()
+        self.strike_collision()
         # Renvoi le rectangle du joueur
         return self.rect
 
@@ -67,14 +69,12 @@ class Jeu:
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
-        self.punch = screen.blit(self.object.image,
-                                 (self.object.x, self.object.y))
-        return self.punch
+        # Met le punching ball à jour
+        return screen.blit(self.object.image, (self.object.rect))
     
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
         if self.collision(self.player, self.all_objects):
-            print('geh')
             for objects in self.collision(self.player, self.all_objects):
                 objects.damage()
                 print(self.player.strike)
