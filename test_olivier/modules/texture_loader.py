@@ -16,7 +16,9 @@ def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
     dict = {'attack': pg.image.load(f'test_olivier/gfx/{name}/attack.png'),
             'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
-            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'), }
+            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'),
+            'jump': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png'),
+            'fall': pg.image.load(f'test_olivier/gfx/{name}/fall_left.png')}
     return dict
 
 
@@ -28,6 +30,7 @@ images["background"] = load_image(
     BG_PATH+'map_tuto.jpg', (1080, 720)).convert()
 images["square"] = load_image(BG_PATH+'square.png', (120, 120))
 images['punchingball'] = load_image(BG_PATH+'image.png', (120, 120))
+images['hit'] = load_image(BG_PATH+'punched.png', (120, 120))
 
 # Chargement des images pour les joueurs
 persos = {}

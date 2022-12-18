@@ -12,19 +12,18 @@ class PunchingBall(pg.sprite.Sprite):
         self.image = images['punchingball']
         # Récupère le rectangle de l'image
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 10, 500
-        self.health = 10
+        self.rect.x, self.rect.y = 0, 500
+        self.health = 1000
         # Vérifie si l'item est attaqué ou non
         self.is_attacked = False
 
     def damage(self):
         '''Fonction qui calcule les dégats reçus'''
-        if self.health > 0:
+        if self.health > 0 and self.rect.x >= 0:
             self.health -= 10
-            self.is_attacked = True
-            # Redonne de la vie continuellement à l'item
-        if not self.is_attacked and self.health < 99:
-            self.health += 1
+            self.rect.x -= 10
 
-    def avance(self):
-        self.rect.x += 0.1
+    def forward(self):
+        '''Cette fonction permet de déplacer l'objet'''
+        if not self.game.collision(self, self.game.all_players):
+            self.rect.x += 0.1

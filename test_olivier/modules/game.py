@@ -3,6 +3,7 @@ les différents événements dans le jeu.'''
 import pygame as pg
 from modules.player import Player
 from modules.object import PunchingBall
+from modules.texture_loader import images, sprites_images
 
 
 class Jeu:
@@ -13,26 +14,32 @@ class Jeu:
         # On récupère le nom du perso choisi.
         self.name = name
         self.is_playing = False
-        self.fps = 60
         self.right = False
+        self.fps = 60
+        # Génération d'un personnage
         self.player = Player(self)
+        # Génération d'un objet
         self.object = PunchingBall(self)
         # Crée des groupes de sprites vide
         self.all_players = pg.sprite.Group()
         self.all_objects = pg.sprite.Group()
         # Ajoute un joueur au groupe de sprite de tout les joueurs
         self.all_players.add(self.player)
+        # Ajout de l'objet dans le groue de spritede tout les objets
         self.spawn_objects()
 
-    def handle_input(self):
+    def handle_input(self, EVENT):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.'''
+        # Récupère les touches préssées actuellement
         choice = pg.key.get_pressed()
-        # On réaffecte le tableau d'origine afinde reprendre les coordonnées de base
+        # Réaffecte la liste d'origine pour reprendre les coordonnées de base
         self.player.coord = self.player.coordinates_list()
         self.player.propertie = self.player.coord[0]
         self.player.pause = True
-        # Modifie les animations en fonction dde l'input
+        # Réaffecte l'image de l'objet
+        self.object.image = images['punchingball']
+        # Modifie les animations en fonction de l'input
         if choice[pg.K_RIGHT]:
             self.player.move_right()
             self.right = True
@@ -41,6 +48,13 @@ class Jeu:
             self.right = False
         elif choice[pg.K_q]:
             self.player.attack()
+            # Gère les collisions du personnage
+            self.strike_collision()
+        for event in EVENT:
+            self.player.jump(event)
+        # Système de gravité
+        self.player.gravity()
+            
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -51,14 +65,13 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dt):
-        '''Cette fonction petrmet de mettre à jour le jeu.'''
-        # screen.blit(self.player.image, self.player.rect)
-        self.rect = self.player.blit_sprite(screen, dt)
+    def update(self, screen, dlt, EVENT):
+        '''Cette fonction petrmet de mettre à jour les événements
+        du jeu.'''
+        # Affiche le personnage sur l'écran
+        self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
-        # self.update_objects(screen)
-        self.handle_input()
-        self.strike_collision()
+        self.handle_input(EVENT)
         # Renvoi le rectangle du joueur
         return self.rect
 
@@ -69,12 +82,14 @@ class Jeu:
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
+        # Fait bouger le punching ball
+        self.object.forward()
         # Met le punching ball à jour
         return screen.blit(self.object.image, (self.object.rect))
-    
+
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
         if self.collision(self.player, self.all_objects):
             for objects in self.collision(self.player, self.all_objects):
                 objects.damage()
-                print(self.player.strike)
+                self.object.image = images['hit']

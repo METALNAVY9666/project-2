@@ -35,7 +35,6 @@ class Menu:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:
                     tab = self.perso()
-                    print('Vous êtes sortis du menu.')
                     # Affecte le nom du joueur sélectionné
                     self.name = tab[self.column][self.lines]
         return self.name

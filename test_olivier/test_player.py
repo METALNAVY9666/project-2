@@ -5,6 +5,12 @@ from modules.game import Jeu
 from modules.texture_loader import images
 
 
+def fps_moy(tab):
+    '''Cette fonction permet de calculer la moyenne des fps'''
+    # Renvoi la somme des valeurs divisée par la longueur du tableau
+    return int(sum([element for element in tab]) / len(tab))
+
+
 def screen_menu():
     '''Fonction qui renvoie l'écran.'''
     pg.display.set_caption('Moissan Fighter Z')
@@ -25,6 +31,7 @@ def main_window():
     '''Fonction qui lance la fenêtre principale.'''
     pg.init()
     clock = pg.time.Clock()
+    list_fps = []
     # Elements de la fenêtre
     screen = screen_menu()
     # Redimensionne le fond d'écran
@@ -38,6 +45,8 @@ def main_window():
     # dlt est le delta time: càd le temps entre 2 frames
     dlt = clock.tick(jeu.fps)
     while test:
+        # Ajoute les fps
+        list_fps.append(int(clock.get_fps()))
         EVENTS = pg.event.get()
         # Ajout du fond dans la liste de chose à mettre à update
         liste_update.append(screen.blit(background, (0, 0)))
@@ -46,7 +55,7 @@ def main_window():
             jeu.name = square.menu_update(screen, EVENTS)
         elif jeu.name != 'hello':
             # Mise à jour du jeu
-            liste_update.append(jeu.update(screen, dlt))
+            liste_update.append(jeu.update(screen, dlt, EVENTS))
             # liste_update.append(jeu.update_objects(screen))
             liste_update.append(jeu.update_objects(screen))
         pg.display.update(liste_update)
@@ -55,8 +64,9 @@ def main_window():
         # On vérifie si le test est sur True ou False constemment
         test = quit_game(EVENTS, test)
         dlt = clock.tick(jeu.fps)
-
+    # Affiche la moyenne des fps
     pg.quit()
+    print("Moyenne des fps:", fps_moy(list_fps))
 
 
 main_window()
