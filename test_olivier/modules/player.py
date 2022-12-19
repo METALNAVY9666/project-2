@@ -36,7 +36,7 @@ class Player(pg.sprite.Sprite):
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
         if self.rect.x <= 950:
-            self.rect.x += 5
+            self.rect.x += 10
             # On change l'image du joueur
             self.change_animation('right')
             # Le joueur fait une action
@@ -46,7 +46,7 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction gère les déplacements à gauche.'''
         if self.rect.x > 5:
             if not self.game.collision(self, self.game.all_objects):
-                self.rect.x -= 5
+                self.rect.x -= 10
                 # On change l'image du joueur
                 self.change_animation('left')
                 # Change les coordonnées du perso
@@ -60,26 +60,28 @@ class Player(pg.sprite.Sprite):
         if not self.game.collision(self, self.game.all_objects):
             self.rect.x -= 1
 
-    def jump(self, event):
+    def jump(self):
         '''Fonction saut'''
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
-                if self.rect.y <= 500 and self.jumps < 2:
-                    self.change_animation('jump')
-                    # Exécute le saut
-                    self.rect.y -= 200
-                    # Augmente le nombre de saut effectués
-                    self.jumps += 1
+        # Vérfie si le perso est inférieur à la hauteur de saut max
+        if self.rect.y >= 300:
+            # Vérifie si le perso n'a pas déjà sauté deux fois
+            if self.jumps < 2:
+                # Saute
+                self.rect.y -= 25
+            # Si le joueur a atteint la hauteur maximale, il redescend
+            if self.rect.y <= 300:
+                self.jumps = 3
 
     def gravity(self):
         '''Focntion qui simule une gravité'''
         # Le joueur tombe tant qu'il n'est pas au sol
-        if self.rect.y != 500:
+        if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
+            # fait tomber le perso et change l'image
             self.pause = False
-            self.rect.y += 5
-            self.change_animation('fall')
+            self.rect.y += 4
+            self.change_animation('jump')
         # Sinon, on réinitialise son nombre de sauts à zéro
-        elif self.rect.y == 500:
+        elif self.rect.y >= 500:
             self.jumps = 0
 
     def change_animation(self, name):

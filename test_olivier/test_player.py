@@ -22,7 +22,7 @@ def quit_game(EVENTS, test):
     '''Fonction qui vérifie si l'on appuie sur le bouton pour quitter.'''
     for event in EVENTS:
         if event.type == pg.QUIT:
-            print('Vous êtes sortis du jeu.')
+            print('\nVous êtes sortis du jeu.')
             test = False
     return test
 
@@ -55,7 +55,7 @@ def main_window():
             jeu.name = square.menu_update(screen, EVENTS)
         elif jeu.name != 'hello':
             # Mise à jour du jeu
-            liste_update.append(jeu.update(screen, dlt, EVENTS))
+            liste_update.append(jeu.update(screen, dlt))
             # liste_update.append(jeu.update_objects(screen))
             liste_update.append(jeu.update_objects(screen))
         pg.display.update(liste_update)
@@ -66,7 +66,7 @@ def main_window():
         dlt = clock.tick(jeu.fps)
     # Affiche la moyenne des fps
     pg.quit()
-    print("Moyenne des fps:", fps_moy(list_fps))
+    print("\nMoyenne des fps:", fps_moy(list_fps))
 
 
 main_window()

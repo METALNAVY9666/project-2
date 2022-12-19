@@ -3,7 +3,7 @@ les différents événements dans le jeu.'''
 import pygame as pg
 from modules.player import Player
 from modules.object import PunchingBall
-from modules.texture_loader import images, sprites_images
+from modules.texture_loader import images
 
 
 class Jeu:
@@ -28,7 +28,7 @@ class Jeu:
         # Ajout de l'objet dans le groue de spritede tout les objets
         self.spawn_objects()
 
-    def handle_input(self, EVENT):
+    def handle_input(self):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.'''
         # Récupère les touches préssées actuellement
@@ -50,8 +50,9 @@ class Jeu:
             self.player.attack()
             # Gère les collisions du personnage
             self.strike_collision()
-        for event in EVENT:
-            self.player.jump(event)
+        elif choice[pg.K_SPACE]:
+            # Gère les sauts
+            self.player.jump()
         # Système de gravité
         self.player.gravity()
             
@@ -65,13 +66,13 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dlt, EVENT):
+    def update(self, screen, dlt):
         '''Cette fonction petrmet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
-        self.handle_input(EVENT)
+        self.handle_input()
         # Renvoi le rectangle du joueur
         return self.rect
 
