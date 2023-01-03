@@ -28,10 +28,10 @@ class Menu:
                ]
         return tab
 
-    def choice_perso(self, EVENTS):
+    def choice_perso(self, actions):
         '''Cette fonction permet de choisir le perso en fonction des lignes et des
         colonnes.'''
-        for event in EVENTS:
+        for event in actions:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:
                     tab = self.perso()
@@ -73,17 +73,19 @@ class Menu:
         # Renvoi le rectangle du texte
         return screen.blit(txt, (self.rect))
 
-    def menu_update(self, screen, EVENTS):
+    def menu_update(self, screen, actions):
         '''Cette fonction met à jour le menu.'''
+        # Affiche les visages des personnages
+        self.images_blit(screen)
         # Affiche le carré pour le menu et l'ajoute dans la liste de chose à updates
         self.liste_rect.append(screen.blit(self.image, (self.rect)))
         self.liste_rect.append(self.txt_blit(screen))
-        for event in EVENTS:
+        for event in actions:
             if event.type == pg.KEYDOWN:
                 # Récupère le numéro de ligne et colonne
                 self.lines = self.choice_lines(event)
                 self.column = self.choice_column(event)
-                self.choice_perso(EVENTS)
+                self.choice_perso(actions)
         # Si le joueur a choisi un perso, initialise Jeu et renvoie le nom
         if self.name != 'hello':
             self.game = Jeu(self.name)
@@ -93,3 +95,10 @@ class Menu:
         '''Cette fonction permet de lancer le jeu, à utiliser plus tard.'''
         self.game.is_playing = True
         print('tu vas rentrer dans le jeu,', self.game.name)
+
+    def images_blit(self, screen):
+        "Cette fonction permet d'afficher les visages des personnages."
+        self.image_vegeta = images['vegeta_face']
+        self.image_goku = images['goku_face']
+        self.liste_rect.append(screen.blit(self.image_goku, (155, 105)))
+        self.liste_rect.append(screen.blit(self.image_vegeta, (260, 105)))

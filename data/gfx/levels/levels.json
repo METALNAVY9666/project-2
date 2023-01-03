@@ -12,5 +12,14 @@
         "music": "data/sfx/music/tenkaichi_budokai/",
         "animated": false,
         "music_folder": true 
+    },
+    
+    "pokemon_deoxys": {
+        "scale": [6000, 2492],
+        "bg": "pokemon_deoxys",
+        "music": "",
+        "animated": false,
+        "music_folder": false
     }
+
 }

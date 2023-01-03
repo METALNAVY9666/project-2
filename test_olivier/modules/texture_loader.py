@@ -14,12 +14,11 @@ def load_image(path, dimensions):
 
 def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
-    dict = {'attack': pg.image.load(f'test_olivier/gfx/{name}/attack.png'),
-            'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
-            'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'),
-            'jump': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png'),
-            'fall': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png')}
-    return dict
+    sprites_dict = {'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
+                    'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'),
+                    'jump': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png'),
+                    'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png')}
+    return sprites_dict
 
 
 # Chargements des images pour le fond d'écran
@@ -28,15 +27,23 @@ images = {}
 # Images pour le menu
 images["background"] = load_image(
     BG_PATH+'map_tuto.jpg', (1080, 720)).convert()
-images["square"] = load_image(BG_PATH+'square.png', (120, 120))
+images["square"] = load_image(BG_PATH+'square.png', (160, 160))
 images['punchingball'] = load_image(BG_PATH+'image.png', (120, 120))
 images['hit'] = load_image(BG_PATH+'punched.png', (120, 120))
+images['goku_face'] = load_image(BG_PATH+'face_goku.png', (90, 90))
+images['vegeta_face'] = load_image(BG_PATH+'face_vegeta.png', (90, 90))
 
 # Chargement des images pour les joueurs
-persos = {}
-persos["goku"] = pg.image.load('test_olivier/gfx/goku/base_left.png')
-persos["vegeta"] = pg.image.load('test_olivier/gfx/vegeta/base_left.png')
-persos["hello"] = pg.image.load('test_olivier/gfx/base/goku_base.png')
-# Images retournées
-persos["vegeta_right"] = pg.transform.flip(persos["vegeta"], True, False)
-persos["goku_right"] = pg.image.load('test_olivier/gfx/goku/base_right.png')
+
+
+def sprite_tab(name, position):
+    '''Fonction qui permet de charger les images à gauche ou à gauche
+    A besoin d'un nom de perso, ainsi que du nom de l'action qu'il réalise'''
+    # Name est le nom du perso, position permet de savoir si il est à gauche ou non
+    tab = [pg.image.load(f'test_olivier/gfx/{name}/base_{position}0.png'),
+           pg.image.load(f'test_olivier/gfx/{name}/base_{position}1.png'),
+           pg.image.load(f'test_olivier/gfx/{name}/base_{position}2.png'),
+           pg.image.load(f'test_olivier/gfx/{name}/base_{position}3.png'),
+           pg.image.load(f'test_olivier/gfx/{name}/base_{position}4.png'),
+           pg.image.load(f'test_olivier/gfx/{name}/base_{position}5.png')]
+    return tab

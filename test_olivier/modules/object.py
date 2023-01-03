@@ -4,7 +4,7 @@ from modules.texture_loader import images
 
 
 class PunchingBall(pg.sprite.Sprite):
-    '''cette classe permet de créer un item du jeu'''
+    '''Cette classe permet de créer un item du jeu'''
 
     def __init__(self, game):
         super().__init__()
@@ -21,9 +21,14 @@ class PunchingBall(pg.sprite.Sprite):
         '''Fonction qui calcule les dégats reçus'''
         if self.health > 0 and self.rect.x >= 0:
             self.health -= 10
-            self.rect.x -= 10
+            # self.rect.x -= 30
 
     def forward(self):
         '''Cette fonction permet de déplacer l'objet'''
         if not self.game.collision(self, self.game.all_players):
             self.rect.x += 0.1
+
+    def gravity_object(self):
+        '''Gravité pour l'objet'''
+        if self.rect.y < 500:
+            self.rect.y += 5

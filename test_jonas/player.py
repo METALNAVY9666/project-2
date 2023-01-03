@@ -1,18 +1,19 @@
-from re import S
-import pygame 
-from controllers import *
+import pygame
 pygame.init()
 
-class square():
+
+class player():
 
     def __init__(self):
-        self.my_square = pygame.Rect(50, 50, 50, 50)
-        self.my_square_color = 0 #Create the sqare's color
-        self.colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+        self.square = pygame.Rect(50, 50, 50, 50)
+        self.square_color = 0
+        self.color = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
         self.motion = [0, 0]
-        self.controllers = touches(event)
-
-    def change(self):
-        if self.controllers == 0:
-            self.my_square_color = (self.my_square_color + 1) % len(self.colors)
+        self.square_rect_x = self.square.x
+        self.square_rect_y = self.square.y
         
+
+
+    def change_color(self):
+        self.sqare_color = (self.square_color + 1) % (len(self.color))
+
