@@ -1,7 +1,7 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from modules.texture_loader import sprites_images, sprite_tab, sprite_tab_right
-
+from pygame.locals import *
 
 class Player(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur, ainsi que son apparence.'''
@@ -39,6 +39,28 @@ class Player(pg.sprite.Sprite):
         # Nombre de combos
         self.combo = 0
 
+    def init_plus_controllers(self):
+        """Cette fonction permet d'initialiser des élements pour 
+        l'utilisation des manettes
+        """
+        # Liste qui sera changé pour le déplacement des persos
+        self.motion = [0, 0]
+
+
+    def right_controller(self, event):
+        print("DROITE")
+        self.motion[event.axis] = event.value
+
+    def left_controller(self, event):
+        print("GAUCHE")
+        self.motion[event.axis] = event.value
+
+    def jump_controller(self, event):
+        if (event.type == JOYAXISMOTION and event.axis == 1 and event.value > 0.5 
+        or event.type == JOYBUTTONDOWN and event.button == 3):
+            self.jump()
+
+        
     def move_right(self):
         '''Cette fonction gère les déplacements à droite.'''
         if self.rect.x <= 950:
@@ -127,3 +149,19 @@ class Player(pg.sprite.Sprite):
         # Réaffecte l'image en fonction de la position
         self.image = self.tab[self.sprite_x]
         return self.image
+
+    def vanish(self, event):
+        '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
+        # L'esquve se fait que si le joueur se prend des dégats
+        if self.game.collision(self, self.game.all_objects):
+            # On vérifie le ombre de tentatives autorisées
+            if self.nbr_vanish > 0 and event.key == pg.K_d:
+                # Change l'animation
+                self.game.side = 'vanish'
+                # Si le joueuer appuie sur la toouche, on diminue le nombre de tentative
+                self.nbr_vanish -= 1
+                # Effectue l'esquive en fonction de la position du perso (droite/gauche)
+                if self.game.right and self.rect.x > 5:
+                    self.rect.x -= 100
+                elif not self.game.right and self.rect.x < 950:
+                    self.rect.x += 100

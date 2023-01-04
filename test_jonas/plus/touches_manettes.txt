@@ -22,10 +22,6 @@ JOY_GAUCHE_BAS : modif des 'axis' 1 : positif
 JOY_GAUCHE_GAUCHE : modif des 'axis' 0 : négatif 
 JOY_GAUCHE_DROITE : modif des 'axis'  0 : positif
 
-JOY_DROITE_HAUT : modif des 'axis' 3 : négatif 
-JOY_DROITE_BAS : modif des 'axis' 3 : positif
-JOY_DROITE_GAUCHE : modif des 'axis' 2 : négatif 
-JOY_DROITE_DROITE : modif des 'axis'  2 : positif
 
 L2 modif des 'axis' 4 : grandi en fonction de l'abaissement de la touche (0 à 1)
 L2 modif des 'axis' 5 : grandi en fonction de l'abaissement de la touche (0 à 1)

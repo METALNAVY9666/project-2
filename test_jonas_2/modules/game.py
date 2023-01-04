@@ -32,21 +32,7 @@ class Jeu:
         # Ajout dans des groupes de sprites
         self.add_groups()
 
-    def handle_input_2(self, ):
-        for event in pg.event.get():
-            print(event)
-            self.player.pause = True
-            self.object.image = images['punchingball']
-            if event.type == JOYBUTTONDOWN :
-                
-
-                if event.button == 0:
-                    self.player.jump()
-            if event.type == JOYAXISMOTION:
-                if event.axis == 0:
-                    self.player.motion[0]
-
-    def handle_input(self):
+    def handle_input(self, actions):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.'''
         # Récupère les touches préssées actuellement
@@ -70,7 +56,32 @@ class Jeu:
             self.player.jump()
         # Système de gravité
         self.player.gravity()
-            
+        # Actions qui nécessitent une boucle 'for'
+        self.loop_input(actions)
+        self.loop_input_controllers(actions)
+        
+        
+    def loop_input_controllers(self, actions):
+        for event in actions:
+            if event.type == JOYAXISMOTION and event.axis == 0 and event.value > 0:
+                if self.rect.x <= 950:
+                    self.player.right_controller(event)
+            elif event.type == JOYAXISMOTION and event.axis == 0 and event.value < 0:
+                if self.rect.x <= 5:
+                    self.player.left_controller(event)
+
+
+    def loop_input(self, actions):
+        '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
+        Celle-ci gère les actions unique, comme une attaque qui ne doit pas être lancée
+        en continu. Ces actions se déclenche uniquement quand le joueur appuie sur une touche,
+        et non quand il la maintient.'''
+        for event in actions:
+            # On vérifie si le joueur appuie sur une touche
+            if event.type == pg.KEYDOWN:
+                # Attaque du joueur
+                self.player.attack(event)
+                self.player.vanish(event)
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -81,14 +92,14 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dlt):
+    def update(self, screen, dlt, actions):
         '''Cette fonction petrmet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
-        self.handle_input()
-        self.handle_input_2()
+        self.handle_input(actions)
+        
         # Renvoi le rectangle du joueur
         return self.rect
 

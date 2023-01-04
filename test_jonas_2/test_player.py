@@ -4,6 +4,13 @@ from modules.menu import Menu
 from modules.game import Jeu
 from modules.texture_loader import images
 
+pg.joystick.init() #initialise le module joystick
+joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
+#Permet de savoir le nombre de manettes utilisés
+for joystick in joysticks:
+    print(joystick.get_name()) #Permet de connaitre la manette utilisée.
+
+
 
 def fps_moy(tab):
     '''Cette fonction permet de calculer la moyenne des fps'''

@@ -78,11 +78,6 @@ while True:
                     motion[event.axis - 2] = 0
             """
 
-
-        #IDK
-        if event.type == JOYHATMOTION:
-            print(event)
-
         #Permet de savoir si une manette a été rajoutée
         if event.type == JOYDEVICEADDED:
             joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
