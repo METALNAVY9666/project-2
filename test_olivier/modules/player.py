@@ -43,24 +43,37 @@ class Player(pg.sprite.Sprite):
         self.combo = 0
         # Tableau d'actions
         self.combo_tab = ['attack', 'combo',
-                          'final', 'impact']
+                          'final', 'impact', 'spe']
         # Nombre maximum d'esquive
         self.nbr_vanish = 4
 
     def move_right(self):
+        test = not self.game.collision(self, self.game.all_objects)
+        right_bool = False
         '''Cette fonction gère les déplacements à droite.'''
         if self.rect.x <= 950:
-            if not self.game.collision(self, self.game.all_objects):
+            if test or (not test and self.rect.y <= 500):
+                right_bool = True
+            if right_bool:
                 self.rect.x += 10
                 # On change l'image du joueur
                 self.change_animation('right')
                 # Le joueur fait une action, donc on passe le bouléen sur False
                 self.pause = False
+                
 
     def move_left(self):
         '''Cette fonction gère les déplacements à gauche.'''
+        # Boulééen qui permet de savoir si il n'y a pas de collisions
+        test = not self.game.collision(self, self.game.all_objects)
+        # Bouléen qui autorise le déplacement à gauche
+        left_bool = False
         if self.rect.x > 5:
-            if not self.game.collision(self, self.game.all_objects):
+            # Si le personnage est en collision et qu'il est au sol, il ne peut pas avancer
+            if test or (not test and self.rect.y <= 500):
+                left_bool = True
+            # Sinon, il peut
+            if left_bool:
                 self.rect.x -= 10
                 # On change l'image du joueur
                 self.change_animation('left')
@@ -75,6 +88,7 @@ class Player(pg.sprite.Sprite):
             # Si il y a une collision, on lance une attaque spécial
             if self.game.collision(self, self.game.all_objects):
                 if self.combo == 3:
+                    self.sprite_x = 0
                     self.game.object.rect.y -= 100
                     self.game.object.rect.x -= 100
                     self.rect.x += 20
@@ -157,7 +171,7 @@ class Player(pg.sprite.Sprite):
         '''Fonction qui a pour but de simuler un combo entier,
         on prend en compte le nobre de fois que le jouueur appuie sur la touche q'''
         # A chaque fois que l'utlisateur lance une attaque, augmente le nombre de combo
-        if self.combo < 3:
+        if self.combo < 4:
             # Max d'attaque
             self.combo += 1
             if not self.game.collision(self, self.game.all_objects) and self.combo >= 2:
@@ -174,6 +188,8 @@ class Player(pg.sprite.Sprite):
         if self.game.collision(self, self.game.all_objects):
             # On vérifie le ombre de tentatives autorisées
             if self.nbr_vanish > 0 and event.key == pg.K_d:
+                # Relance l'animation à zéro
+                self.sprite_x = 0
                 # Change l'animation
                 self.game.side = 'vanish'
                 # Si le joueuer appuie sur la toouche, on diminue le nombre de tentative
