@@ -36,7 +36,7 @@ class Jeu:
         et gère des actions en continu comme le fait d'avancer.'''
         # Récupère les touches préssées actuellement
         choice = pg.key.get_pressed()
-        self.player.pause = True
+        self.player.stats_dict['pause'] = True
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
