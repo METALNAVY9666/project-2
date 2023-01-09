@@ -11,25 +11,21 @@ class Player(pg.sprite.Sprite):
         self.game = game
         # Dictionnaire des attributs du personnage
         self.stats_dict = {
-            'nbr_sprite': 0,
-            'strike': 10,
-            'max_height': 400,
-            'jumps': 1,
-            'current_height': 0,
-            'pause': True,
-            'idle_speed': 125,
-            'delta_sum': 0,
-            'nbr_combo': 0,
-            'nbr_vanish': 4}
+            'nbr_sprite': 0, 'strike': 10,
+            'max_height': 400, 'jumps': 1,
+            'current_height': 0, 'pause': True,
+            'idle_speed': 125, 'delta_sum': 0,
+            'nbr_combo': 0, 'nbr_vanish': 4,
+            'max_health': 100, 'health': 100,
+            'attacked': False}
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.side)
         # Affectation de l'image
         self.image = self.tab[self.stats_dict['nbr_sprite']]
         # Récupération du rectangle de l'image
         self.rect = self.image.get_rect()
+        # Coordonées en x et y
         self.rect.x, self.rect.y = 900, 400
-        # Temps entre chaque sprite de l'animation idle en ms
-        # Somme des temps entres chaque frame
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name)
         # Tableau d'actions
@@ -68,18 +64,19 @@ class Player(pg.sprite.Sprite):
                 # Change l'état du personnage
                 self.stats_dict['pause'] = False
 
-    def attack(self, event):
+    def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         # Le joueur fait une action
         if event.key == pg.K_q:
             self.stats_dict['nbr_sprite'] = 0
             # Si il y a une collision, on lance une attaque spécial
             if self.game.collision(self, self.game.all_objects):
+                self.jump_attack(choice)
                 if self.stats_dict['nbr_combo'] == 3:
                     self.stats_dict['nbr_sprite'] = 0
                     self.game.object.rect.y -= 100
                     self.game.object.rect.x -= 100
-                    self.rect.x += 20
+                    self.game.object.health -= 20
             # On récupère les images d'attaques du perso en fonction duu combo
             self.game.side = self.combo_tab[self.stats_dict['nbr_combo']]
             # Actionne la mécanique de dégats quand il y a une collision
@@ -177,10 +174,27 @@ class Player(pg.sprite.Sprite):
                 self.stats_dict['nbr_sprite'] = 0
                 # Change l'animation
                 self.game.side = 'vanish'
-                # Si le joueuer appuie sur la toouche, on diminue le nombre de tentative
+                # Si le joueuer appuie sur la touche, on diminue le nombre de tentative
                 self.stats_dict['nbr_vanish'] -= 1
                 # Effectue l'esquive en fonction de la position du perso (droite/gauche)
                 if self.game.right and self.rect.x > 5:
                     self.rect.x -= 100
                 elif not self.game.right and self.rect.x < 950:
                     self.rect.x += 100
+
+    def jump_attack(self, choice):
+        '''Attaque en l'air'''
+        if choice[pg.K_UP]:
+            self.stats_dict['nbr_combo'] = 3
+            print('je suis en l\'air')
+            print(self.stats_dict['nbr_combo'])
+
+    def damages(self):
+        '''Focntion qui gère les dommages'''
+        if self.game.collision(self, self.game.all_objects):
+            if not self.stats_dict['attacked']:
+                self.stats_dict['health'] -= 0.1
+
+    def block(self):
+        '''Fonction qui empêche de se prendre des dégats durant une attaque'''
+        self.stats_dict['attacked'] = True

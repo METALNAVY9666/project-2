@@ -32,7 +32,7 @@ class Jeu:
     def handle_input(self, actions):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.
-        La focntion get_pressed() récupère les touches préssées actuellement,
+        La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
         # Récupère les touches préssées actuellement
         choice = pg.key.get_pressed()
@@ -50,6 +50,9 @@ class Jeu:
         elif choice[pg.K_SPACE]:
             # Gère les sauts
             self.player.jump()
+        elif choice[pg.K_s]:
+            # Gère le bloquage
+            self.player.block()
         # Système de gravité
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
@@ -57,14 +60,15 @@ class Jeu:
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
-        Celle-ci gère les actions unique, comme une attaque qui ne doit pas être lancée
-        en continu. Ces actions se déclenche uniquement quand le joueur appuie sur une touche,
+        Celle-ci gère les actions unique, par exemple, une attaque qui ne doit pas être lancée
+        en continu. Ces actions se déclenchent uniquement quand le joueur appuie sur une touche,
         et non quand il la maintient.'''
+        choice = pg.key.get_pressed()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
                 # Attaque du joueur
-                self.player.attack(event)
+                self.player.attack(event, choice)
                 # Esquive du joueur
                 self.player.vanish(event)
 
@@ -78,13 +82,16 @@ class Jeu:
                                        False, pg.sprite.collide_mask)
 
     def update(self, screen, dlt, actions):
-        '''Cette fonction petrmet de mettre à jour les événements
+        '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
         self.handle_input(actions)
         # Renvoi le rectangle du joueur
+        self.update_health(screen)
+        # Dommages
+        self.player.damages()
         return self.rect
 
     def add_groups(self):
@@ -110,3 +117,15 @@ class Jeu:
                 objects.damage()
                 # Change l'animation en cas d'attaque
                 self.object.image = images['hit']
+
+    def update_health(self, surface):
+        '''Cette fonction dessine la barre de vie, d'énergie, et de défense du perso.
+        Chaque barre possède une longueur propre au montant de sa variable respective.
+        On dessine d'abord une barre grise, afin de faire le fond, puis on dessine celle
+        avec de la couleur. Les deux, sur la surface donnée en paramètre.'''
+        # Dessin de la barre de vie
+        pg.draw.rect(surface, (140, 138, 137), [950, 50, self.player.stats_dict['max_health'], 15])
+        pg.draw.rect(surface, (1, 88, 33), [950, 50, self.player.stats_dict['health'], 15])
+        # Barre de vie de l'objet
+        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.max_health, 15])
+        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.health, 15])

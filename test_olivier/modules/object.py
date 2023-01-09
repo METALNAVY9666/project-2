@@ -13,7 +13,8 @@ class PunchingBall(pg.sprite.Sprite):
         # Récupère le rectangle de l'image
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 300, 500
-        self.health = 1000
+        self.health = 200
+        self.max_health = 200
         # Vérifie si l'item est attaqué ou non
         self.is_attacked = False
 
