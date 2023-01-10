@@ -13,12 +13,12 @@ class Jeu:
     def __init__(self, name):
         # On récupère le nom du perso choisi.
         self.name = name
+        self.dict_game = {'right': False, 'fps': 60,
+                          'side': 'left', 'is_playing': False}
         self.is_playing = False
-        self.right = False
-        self.fps = 60
         self.rect = None
         # Position
-        self.side = 'left'
+        self.dict_game['side'] = 'left'
         # Génération d'un personnage
         self.player = Player(self)
         # Génération d'un objet
@@ -42,11 +42,11 @@ class Jeu:
         # Modifie les animations en fonction de l'input
         if choice[pg.K_RIGHT]:
             self.player.move_right()
-            self.right = True
+            self.dict_game['right'] = True
         elif choice[pg.K_LEFT]:
             self.player.move_left()
-            self.right = False
-            self.side = 'left'
+            self.dict_game['right'] = False
+            self.dict_game['side'] = 'left'
         elif choice[pg.K_SPACE]:
             # Gère les sauts
             self.player.jump()

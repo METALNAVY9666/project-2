@@ -44,7 +44,7 @@ def main_window():
     # Boucle du jeu
     test = True
     # dlt est le delta time: càd le temps entre 2 frames
-    dlt = clock.tick(jeu.fps)
+    dlt = clock.tick(jeu.dict_game['fps'])
 
     # Boucle du jeu
     while test:
@@ -65,7 +65,7 @@ def main_window():
         pg.display.set_caption(f'FPS: {int(clock.get_fps())}')
         # On vérifie si le test est sur True ou False constemment
         test = quit_game(actions, test)
-        dlt = clock.tick(jeu.fps)
+        dlt = clock.tick(jeu.dict_game['fps'])
     # Affiche la moyenne des fps
     pg.quit()
     print("\nMoyenne des fps:", int(fps_moy(list_fps)))

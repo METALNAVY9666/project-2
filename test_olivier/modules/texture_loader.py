@@ -17,7 +17,9 @@ def sprites_images(name):
     sprites_dict = {'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
                     'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'),
                     'jump': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png'),
-                    'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png')}
+                    'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png'),
+                    'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
+                    'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
     return sprites_dict
 
 

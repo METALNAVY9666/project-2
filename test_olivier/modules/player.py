@@ -19,7 +19,7 @@ class Player(pg.sprite.Sprite):
             'max_health': 100, 'health': 100,
             'attacked': False}
         # Récupération du tableau des images du persos
-        self.tab = sprite_tab(self.game.name, self.game.side)
+        self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Affectation de l'image
         self.image = self.tab[self.stats_dict['nbr_sprite']]
         # Récupération du rectangle de l'image
@@ -78,7 +78,7 @@ class Player(pg.sprite.Sprite):
                     self.game.object.rect.x -= 100
                     self.game.object.health -= 20
             # On récupère les images d'attaques du perso en fonction duu combo
-            self.game.side = self.combo_tab[self.stats_dict['nbr_combo']]
+            self.game.dict_game['side'] = self.combo_tab[self.stats_dict['nbr_combo']]
             # Actionne la mécanique de dégats quand il y a une collision
             self.game.strike_collision()
             # Augemente le nombre de combo
@@ -106,7 +106,7 @@ class Player(pg.sprite.Sprite):
             self.rect.y += 4
             self.change_animation('jump')
             # Change l'animation si on est à droite ou à gauche
-            if self.game.right:
+            if self.game.dict_game['right']:
                 self.change_animation('jump_right')
         # Sinon, on réinitialise son nombre de sauts à zéro
         elif self.rect.y >= 500 or self.game.collision(self, self.game.all_objects):
@@ -119,6 +119,7 @@ class Player(pg.sprite.Sprite):
         # On réaffecte le dictionnaire d'images
         self.images_dict = sprites_images(self.game.name)
         self.image = self.images_dict[name]
+        
 
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu
@@ -138,16 +139,16 @@ class Player(pg.sprite.Sprite):
             if self.stats_dict['nbr_sprite'] >= 5:
                 self.stats_dict['nbr_sprite'] = 0
                 # Si le joueur ne fait pas d'attaque, on remet l'animation de base
-                self.game.side = 'left'
+                self.game.dict_game['side'] = 'left'
 
     def position(self):
         '''Fonction qui change le tableau d'image en fonction de la position du persos'''
         # Vérifie si le personnage est à droite ou à gauche
-        self.tab = sprite_tab(self.game.name, self.game.side)
+        self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Réaffecte l'image en fonction de la position
         self.image = self.tab[self.stats_dict['nbr_sprite']]
         # Inverse les images en cas d'attaque à droite
-        if self.game.right:
+        if self.game.dict_game['right']:
             self.image = pg.transform.flip(
                 self.tab[self.stats_dict['nbr_sprite']], True, False)
         return self.image
@@ -173,13 +174,13 @@ class Player(pg.sprite.Sprite):
                 # Relance l'animation à zéro
                 self.stats_dict['nbr_sprite'] = 0
                 # Change l'animation
-                self.game.side = 'vanish'
+                self.game.dict_game['side'] = 'vanish'
                 # Si le joueuer appuie sur la touche, on diminue le nombre de tentative
                 self.stats_dict['nbr_vanish'] -= 1
                 # Effectue l'esquive en fonction de la position du perso (droite/gauche)
-                if self.game.right and self.rect.x > 5:
+                if self.game.dict_game['right'] and self.rect.x > 5:
                     self.rect.x -= 100
-                elif not self.game.right and self.rect.x < 950:
+                elif not self.game.dict_game['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
     def jump_attack(self, choice):
@@ -198,3 +199,6 @@ class Player(pg.sprite.Sprite):
     def block(self):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''
         self.stats_dict['attacked'] = True
+        self.change_animation('shield')
+        if self.game.dict_game['right']:
+            self.change_animation('shield_right')
