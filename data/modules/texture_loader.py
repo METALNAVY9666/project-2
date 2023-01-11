@@ -23,6 +23,7 @@ surface = pygame.display.set_mode(win_scale)
 
 UI_PATH = "data/gfx/ui/"
 LEVELS_PATH = "data/gfx/levels/"
+EVENTS_PATH = "data/gfx/events/"
 
 # convert permet de blit les images plus rapidement
 # et convert_alpha fait la même chose pour les images transparentes
@@ -36,6 +37,12 @@ pygame.display.update(loading_rect)
 # chargements des texures de menu
 GFX["blur"] = load_image(UI_PATH+"blur", win_scale).convert_alpha()
 GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
+
+# chargements de évènements
+for number in ["one", "two", "three", "go"]:
+    GFX[number] = load_image(UI_PATH+number, (X//6, Y//6)).convert_alpha()
+GFX["ae86"] = load_image(EVENTS_PATH+"trueno_drift/ae86", (X//6, Y//6))
+GFX["ae86"].convert_alpha()
 
 # chargement des niveaux
 for level in list(levels.keys()):

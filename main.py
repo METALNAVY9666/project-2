@@ -7,7 +7,7 @@ from data.modules.debug import FPS
 game_settings = read_settings()
 x = game_settings["display"]["horizontal"]
 y = game_settings["display"]["vertical"]
-dimensions = (x, y)
+dimensions = [x, y]
 
 pack_pygame = {
     "pygame": pygame,
@@ -30,7 +30,7 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-level = read_levels()["neo_tokyo"]
+level = read_levels()["highway"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
 fps = FPS(pack_pygame)

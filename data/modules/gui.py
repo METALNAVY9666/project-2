@@ -14,9 +14,11 @@ class PauseMenu:
         if self.bool:
             self.pkg["mouse"].set_visible(True)
             self.bg_music.pause(True)
+            self.pkg["mixer"].pause()
         else:
             self.pkg["mouse"].set_visible(False)
             self.bg_music.pause(False)
+            self.pkg["mixer"].unpause()
 
     def update(self):
         """met à jour le menu pause"""
