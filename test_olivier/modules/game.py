@@ -15,10 +15,7 @@ class Jeu:
         self.name = name
         self.dict_game = {'right': False, 'fps': 60,
                           'side': 'left', 'is_playing': False}
-        self.is_playing = False
         self.rect = None
-        # Position
-        self.dict_game['side'] = 'left'
         # Génération d'un personnage
         self.player = Player(self)
         # Génération d'un objet
@@ -41,10 +38,10 @@ class Jeu:
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
         if choice[pg.K_RIGHT]:
-            self.player.move_right()
+            self.player.move()
             self.dict_game['right'] = True
         elif choice[pg.K_LEFT]:
-            self.player.move_left()
+            self.player.move()
             self.dict_game['right'] = False
             self.dict_game['side'] = 'left'
         elif choice[pg.K_SPACE]:

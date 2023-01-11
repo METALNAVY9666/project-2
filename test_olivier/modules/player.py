@@ -32,37 +32,22 @@ class Player(pg.sprite.Sprite):
         self.combo_tab = ['attack', 'combo',
                           'final', 'impact', 'spe']
 
-    def move_right(self):
-        '''Cette fonction gère les déplacements à droite.'''
+    def move(self):
+        '''Cette fonction gère les déplacements à droite ou à gauche.'''
+        # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
-        right_bool = False
-        if self.rect.x <= 950:
-            if test or (not test and self.rect.y <= 500):
-                right_bool = True
-            if right_bool:
+        if test or (not test and self.rect.y <= 500):
+            # Déplacement vers la gauche
+            if self.game.dict_game['right'] and self.rect.x < 950:
                 self.rect.x += 10
                 # On change l'image du joueur
                 self.change_animation('right')
-                # Le joueur fait une action, donc on passe le bouléen sur False
-                self.stats_dict['pause'] = False
-
-    def move_left(self):
-        '''Cette fonction gère les déplacements à gauche.'''
-        # Boulééen qui permet de savoir si il n'y a pas de collisions
-        test = not self.game.collision(self, self.game.all_objects)
-        # Bouléen qui autorise le déplacement à gauche
-        left_bool = False
-        if self.rect.x > 5:
-            # Si le personnage est en collision et qu'il est au sol, il ne peut pas avancer
-            if test or (not test and self.rect.y <= 500):
-                left_bool = True
-            # Sinon, il peut
-            if left_bool:
+            # Déplacement vers la droite
+            elif not self.game.dict_game['right'] and self.rect.x > 5:
                 self.rect.x -= 10
-                # On change l'image du joueur
                 self.change_animation('left')
-                # Change l'état du personnage
-                self.stats_dict['pause'] = False
+            # Le joueur fait une action, donc on passe le bouléen sur False
+            self.stats_dict['pause'] = False
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
@@ -119,7 +104,6 @@ class Player(pg.sprite.Sprite):
         # On réaffecte le dictionnaire d'images
         self.images_dict = sprites_images(self.game.name)
         self.image = self.images_dict[name]
-        
 
     def blit_sprite(self, screen, dlt):
         '''Cette fonction sert à afficher le sprite du joueur en continu

@@ -50,6 +50,7 @@ def sprite_tab(name, position):
            pg.image.load(f'test_olivier/gfx/{name}/base_{position}5.png')]
     return tab
 
+
 bro_tab = ["C'est quoi la blague ?",
            "C'est un peu bêbête",
            "You fuck my wife ?",
@@ -58,4 +59,4 @@ bro_tab = ["C'est quoi la blague ?",
            "Au procès, je gagne !",
            "Je vais faire sonner le gros Ben",
            "Je fais donc péter le logarithme",
-           "Je fais donc péter l'exponentielle",]
+           "Je fais donc péter l'exponentielle", ]

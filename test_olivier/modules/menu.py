@@ -9,14 +9,15 @@ class Menu:
     on pourra choisir son personnage.'''
 
     def __init__(self):
-        self.image = images["square"]
-        self.rect = self.image.get_rect()
+        self.menu_dict = {'line': 0, 'column': 0,
+                          'font': pg.font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 20),
+                          'image': images['square']
+                          }
+        self.rect = self.menu_dict['image'].get_rect()
         self.rect.x = 120
         self.rect.y = 70
-        self.font = pg.font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 20)
         # Affecte un nom par défaut
         self.name = 'hello'
-        self.lines, self.column = 0, 0
         self.game = None
         self.liste_rect = []
 
@@ -36,40 +37,42 @@ class Menu:
                 if event.key == pg.K_RETURN:
                     tab = self.perso()
                     # Affecte le nom du joueur sélectionné
-                    self.name = tab[self.column][self.lines]
+                    self.name = tab[self.menu_dict['column']
+                                    ][self.menu_dict['line']]
         return self.name
 
     def choice_lines(self, event):
         '''Cette fonction permet de renvoyer le numéro de la ligne
         sur laquelle le joueur est.'''
-        if event.key == pg.K_RIGHT and self.lines < 3:
-            self.lines += 1
+        if event.key == pg.K_RIGHT and self.menu_dict['line'] < 3:
+            self.menu_dict['line'] += 1
             self.rect.x += 110
-        elif event.key == pg.K_LEFT and self.lines >= 0:
-            if self.lines < 0:
-                self.lines = 0
+        elif event.key == pg.K_LEFT and self.menu_dict['line'] >= 0:
+            if self.menu_dict['line'] < 0:
+                self.menu_dict['line'] = 0
             else:
                 self.rect.x -= 110
-                self.lines -= 1
-        return self.lines
+                self.menu_dict['line'] -= 1
+        return self.menu_dict['line']
 
     def choice_column(self, event):
         '''Cette fonction permet de renvoyer le numéro de la colonne
         sur laquelle le joueur est.'''
-        if event.key == pg.K_DOWN and self.column < 2:
+        if event.key == pg.K_DOWN and self.menu_dict['column'] < 2:
             self.rect.y += 100
-            self.column += 1
-            print(self.column)
-        elif event.key == pg.K_UP and self.column > 0:
+            self.menu_dict['column'] += 1
+            print(self.menu_dict['column'])
+        elif event.key == pg.K_UP and self.menu_dict['column'] > 0:
             self.rect.y -= 100
-            self.column -= 1
-            print(self.column)
-        return self.column
+            self.menu_dict['column'] -= 1
+            print(self.menu_dict['column'])
+        return self.menu_dict['column']
 
     def txt_blit(self, screen):
         '''Affiche les noms des persos que l'on peut choisir.'''
         tab = self.perso()
-        txt = self.font.render(tab[self.column][self.lines], 0, (0, 0, 0))
+        txt = self.menu_dict['font'].render(
+            tab[self.menu_dict['column']][self.menu_dict['line']], 0, (0, 0, 0))
         # Renvoi le rectangle du texte
         return screen.blit(txt, (self.rect))
 
@@ -78,13 +81,14 @@ class Menu:
         # Affiche les visages des personnages
         self.images_blit(screen)
         # Affiche le carré pour le menu et l'ajoute dans la liste de chose à updates
-        self.liste_rect.append(screen.blit(self.image, (self.rect)))
+        self.liste_rect.append(screen.blit(
+            self.menu_dict['image'], (self.rect)))
         self.liste_rect.append(self.txt_blit(screen))
         for event in actions:
             if event.type == pg.KEYDOWN:
                 # Récupère le numéro de ligne et colonne
-                self.lines = self.choice_lines(event)
-                self.column = self.choice_column(event)
+                self.menu_dict['line'] = self.choice_lines(event)
+                self.menu_dict['column'] = self.choice_column(event)
                 self.choice_perso(actions)
         # Si le joueur a choisi un perso, initialise Jeu et renvoie le nom
         if self.name != 'hello':
@@ -93,7 +97,7 @@ class Menu:
 
     def launch_game(self):
         '''Cette fonction permet de lancer le jeu, à utiliser plus tard.'''
-        self.game.is_playing = True
+        self.game.dict_game["is_playing"] = True
         print('tu vas rentrer dans le jeu,', self.game.name)
 
     def images_blit(self, screen):

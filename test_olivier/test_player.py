@@ -1,4 +1,5 @@
 '''Ce module gère la fenêtre afin de tester les personnages etc...'''
+from os import system
 import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
@@ -29,6 +30,8 @@ def quit_game(actions, test):
 
 def main_window():
     '''Fonction qui lance la fenêtre principale.'''
+    # Nettoie la console
+    system('clear')
     # Init des éléments principaux
     pg.init()
     clock = pg.time.Clock()
