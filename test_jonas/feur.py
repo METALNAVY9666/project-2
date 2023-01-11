@@ -22,6 +22,7 @@ carre = player()
 
 while True:
 
+
     screen.fill((0, 0, 0))
 
     pygame.draw.rect(screen, carre.color[carre.square_color], carre.square)
