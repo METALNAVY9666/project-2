@@ -63,7 +63,6 @@ class Jeu:
             self.object.image = images['punchingball']
             # Modifie les animations en fonction de l'input
             for event in actions:
-                print(event)
                 self.player.move_controller(event)
             if choice[pg.K_SPACE]:
                 # Gère les sauts
@@ -108,7 +107,7 @@ class Jeu:
         self.handle_input(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
-        self.handle_input_controller(actions)
+        #self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
         return self.rect
@@ -146,5 +145,5 @@ class Jeu:
         pg.draw.rect(surface, (140, 138, 137), [950, 50, self.player.stats_dict['max_health'], 15])
         pg.draw.rect(surface, (1, 88, 33), [950, 50, self.player.stats_dict['health'], 15])
         # Barre de vie de l'objet
-        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.max_health, 15])
-        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.health, 15])
+        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.stats['max_health'], 15])
+        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.stats['health'], 15])

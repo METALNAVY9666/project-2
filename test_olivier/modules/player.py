@@ -31,7 +31,7 @@ class Player(pg.sprite.Sprite):
         # Tableau d'actions
         self.combo_tab = ['attack', 'combo',
                           'final', 'impact', 'spe']
-        #Axe droite-gauche
+        # Axe droite-gauche
         self.motion = [0]
 
     def move(self):
@@ -53,12 +53,12 @@ class Player(pg.sprite.Sprite):
 
     def move_controller(self, actions):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
-        #Vérifie s'il n'y a pas de collisions
+        # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test or (not test and self.rect.y <= 500):
             if self.rect.x < 950:
                 if actions.type == pg.JOYAXISMOTION:
-                    if actions.axis ==  0:
+                    if actions.axis == 0:
                         self.motion[actions.axis] = actions.value * 10
                         self.rect.x += self.motion[actions.axis]
                         if actions.value < 0:
@@ -74,25 +74,20 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action
         if event.key == pg.K_q:
             self.stats_dict['nbr_sprite'] = 0
-            self.combo_strike()
-        
+            self.game.dict_game['side'] = 'attack'
+            # Actionne la mécanique de dégats quand il y a une collision
+            self.game.strike_collision()
         if event.key == pg.K_w:
-            self.stats_dict['nb_sprite'] = 2
-            self.combo_strike()
-            # Si il y a une collision, on lance une attaque spécial
-            if self.game.collision(self, self.game.all_objects):
-                self.jump_attack(choice)
-                if self.stats_dict['nbr_combo'] >= 3:
-                    self.stats_dict['nbr_sprite'] = 0
-                    self.game.object.rect.y -= 100
-                    self.game.object.rect.x -= 100
-                    self.game.object.health -= 20
-                    
-        # On récupère les images d'attaques du perso en fonction du combo
-        self.game.dict_game['side'] = self.combo_tab[self.stats_dict['nbr_combo']]
-        # Actionne la mécanique de dégats quand il y a une collision
-        self.game.strike_collision()
+            self.stats_dict['nbr_sprite'] = 0
+            self.game.dict_game['side'] = 'impact'
+            if choice[pg.K_UP]:
+                self.game.dict_game['side'] = 'combo'
+                self.game.object.rect.y -= 100
+                self.game.object.rect.x -= 100
+            # Actionne la mécanique de dégats quand il y a une collision
+            self.game.strike_collision()
         # Augemente le nombre de combo
+        # A voir ~~~~~
 
     def jump(self):
         '''Fonction saut'''
@@ -113,7 +108,7 @@ class Player(pg.sprite.Sprite):
         if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
             # fait tomber le perso et change l'image
             self.stats_dict['pause'] = False
-            self.rect.y += 5
+            self.rect.y += 7
             self.change_animation('jump')
             # Change l'animation si on est à droite ou à gauche
             if self.game.dict_game['right']:
@@ -161,16 +156,6 @@ class Player(pg.sprite.Sprite):
             self.image = pg.transform.flip(
                 self.tab[self.stats_dict['nbr_sprite']], True, False)
         return self.image
-
-    def combo_strike(self):
-        '''Fonction qui a pour but de simuler un combo entier,
-        on prend en compte le nobre de fois que le jouueur appuie sur la touche q'''
-        # A chaque fois que l'utlisateur lance une attaque, augmente le nombre de combo
-        if self.stats_dict['nbr_combo'] < 5:
-            if not self.game.collision(self, self.game.all_objects):
-                if self.stats_dict['nbr_combo'] >= 2:
-                    self.stats_dict['nbr_combo'] = 0
-        print(self.stats_dict['nbr_combo'])
 
     def vanish(self, event):
         '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
