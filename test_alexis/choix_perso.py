@@ -26,7 +26,7 @@ class Bouton_quit:
             pygame. """
         pygame.draw.rect(aff_surface, self.top_color, self.top_rect)
         aff_surface.blit(self.text_surf, self.text_rect)
-        self.check_click()
+        return self.check_click()
 
     # Fonction qui va vérifier le click de la souri sur le bouton
     def check_click(self):
@@ -39,8 +39,7 @@ class Bouton_quit:
                 self.presse = True
             else:
                 if self.presse is True:
-                    pygame.display.quit()
-                    sys.exit()
+                    return True
                     
         else:
             self.top_color = (255, 0, 0)
@@ -179,7 +178,10 @@ def main():
         # On ajoute l'image et on la place au coordonnée (0 ; 0)
         aff_surface.blit(fond2, (0, 0))
 
-        Bouton.dessin()
+        retour = Bouton.dessin()
+        
+        if retour:
+            return "retour"
 
         y = cadre_1.check_touche()
         z = cadre_2.check_touche2()

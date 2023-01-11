@@ -26,9 +26,12 @@ class Bouton:
     def dessin(self):
         """ Cette fonction permet de dessiner le bouton sur la fenetre
             pygame. """
+    
         pygame.draw.rect(aff_surface, self.top_color, self.top_rect)
         aff_surface.blit(self.text_surf, self.text_rect)
-        self.check_click()
+        return self.check_click()
+        
+        
 
     # Fonction qui va vérifier le click de la souri sur le bouton
     def check_click(self):
@@ -43,8 +46,7 @@ class Bouton:
                 if self.presse is True:
                     # Bouton jouer
                     if pos_souri[1] < 335:
-                        print("clik verifier pour jouer")
-                        choix()
+                        return "choix_perso"
                     # Bouton règle du jeu
                     elif 340 < pos_souri[1] < 430:
                         pass
@@ -78,7 +80,7 @@ class Bouton_quit:
             pygame. """
         pygame.draw.rect(aff_surface, self.top_color, self.top_rect)
         aff_surface.blit(self.text_surf, self.text_rect)
-        self.check_click()
+        return self.check_click()
 
     # Fonction qui va vérifier le click de la souri sur le bouton
     def check_click(self):
@@ -91,8 +93,7 @@ class Bouton_quit:
                 self.presse = True
             else:
                 if self.presse is True:
-                    pygame.display.quit()
-                    sys.exit()
+                    return True
         else:
             self.top_color = (255, 0, 0)
 
@@ -183,10 +184,16 @@ def main():
 
         Bouton2.dessin()
 
-        Bouton3.dessin()
+        jouer = Bouton3.dessin()
 
-        Bouton4.dessin()
+        if jouer == "choix_perso":
+            return "choix_perso"
+        
+        quitter = Bouton4.dessin()
 
+        if quitter:
+            return "quitter"
+        
         Bouton5.dessin()
 
         if test is True:
@@ -194,9 +201,6 @@ def main():
             for event in pygame.event.get():
                 pygame.display.update()
                 if event.type == pygame.display.quit:
-
-                    pygame.display.quit()
-
-                    sys.exit()
+                    return suivant
                     
             
