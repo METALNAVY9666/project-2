@@ -53,6 +53,7 @@ def main_window():
     while test:
         # Ajoute les fps
         list_fps.append(int(clock.get_fps()))
+        # Touches préssées
         actions = pg.event.get()
         # Ajout du fond dans la liste de chose à mettre à update
         liste_update.append(screen.blit(background, (0, 0)))

@@ -54,20 +54,25 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action
         if event.key == pg.K_q:
             self.stats_dict['nbr_sprite'] = 0
+            self.combo_strike()
+        
+        if event.key == pg.K_w:
+            self.stats_dict['nb_sprite'] = 2
+            self.combo_strike()
             # Si il y a une collision, on lance une attaque spécial
             if self.game.collision(self, self.game.all_objects):
                 self.jump_attack(choice)
-                if self.stats_dict['nbr_combo'] == 3:
+                if self.stats_dict['nbr_combo'] >= 3:
                     self.stats_dict['nbr_sprite'] = 0
                     self.game.object.rect.y -= 100
                     self.game.object.rect.x -= 100
                     self.game.object.health -= 20
-            # On récupère les images d'attaques du perso en fonction duu combo
-            self.game.dict_game['side'] = self.combo_tab[self.stats_dict['nbr_combo']]
-            # Actionne la mécanique de dégats quand il y a une collision
-            self.game.strike_collision()
-            # Augemente le nombre de combo
-            self.combo_strike()
+                    
+        # On récupère les images d'attaques du perso en fonction du combo
+        self.game.dict_game['side'] = self.combo_tab[self.stats_dict['nbr_combo']]
+        # Actionne la mécanique de dégats quand il y a une collision
+        self.game.strike_collision()
+        # Augemente le nombre de combo
 
     def jump(self):
         '''Fonction saut'''
@@ -88,7 +93,7 @@ class Player(pg.sprite.Sprite):
         if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
             # fait tomber le perso et change l'image
             self.stats_dict['pause'] = False
-            self.rect.y += 4
+            self.rect.y += 5
             self.change_animation('jump')
             # Change l'animation si on est à droite ou à gauche
             if self.game.dict_game['right']:
@@ -142,8 +147,6 @@ class Player(pg.sprite.Sprite):
         on prend en compte le nobre de fois que le jouueur appuie sur la touche q'''
         # A chaque fois que l'utlisateur lance une attaque, augmente le nombre de combo
         if self.stats_dict['nbr_combo'] < 5:
-            # Max d'attaque
-            self.stats_dict['nbr_combo'] += 1
             if not self.game.collision(self, self.game.all_objects):
                 if self.stats_dict['nbr_combo'] >= 2:
                     self.stats_dict['nbr_combo'] = 0
