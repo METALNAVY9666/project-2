@@ -48,8 +48,8 @@ class Player(pg.sprite.Sprite):
             elif not self.game.dict_game['right'] and self.rect.x > 5:
                 self.rect.x -= 10
                 self.change_animation('left')
-            # Le joueur fait une action, donc on passe le bouléen sur False
-            self.stats_dict['pause'] = False
+        # Le joueur fait une action, donc on passe le bouléen sur False
+        self.stats_dict['pause'] = False
 
     def move_controller(self, actions):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
@@ -72,20 +72,30 @@ class Player(pg.sprite.Sprite):
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         # Le joueur fait une action
-        if event.key == pg.K_q:
-            self.stats_dict['nbr_sprite'] = 0
-            self.game.dict_game['side'] = 'attack'
-            # Actionne la mécanique de dégats quand il y a une collision
-            self.game.strike_collision()
-        if event.key == pg.K_w:
-            self.stats_dict['nbr_sprite'] = 0
-            self.game.dict_game['side'] = 'impact'
-            if choice[pg.K_UP]:
-                self.game.dict_game['side'] = 'combo'
-                self.game.object.rect.y -= 100
-                self.game.object.rect.x -= 100
-            # Actionne la mécanique de dégats quand il y a une collision
-            self.game.strike_collision()
+        if 0 <= self.stats_dict['nbr_combo'] < 3:
+            if event.key == pg.K_q and self.stats_dict['nbr_combo'] < 1:
+                self.stats_dict['nbr_sprite'] = 0
+                self.game.dict_game['side'] = 'attack'
+                self.attack_up(choice)
+                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] < 1:
+                    self.stats_dict['nbr_combo'] += 1
+                    print(self.stats_dict['nbr_combo'])
+                # Actionne la mécanique de dégats quand il y a une collision
+                self.game.strike_collision()
+            if event.key == pg.K_w and self.stats_dict['nbr_combo'] < 3:
+                self.stats_dict['nbr_sprite'] = 0
+                self.game.dict_game['side'] = 'impact'
+                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] >= 1:
+                    # Actionne la mécanique de dégats quand il y a une collision
+                    self.stats_dict['nbr_combo'] += 1
+                    print(self.stats_dict['nbr_combo'])
+                    self.game.strike_collision()
+        if self.stats_dict['nbr_combo'] >= 2:
+            pg.time.wait(1000)
+            self.game.dict_game['side'] = 'spe'
+            self.game.object.rect.x -= 200
+        if not self.game.collision(self, self.game.all_objects):
+            self.stats_dict['nbr_combo'] = 0
         # Augemente le nombre de combo
         # A voir ~~~~~
 
@@ -175,12 +185,12 @@ class Player(pg.sprite.Sprite):
                 elif not self.game.dict_game['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
-    def jump_attack(self, choice):
+    def attack_up(self, choice):
         '''Attaque en l'air'''
-        if choice[pg.K_UP]:
-            self.stats_dict['nbr_combo'] = 3
-            print('je suis en l\'air')
-            print(self.stats_dict['nbr_combo'])
+        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
+            self.game.dict_game['side'] = 'combo'
+            self.game.object.rect.y -= 100
+            self.game.object.rect.x -= 100
 
     def damages(self):
         '''Focntion qui gère les dommages'''
