@@ -117,10 +117,19 @@ class Player(pg.sprite.Sprite):
             if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                 self.stats_dict['jumps'] = 3
 
-    """def jump_controller(self, actions):
+    def jump_controller(self, actions):
         #Fonction saut a la manette
         if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
-            if actions.type == pg.JOYBUTTONDOWN:"""
+            if self.stats_dict['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
+                if actions.button == 0:
+                    # Vérifie si le perso n'a pas déjà sauté deux fois
+                    if self.stats_dict['jumps'] < 2:
+                        # Saute
+                        self.rect.y -= 25
+                        self.stats_dict['current_height'] += 25
+                    # Si le joueur a atteint la hauteur maximale, il redescend
+                    if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
+                        self.stats_dict['jumps'] = 3
 
     def gravity(self):
         '''Fonction qui simule une gravité'''

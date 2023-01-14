@@ -63,11 +63,11 @@ class Jeu:
             self.object.image = images['punchingball']
             # Modifie les animations en fonction de l'input
             for event in actions:
+                #Gère les mouvements
                 self.player.move_controller(event)
-            if choice[pg.K_SPACE]:
                 # Gère les sauts
-                self.player.jump()
-            elif choice[pg.K_s]:
+                self.player.jump_controller(event)
+            if choice[pg.K_s]:
                 # Gère le bloquage
                 self.player.block()
             # Système de gravité
