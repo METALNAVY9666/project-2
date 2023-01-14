@@ -4,8 +4,6 @@ import pygame as pg
 from modules.player import Player
 from modules.object import PunchingBall
 from modules.texture_loader import images
-from pygame.locals import *
-pg.init()
 
 
 class Jeu:
@@ -27,29 +25,6 @@ class Jeu:
         self.all_objects = pg.sprite.Group()
         # Ajout dans des groupes de sprites
         self.add_groups()
-
-
-    def handle_input_controller(self, actions):
-        """
-        """
-        choice = pg.key.get_pressed()
-        # Réaffecte l'image de l'objet
-        self.object.image = images['punchingball']
-        # Modifie les animations en fonction de l'input
-        for event in actions:
-            print(event)
-            self.player.move_controller(event)
-        if choice[pg.K_SPACE]:
-            # Gère les sauts
-            self.player.jump()
-        elif choice[pg.K_s]:
-            # Gère le bloquage
-            self.player.block()
-        # Système de gravité
-        self.player.gravity()
-        # Actions qui nécessitent une boucle 'for'
-        self.loop_input(actions)
-
 
     def handle_input(self, actions):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -79,6 +54,26 @@ class Jeu:
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
+
+    def handle_input_controller(self, actions):
+            """
+            """
+            choice = pg.key.get_pressed()
+            # Réaffecte l'image de l'objet
+            self.object.image = images['punchingball']
+            # Modifie les animations en fonction de l'input
+            for event in actions:
+                self.player.move_controller(event)
+            if choice[pg.K_SPACE]:
+                # Gère les sauts
+                self.player.jump()
+            elif choice[pg.K_s]:
+                # Gère le bloquage
+                self.player.block()
+            # Système de gravité
+            self.player.gravity()
+            # Actions qui nécessitent une boucle 'for'
+            self.loop_input(actions)
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -110,9 +105,9 @@ class Jeu:
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
         self.handle_input(actions)
-        self.handle_input_controller(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
+        self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
         return self.rect
@@ -150,5 +145,5 @@ class Jeu:
         pg.draw.rect(surface, (140, 138, 137), [950, 50, self.player.stats_dict['max_health'], 15])
         pg.draw.rect(surface, (1, 88, 33), [950, 50, self.player.stats_dict['health'], 15])
         # Barre de vie de l'objet
-        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.max_health, 15])
-        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.health, 15])
+        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.stats['max_health'], 15])
+        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.stats['health'], 15])

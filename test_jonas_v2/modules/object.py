@@ -13,15 +13,13 @@ class PunchingBall(pg.sprite.Sprite):
         # Récupère le rectangle de l'image
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 300, 510
-        self.health = 200
-        self.max_health = 200
-        # Vérifie si l'item est attaqué ou non
-        self.is_attacked = False
+        self.stats = {'health': 200, 'max_health': 200,
+                      'fall': True, 'is_attacked': True}
 
     def damage(self):
         '''Fonction qui calcule les dégats reçus'''
-        if self.health > 0 and self.rect.x >= 0:
-            self.health -= 10
+        if self.stats['health'] > 0 and self.rect.x >= 0:
+            self.stats['health'] -= 10
             # self.rect.x -= 30
 
     def forward(self):

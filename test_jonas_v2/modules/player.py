@@ -1,5 +1,4 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
-from itertools import accumulate
 import pygame as pg
 from modules.texture_loader import sprites_images, sprite_tab
 
@@ -10,7 +9,6 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.motion = [0]
         # Dictionnaire des attributs du personnage
         self.stats_dict = {
             'nbr_sprite': 0, 'strike': 10,
@@ -33,29 +31,8 @@ class Player(pg.sprite.Sprite):
         # Tableau d'actions
         self.combo_tab = ['attack', 'combo',
                           'final', 'impact', 'spe']
-
-
-
-    def move_controller(self, actions):
-        "Cette fonction gère les déplacements de droite à gauche a la manette"
-        #Vérifie s'il n'y a pas de collisions
-        test = not self.game.collision(self, self.game.all_objects)
-        if test or (not test and self.rect.y <= 500):
-            if self.rect.x < 950:
-                if actions.type == pg.JOYAXISMOTION:
-                    if actions.axis ==  0:
-                        self.motion[actions.axis] = actions.value * 10
-                        self.rect.x += self.motion[actions.axis]
-                        if actions.value < 0:
-                            self.stats_dict['pause'] = False
-                            # On change l'image du joueur
-                            self.change_animation('right')
-                        else:
-                            self.stats_dict['pause'] = False
-                            self.change_animation('left')
-
-
-
+        # Axe droite-gauche
+        self.motion = [0]
 
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
@@ -71,28 +48,61 @@ class Player(pg.sprite.Sprite):
             elif not self.game.dict_game['right'] and self.rect.x > 5:
                 self.rect.x -= 10
                 self.change_animation('left')
-            # Le joueur fait une action, donc on passe le bouléen sur False
-            self.stats_dict['pause'] = False
+        # Le joueur fait une action, donc on passe le bouléen sur False
+        self.stats_dict['pause'] = False
+
+    def move_controller(self, actions):
+        "Cette fonction gère les déplacements de droite à gauche a la manette"
+        # Vérifie s'il n'y a pas de collisions
+        test = not self.game.collision(self, self.game.all_objects)
+        if test:
+            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
+                if actions.value < -0.15 and self.rect.x > 0:
+                    self.motion[actions.axis] = actions.value * 5
+                    self.rect.x += self.motion[actions.axis]
+                    self.stats_dict['pause'] = False
+                    # On change l'image du joueur
+                    self.change_animation('left')
+                    
+                elif actions.value > 0.15 and self.rect.x < 950:
+                    self.motion[actions.axis] = actions.value * 5
+                    self.rect.x += self.motion[actions.axis]
+                    self.stats_dict['pause'] = False
+                    self.change_animation('right')
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         # Le joueur fait une action
-        if event.key == pg.K_q:
-            self.stats_dict['nbr_sprite'] = 0
-            # Si il y a une collision, on lance une attaque spécial
-            if self.game.collision(self, self.game.all_objects):
-                self.jump_attack(choice)
-                if self.stats_dict['nbr_combo'] == 3:
-                    self.stats_dict['nbr_sprite'] = 0
-                    self.game.object.rect.y -= 100
-                    self.game.object.rect.x -= 100
-                    self.game.object.health -= 20
-            # On récupère les images d'attaques du perso en fonction duu combo
-            self.game.dict_game['side'] = self.combo_tab[self.stats_dict['nbr_combo']]
-            # Actionne la mécanique de dégats quand il y a une collision
-            self.game.strike_collision()
-            # Augemente le nombre de combo
-            self.combo_strike()
+        if 0 <= self.stats_dict['nbr_combo'] < 3:
+            if event.key == pg.K_q and self.stats_dict['nbr_combo'] < 1:
+                self.stats_dict['nbr_sprite'] = 0
+                self.game.dict_game['side'] = 'attack'
+                self.attack_up(choice)
+                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] < 1:
+                    self.stats_dict['nbr_combo'] += 1
+                    print(self.stats_dict['nbr_combo'])
+                # Actionne la mécanique de dégats quand il y a une collision
+                self.game.strike_collision()
+            if event.key == pg.K_w and self.stats_dict['nbr_combo'] < 3:
+                self.stats_dict['nbr_sprite'] = 0
+                self.game.dict_game['side'] = 'impact'
+                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] >= 1:
+                    # Actionne la mécanique de dégats quand il y a une collision
+                    self.stats_dict['nbr_combo'] += 1
+                    print(self.stats_dict['nbr_combo'])
+                    self.game.strike_collision()
+        if self.stats_dict['nbr_combo'] >= 2:
+            pg.time.wait(1000)
+            self.game.dict_game['side'] = 'spe'
+            self.game.object.rect.x -= 200
+        if not self.game.collision(self, self.game.all_objects):
+            self.stats_dict['nbr_combo'] = 0
+        # Augemente le nombre de combo
+        # A voir ~~~~~
+
+    #def attack_controller(self):
+    """Je dois encore la compléter"""
+
 
     def jump(self):
         '''Fonction saut'''
@@ -107,13 +117,18 @@ class Player(pg.sprite.Sprite):
             if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                 self.stats_dict['jumps'] = 3
 
+    """def jump_controller(self, actions):
+        #Fonction saut a la manette
+        if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
+            if actions.type == pg.JOYBUTTONDOWN:"""
+
     def gravity(self):
         '''Fonction qui simule une gravité'''
         # Le joueur tombe tant qu'il n'est pas au sol
         if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
             # fait tomber le perso et change l'image
             self.stats_dict['pause'] = False
-            self.rect.y += 4
+            self.rect.y += 7
             self.change_animation('jump')
             # Change l'animation si on est à droite ou à gauche
             if self.game.dict_game['right']:
@@ -162,18 +177,6 @@ class Player(pg.sprite.Sprite):
                 self.tab[self.stats_dict['nbr_sprite']], True, False)
         return self.image
 
-    def combo_strike(self):
-        '''Fonction qui a pour but de simuler un combo entier,
-        on prend en compte le nobre de fois que le jouueur appuie sur la touche q'''
-        # A chaque fois que l'utlisateur lance une attaque, augmente le nombre de combo
-        if self.stats_dict['nbr_combo'] < 5:
-            # Max d'attaque
-            self.stats_dict['nbr_combo'] += 1
-            if not self.game.collision(self, self.game.all_objects):
-                if self.stats_dict['nbr_combo'] >= 2:
-                    self.stats_dict['nbr_combo'] = 0
-        print(self.stats_dict['nbr_combo'])
-
     def vanish(self, event):
         '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
@@ -192,12 +195,12 @@ class Player(pg.sprite.Sprite):
                 elif not self.game.dict_game['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
-    def jump_attack(self, choice):
+    def attack_up(self, choice):
         '''Attaque en l'air'''
-        if choice[pg.K_UP]:
-            self.stats_dict['nbr_combo'] = 3
-            print('je suis en l\'air')
-            print(self.stats_dict['nbr_combo'])
+        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
+            self.game.dict_game['side'] = 'combo'
+            self.game.object.rect.y -= 100
+            self.game.object.rect.x -= 100
 
     def damages(self):
         '''Focntion qui gère les dommages'''

@@ -5,11 +5,6 @@ from modules.menu import Menu
 from modules.game import Jeu
 from modules.texture_loader import images
 
-pg.joystick.init() #initialise le module joystick
-joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
-#Permet de savoir le nombre de manettes utilisés
-for joystick in joysticks:
-    print(joystick.get_name()) #Permet de connaitre la manette utilisée.
 
 def fps_moy(fps_list):
     '''Cette fonction permet de calculer la moyenne des fps'''
@@ -53,11 +48,18 @@ def main_window():
     test = True
     # dlt est le delta time: càd le temps entre 2 frames
     dlt = clock.tick(jeu.dict_game['fps'])
+    
+    pg.joystick.init() #initialise le module joystick
+    joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
+    #Permet de savoir le nombre de manettes utilisés
+    for joystick in joysticks:
+        print(joystick.get_name()) #Permet de connaitre la manette utilisée.
 
     # Boucle du jeu
     while test:
         # Ajoute les fps
         list_fps.append(int(clock.get_fps()))
+        # Touches préssées
         actions = pg.event.get()
         # Ajout du fond dans la liste de chose à mettre à update
         liste_update.append(screen.blit(background, (0, 0)))
