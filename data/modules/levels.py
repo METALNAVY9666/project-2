@@ -68,7 +68,8 @@ class BaseLevel:
         """initialise les évènements"""
         self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
         self.cls["events"] = {}
-        self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
+        if "ae86" in self.prop["events"]:
+            self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
 
     def update_events(self, pause=bool, busy=bool):
         """met à jour les évènements du niveau"""
