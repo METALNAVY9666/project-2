@@ -1,51 +1,64 @@
 {
-  "neo_tokyo": {
-    "scale": [
-      2951,
-      2028
-    ],
-    "bg": "neo_tokyo",
-    "music": "data/sfx/music/neo_tokyo.mp3",
-    "animated": false,
-    "music_folder": false,
-    "drop": 5,
-    "events": []
-  },
-  "tenkaichi_budokai": {
-    "scale": [
-      1920,
-      1080
-    ],
-    "bg": "tenkaichi_budokai",
-    "music": "data/sfx/music/tenkaichi_budokai/",
-    "animated": false,
-    "music_folder": true,
-    "drop": 6,
-    "events": []
-  },
-  "pokemon_deoxys": {
-    "scale": [
-      6000,
-      2492
-    ],
-    "bg": "pokemon_deoxys",
-    "music": "",
-    "animated": false,
-    "music_folder": false,
-    "events": []
-  },
-  "highway": {
-    "scale": [
-      2048,
-      1152
-    ],
-    "bg": "highway",
-    "music": "data/sfx/music/beat_of_the_rising_sun.mp3",
-    "animated": false,
-    "music_folder": false,
-    "events": [
-      "trueno_drift"
-    ],
-    "drop": 12
+    "neo_tokyo": {
+        "scale": [
+            2951,
+            2028
+        ],
+        "bg": "neo_tokyo",
+        "music": "data/sfx/music/neo_tokyo.mp3",
+        "animated": false,
+        "music_folder": false,
+        "drop": 5,
+        "events": []
+    },
+    "tenkaichi_budokai": {
+        "scale": [
+            1920,
+            1080
+        ],
+        "bg": "tenkaichi_budokai",
+        "music": "data/sfx/music/tenkaichi_budokai/",
+        "animated": false,
+        "music_folder": true,
+        "drop": 6,
+        "events": []
+    },
+    "pokemon_deoxys": {
+        "scale": [
+            6000,
+            2492
+        ],
+        "bg": "pokemon_deoxys",
+        "music": "",
+        "animated": false,
+        "music_folder": false,
+        "events": []
+    },
+    "highway": {
+        "scale": [
+            2048,
+            1152
+        ],
+        "bg": "highway",
+        "music": "data/sfx/music/beat_of_the_rising_sun.mp3",
+        "animated": false,
+        "music_folder": false,
+        "events": [
+            "trueno_drift"
+        ],
+        "drop": 12
+    },
+    "laboratory": {
+      "scale": [
+          1000,
+          563
+      ],
+      "bg": "laboratory",
+      "music": "data/sfx/music/laboratory.mp3",
+      "animated": false,
+      "music_folder": false,
+      "events": [
+      ],
+      "drop": 14
   }
 }

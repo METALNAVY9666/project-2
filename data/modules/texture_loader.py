@@ -3,7 +3,7 @@ import pygame
 from data.modules.settings import read_settings, read_levels
 
 
-def load_image(path, dimensions):
+def load_image(path=str, dimensions=tuple):
     """charge l'image et modifie les dimensions de cette dernière"""
     temp = pygame.image.load(path+".png")
     if dimensions is not None:
@@ -30,15 +30,16 @@ EVENTS_PATH = "data/gfx/events/"
 
 GFX = {}
 GFX["loading"] = load_image(UI_PATH+"loading", win_scale).convert()
+
 # affichage écran de chargement
 loading_rect = surface.blit(GFX["loading"], (0, 0))
 pygame.display.update(loading_rect)
 
-# chargements des texures de menu
+# chargement des texures du menu pause
 GFX["blur"] = load_image(UI_PATH+"blur", win_scale).convert_alpha()
 GFX["exit"] = load_image(UI_PATH+"exit_btn", (X//8, Y//10)).convert()
 
-# chargements de évènements
+# chargement des évènements
 for number in ["one", "two", "three", "go"]:
     GFX[number] = load_image(UI_PATH+number, (X//6, Y//6)).convert_alpha()
 GFX["ae86"] = load_image(EVENTS_PATH+"trueno_drift/ae86", (X//6, Y//6))
@@ -49,6 +50,10 @@ for level in list(levels.keys()):
     GFX[level] = {}
     TEMP = LEVELS_PATH + level
     GFX[level]["bg"] = load_image(TEMP, levels[level]["scale"]).convert()
+
+# chargement des textures des obstacles
+path = LEVELS_PATH+"platform"
+GFX["platform"] = load_image(path, (X//1.5, Y//1.5)).convert_alpha()
 
 # textures test
 GFX["players"] = {}

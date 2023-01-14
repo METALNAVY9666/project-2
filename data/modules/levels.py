@@ -93,6 +93,15 @@ class BaseLevel:
         else:
             if ctn[0] == "end":
                 self.cls["busy"] = False
+    
+    def update_obstacles(self):
+        """met à jour la position des obstacles"""
+        if self.prop["bg"] == "neo_tokyo":
+            surface = self.pkg["surface"]
+            width = self.settings["display"]["horizontal"]
+            height = self.settings["display"]["vertical"]
+            pos = [(width//2)-(width//3), height//1.5] 
+            return surface.blit(GFX["platform"], pos)
 
     def update(self, delta):
         """met à jour le niveau, renvoie si le niveau est terminé ou
@@ -106,8 +115,10 @@ class BaseLevel:
         # met à jour le fond
         self.update_list.append(self.cls["bg"].update())
 
+        # met à jour les obstacles
+        self.update_list.append(self.update_obstacles())
+
         # met à jour les évènements
-        
         self.update_list += self.update_events(self.cls["pause"].bool,
         self.cls["busy"])
         
