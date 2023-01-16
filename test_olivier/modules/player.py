@@ -17,7 +17,7 @@ class Player(pg.sprite.Sprite):
             'idle_speed': 125, 'delta_sum': 0,
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
-            'attacked': False}
+            'attacked': False, 'fall': True}
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Affectation de l'image
@@ -114,20 +114,21 @@ class Player(pg.sprite.Sprite):
     def gravity(self):
         '''Fonction qui simule une gravité'''
         # Le joueur tombe tant qu'il n'est pas au sol
-        if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
-            # fait tomber le perso et change l'image
-            self.stats_dict['pause'] = True
-            self.rect.y += 7
-            if not self.game.collision(self, self.game.all_objects):
-                self.change_animation('jump')
-            # Change l'animation si on est à droite ou à gauche
-            if self.game.dict_game['right']:
-                self.change_animation('jump_right')
-        # Sinon, on réinitialise son nombre de sauts à zéro
-        elif self.rect.y >= 500 or self.game.collision(self, self.game.all_objects):
-            self.stats_dict['jumps'] = 0
-            # Réaffecte à zéro la hauteur actuelle
-            self.stats_dict['current_height'] = 0
+        if self.stats_dict['fall']:
+            if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
+                # fait tomber le perso et change l'image
+                self.stats_dict['pause'] = True
+                self.rect.y += 10
+                if not self.game.collision(self, self.game.all_objects):
+                    self.change_animation('jump')
+                # Change l'animation si on est à droite ou à gauche
+                if self.game.dict_game['right']:
+                    self.change_animation('jump_right')
+            # Sinon, on réinitialise son nombre de sauts à zéro
+            elif self.rect.y >= 500 or self.game.collision(self, self.game.all_objects):
+                self.stats_dict['jumps'] = 0
+                # Réaffecte à zéro la hauteur actuelle
+                self.stats_dict['current_height'] = 0
 
     def change_animation(self, name):
         '''Fonction qui change l'image du personnage'''
@@ -187,10 +188,12 @@ class Player(pg.sprite.Sprite):
 
     def attack_up(self, choice):
         '''Attaque en l'air'''
+        self.stats_dict['fall'] = True
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'combo'
-            self.game.object.rect.y -= 200
-            self.rect.y -= 200
+            self.stats_dict['fall'] = False
+            self.rect.y = 300
+            self.game.object.rect.y = 300
 
     def damages(self):
         '''Focntion qui gère les dommages'''
