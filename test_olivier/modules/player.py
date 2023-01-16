@@ -17,7 +17,8 @@ class Player(pg.sprite.Sprite):
             'idle_speed': 125, 'delta_sum': 0,
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
-            'attacked': False, 'fall': True}
+            'attacked': False, 'fall': True,
+            'nbr_combo_q': 0, 'nbr_combo_w': 0}
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Affectation de l'image
@@ -71,30 +72,23 @@ class Player(pg.sprite.Sprite):
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
+        collide = self.game.collision(self, self.game.all_objects)
         # Le joueur fait une action
         if event.key == pg.K_q:
-            self.stats_dict['nbr_sprite'] = 0
-            self.game.dict_game['side'] = 'attack'
-            self.attack_up(choice)
-            if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] < 1:
-                self.stats_dict['nbr_combo'] += 1
-                print(self.stats_dict['nbr_combo'])
-            # Actionne la mécanique de dégats quand il y a une collision
-            self.game.strike_collision()
-        if event.key == pg.K_w:
-            self.stats_dict['nbr_sprite'] = 0
-            self.game.dict_game['side'] = 'impact'
-            if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] >= 1:
-                # Actionne la mécanique de dégats quand il y a une collision
-                self.stats_dict['nbr_combo'] += 1
-                print(self.stats_dict['nbr_combo'])
-                self.game.strike_collision()
-        if self.stats_dict['nbr_combo'] >= 3:
+            self.combo('attack', 'nbr_combo_q')
+        elif event.key == pg.K_w:
+            self.combo('impact', 'nbr_combo_w')
+        if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
             # pg.time.wait(1000)
+            print('AAAAAAAAH')
             self.game.dict_game['side'] = 'spe'
             self.game.object.rect.x -= 200
-        if not self.game.collision(self, self.game.all_objects):
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nb_combo_q'] = 0
+        if not collide:
             self.stats_dict['nbr_combo'] = 0
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nbr_combo_q'] = 0
         # Augemente le nombre de combo
         # A voir ~~~~~
 
@@ -188,12 +182,12 @@ class Player(pg.sprite.Sprite):
 
     def attack_up(self, choice):
         '''Attaque en l'air'''
-        self.stats_dict['fall'] = True
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'combo'
             self.stats_dict['fall'] = False
             self.rect.y = 300
             self.game.object.rect.y = 300
+        self.stats_dict['fall'] = True
 
     def damages(self):
         '''Focntion qui gère les dommages'''
@@ -207,3 +201,17 @@ class Player(pg.sprite.Sprite):
         self.change_animation('shield')
         if self.game.dict_game['right']:
             self.change_animation('shield_right')
+
+    def combo(self, atk_name, key_name):
+        '''Fonction attaque qui prend en paramètre le nom de la touche preéssée,
+        et qui fait les animations ainsi que le comptage des combos'''
+        collide = self.game.collision(self, self.game.all_objects)
+        self.stats_dict['nbr_sprite'] = 0
+        self.game.dict_game['side'] = atk_name
+        if collide:
+            # attaque en l'air
+            #self.attack_up(choice)
+            self.stats_dict[key_name] += 1
+            print(self.stats_dict[key_name])
+        # Actionne la mécanique de dégats quand il y a une collision
+        self.game.strike_collision()
