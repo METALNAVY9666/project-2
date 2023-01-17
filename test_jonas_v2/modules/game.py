@@ -50,6 +50,8 @@ class Jeu:
         elif choice[pg.K_s]:
             # Gère le bloquage
             self.player.block()
+        elif choice[pg.K_ESCAPE]:
+            self.dict_game['is_playing'] = False
         # Système de gravité
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
@@ -84,6 +86,8 @@ class Jeu:
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
+                # Le perso tombe
+                self.player.stats_dict['fall'] = True
                 # Attaque du joueur
                 self.player.attack(event, choice)
                 # Esquive du joueur
@@ -142,8 +146,16 @@ class Jeu:
         On dessine d'abord une barre grise, afin de faire le fond, puis on dessine celle
         avec de la couleur. Les deux, sur la surface donnée en paramètre.'''
         # Dessin de la barre de vie
-        pg.draw.rect(surface, (140, 138, 137), [950, 50, self.player.stats_dict['max_health'], 15])
-        pg.draw.rect(surface, (1, 88, 33), [950, 50, self.player.stats_dict['health'], 15])
+        pg.draw.rect(surface, (140, 138, 137), [
+                     950, 50, self.player.stats_dict['max_health'], 15])
+        pg.draw.rect(surface, (1, 88, 33), [
+                     950, 50, self.player.stats_dict['health'], 15])
         # Barre de vie de l'objet
-        pg.draw.rect(surface, (140, 138, 137), [10, 50, self.object.stats['max_health'], 15])
-        pg.draw.rect(surface, (1, 88, 33), [10, 50, self.object.stats['health'], 15])
+        pg.draw.rect(surface, (140, 138, 137), [
+                     10, 50, self.object.stats['max_health'], 15])
+        pg.draw.rect(surface, (1, 88, 33), [
+                     10, 50, self.object.stats['health'], 15])
+        # Nombre d'esquive possible
+        pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
+        pg.draw.rect(surface, (255, 200, 133), [
+                     950, 100, self.player.stats_dict['nbr_vanish']*30, 15])

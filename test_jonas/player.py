@@ -17,3 +17,6 @@ class player():
     def change_color(self):
         self.sqare_color = (self.square_color + 1) % (len(self.color))
 
+    def jump(self):
+        while self.square_rect_y > 10:
+            self.square.y += 10

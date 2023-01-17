@@ -49,6 +49,12 @@ def main_window():
     # dlt est le delta time: càd le temps entre 2 frames
     dlt = clock.tick(jeu.dict_game['fps'])
 
+    pg.joystick.init() #initialise le module joystick
+    joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
+    #Permet de savoir le nombre de manettes utilisés
+    for joystick in joysticks:
+        print(joystick.get_name()) #Permet de connaitre la manette utilisée.
+
     # Boucle du jeu
     while test:
         # Ajoute les fps

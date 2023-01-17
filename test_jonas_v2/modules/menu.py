@@ -18,8 +18,8 @@ class Menu:
         self.rect.y = 70
         # Affecte un nom par défaut
         self.name = 'hello'
-        self.game = None
         self.liste_rect = []
+        self.choosen = False
 
     def perso(self):
         '''Tableau qui renvoie les personnages, à modifier si inutile.'''
@@ -39,6 +39,7 @@ class Menu:
                     # Affecte le nom du joueur sélectionné
                     self.name = tab[self.menu_dict['column']
                                     ][self.menu_dict['line']]
+                    self.choosen = True
         return self.name
 
     def choice_lines(self, event):
@@ -90,15 +91,7 @@ class Menu:
                 self.menu_dict['line'] = self.choice_lines(event)
                 self.menu_dict['column'] = self.choice_column(event)
                 self.choice_perso(actions)
-        # Si le joueur a choisi un perso, initialise Jeu et renvoie le nom
-        if self.name != 'hello':
-            self.game = Jeu(self.name)
         return self.name
-
-    def launch_game(self):
-        '''Cette fonction permet de lancer le jeu, à utiliser plus tard.'''
-        self.game.dict_game["is_playing"] = True
-        print('tu vas rentrer dans le jeu,', self.game.name)
 
     def images_blit(self, screen):
         "Cette fonction permet d'afficher les visages des personnages."

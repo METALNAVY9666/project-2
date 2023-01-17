@@ -17,6 +17,8 @@ for joystick in joysticks:
     print(joystick.get_name()) #Permet de connaitre la manette utilisée.
 
 
+
+
 #Create a square
 carre = player()
 
@@ -44,7 +46,7 @@ while True:
                 carre.square_color = (carre.square_color + 1) % len(carre.color) #Change square color
 
             if event.button == 1:
-                pass
+                carre.jump()
             if event.button == 2:
                 pass
             if event.button == 3:

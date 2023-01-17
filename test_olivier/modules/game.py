@@ -66,12 +66,10 @@ class Jeu:
         # Modifie les animations en fonction de l'input
         for event in actions:
             self.player.move_controller(event)
-        if choice[pg.K_SPACE]:
             # Gère les sauts
             self.player.jump()
-        elif choice[pg.K_s]:
-            # Gère le bloquage
-            self.player.block()
+            """# Gère le bloquage
+            self.player.block()"""
         # Système de gravité
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
@@ -111,7 +109,7 @@ class Jeu:
         self.handle_input(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
-        # self.handle_input_controller(actions)
+        #self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
         return self.rect

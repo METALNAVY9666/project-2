@@ -56,19 +56,20 @@ class Player(pg.sprite.Sprite):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
-        if test or (not test and self.rect.y <= 500):
-            if self.rect.x < 950:
-                if actions.type == pg.JOYAXISMOTION:
-                    if actions.axis == 0:
-                        self.motion[actions.axis] = actions.value * 10
-                        self.rect.x += self.motion[actions.axis]
-                        if actions.value < 0:
-                            self.stats_dict['pause'] = False
-                            # On change l'image du joueur
-                            self.change_animation('right')
-                        else:
-                            self.stats_dict['pause'] = False
-                            self.change_animation('left')
+        if test:
+            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
+                if actions.value < -0.15 and self.rect.x > 0:
+                    self.motion[actions.axis] = actions.value * 5
+                    self.rect.x += self.motion[actions.axis]
+                    self.stats_dict['pause'] = False
+                    # On change l'image du joueur
+                    self.change_animation('left')
+                    
+                elif actions.value > 0.15 and self.rect.x < 950:
+                    self.motion[actions.axis] = actions.value * 5
+                    self.rect.x += self.motion[actions.axis]
+                    self.stats_dict['pause'] = False
+                    self.change_animation('right')
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
@@ -105,6 +106,20 @@ class Player(pg.sprite.Sprite):
             # Si le joueur a atteint la hauteur maximale, il redescend
             if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                 self.stats_dict['jumps'] = 3
+
+    def jump_controller(self, actions):
+        #Fonction saut a la manette
+        if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
+            if self.stats_dict['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
+                if actions.button == 0:
+                    # Vérifie si le perso n'a pas déjà sauté deux fois
+                    if self.stats_dict['jumps'] < 2:
+                        # Saute
+                        self.rect.y -= 25
+                        self.stats_dict['current_height'] += 25
+                    # Si le joueur a atteint la hauteur maximale, il redescend
+                    if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
+                        self.stats_dict['jumps'] = 3
 
     def gravity(self):
         '''Fonction qui simule une gravité'''

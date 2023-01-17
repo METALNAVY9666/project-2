@@ -17,7 +17,8 @@ class Player(pg.sprite.Sprite):
             'idle_speed': 125, 'delta_sum': 0,
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
-            'attacked': False}
+            'attacked': False, 'fall': True,
+            'nbr_combo_q': 0, 'nbr_combo_w': 0}
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Affectation de l'image
@@ -72,31 +73,24 @@ class Player(pg.sprite.Sprite):
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
+        collide = self.game.collision(self, self.game.all_objects)
         # Le joueur fait une action
-        if 0 <= self.stats_dict['nbr_combo'] < 3:
-            if event.key == pg.K_q and self.stats_dict['nbr_combo'] < 1:
-                self.stats_dict['nbr_sprite'] = 0
-                self.game.dict_game['side'] = 'attack'
-                self.attack_up(choice)
-                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] < 1:
-                    self.stats_dict['nbr_combo'] += 1
-                    print(self.stats_dict['nbr_combo'])
-                # Actionne la mécanique de dégats quand il y a une collision
-                self.game.strike_collision()
-            if event.key == pg.K_w and self.stats_dict['nbr_combo'] < 3:
-                self.stats_dict['nbr_sprite'] = 0
-                self.game.dict_game['side'] = 'impact'
-                if self.game.collision(self, self.game.all_objects) and self.stats_dict['nbr_combo'] >= 1:
-                    # Actionne la mécanique de dégats quand il y a une collision
-                    self.stats_dict['nbr_combo'] += 1
-                    print(self.stats_dict['nbr_combo'])
-                    self.game.strike_collision()
-        if self.stats_dict['nbr_combo'] >= 2:
-            pg.time.wait(1000)
+        if event.key == pg.K_q:
+            self.combo('attack', 'nbr_combo_q')
+            self.attack_up(choice)
+        elif event.key == pg.K_w:
+            self.combo('impact', 'nbr_combo_w')
+        if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
+            # pg.time.wait(1000)
+            print('AAAAAAAAH')
             self.game.dict_game['side'] = 'spe'
             self.game.object.rect.x -= 200
-        if not self.game.collision(self, self.game.all_objects):
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nb_combo_q'] = 0
+        if not collide:
             self.stats_dict['nbr_combo'] = 0
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nbr_combo_q'] = 0
         # Augemente le nombre de combo
         # A voir ~~~~~
 
