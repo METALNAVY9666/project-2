@@ -183,8 +183,13 @@ class Player(pg.sprite.Sprite):
         '''Attaque en l'air'''
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'combo'
-            #self.stats_dict['fall'] = False
-            self.game.object.rect.y = 300
+            self.game.object.rect.y = 250
+        if self.game.collision(self, self.game.all_objects):
+            self.stats_dict['fall'] = False
+            if self.stats_dict['nbr_combo_q'] > 1:
+                self.game.dict_game['side'] = 'impact'
+                self.game.object.rect.x -= 100
+                self.stats_dict['fall'] = True
 
     def damages(self):
         '''Focntion qui gère les dommages'''
