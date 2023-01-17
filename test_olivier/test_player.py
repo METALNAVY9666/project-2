@@ -57,10 +57,11 @@ def main_window():
         actions = pg.event.get()
         # Ajout du fond dans la liste de chose à mettre à update
         liste_update.append(screen.blit(background, (0, 0)))
-        if square.name == 'hello':
+        if not square.choosen or not jeu.dict_game['is_playing']:
             # On change par le nom du perso choisi
             jeu.name = square.menu_update(screen, actions)
-        elif jeu.name != 'hello':
+            if square.choosen: jeu.dict_game['is_playing'] = True
+        elif square.choosen and jeu.dict_game['is_playing']:
             # Mise à jour du jeu
             liste_update.append(jeu.update(screen, dlt, actions))
             liste_update.append(jeu.update_objects(screen))

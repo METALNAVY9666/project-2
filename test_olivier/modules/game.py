@@ -14,7 +14,7 @@ class Jeu:
         # On récupère le nom du perso choisi.
         self.name = name
         self.dict_game = {'right': False, 'fps': 60,
-                          'side': 'left', 'is_playing': False}
+                          'side': 'left', 'is_playing': True}
         self.rect = None
         # Génération d'un personnage
         self.player = Player(self)
@@ -50,6 +50,8 @@ class Jeu:
         elif choice[pg.K_s]:
             # Gère le bloquage
             self.player.block()
+        elif choice[pg.K_ESCAPE]:
+            self.dict_game['is_playing'] = False
         # Système de gravité
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'

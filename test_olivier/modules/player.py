@@ -76,6 +76,7 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action
         if event.key == pg.K_q:
             self.combo('attack', 'nbr_combo_q')
+            self.attack_up(choice)
         elif event.key == pg.K_w:
             self.combo('impact', 'nbr_combo_w')
         if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
@@ -99,8 +100,8 @@ class Player(pg.sprite.Sprite):
             # Vérifie si le perso n'a pas déjà sauté deux fois
             if self.stats_dict['jumps'] < 2:
                 # Saute
-                self.rect.y -= 25
-                self.stats_dict['current_height'] += 25
+                self.rect.y -= 30
+                self.stats_dict['current_height'] += 30
             # Si le joueur a atteint la hauteur maximale, il redescend
             if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                 self.stats_dict['jumps'] = 3
@@ -110,8 +111,6 @@ class Player(pg.sprite.Sprite):
         # Le joueur tombe tant qu'il n'est pas au sol
         if self.stats_dict['fall']:
             if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
-                # fait tomber le perso et change l'image
-                self.stats_dict['pause'] = True
                 self.rect.y += 10
                 if not self.game.collision(self, self.game.all_objects):
                     self.change_animation('jump')
@@ -184,10 +183,8 @@ class Player(pg.sprite.Sprite):
         '''Attaque en l'air'''
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'combo'
-            self.stats_dict['fall'] = False
-            self.rect.y = 300
+            #self.stats_dict['fall'] = False
             self.game.object.rect.y = 300
-        self.stats_dict['fall'] = True
 
     def damages(self):
         '''Focntion qui gère les dommages'''
