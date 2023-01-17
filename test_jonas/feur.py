@@ -3,7 +3,10 @@ from player import *
 import sys
 import pygame
 from pygame.locals import *
+import pygame._sdl2
+from pygame._sdl2.controller import Controller
 pygame.init()
+pygame._sdl2.controller.init()
 
 
 pygame.display.set_caption('test_manettes') #Create the name of the game
@@ -15,6 +18,7 @@ joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_coun
 #Permet de savoir le nombre de manettes utilisés
 for joystick in joysticks:
     print(joystick.get_name()) #Permet de connaitre la manette utilisée.
+    controller = Controller.from_joystick(joystick)
 
 
 
@@ -38,6 +42,10 @@ while True:
 
     for event in pygame.event.get():
 
+        
+        if controller.get_button(1):
+            print("Yo")
+        """
         if event.type == JOYBUTTONDOWN:
             print(event)
 
@@ -54,7 +62,7 @@ while True:
             if event.button == 4:
                 pass
             if event.button == 5:
-                pass
+                pass"""
 
 
 

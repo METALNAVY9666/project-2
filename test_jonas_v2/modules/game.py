@@ -14,7 +14,7 @@ class Jeu:
         # On récupère le nom du perso choisi.
         self.name = name
         self.dict_game = {'right': False, 'fps': 60,
-                          'side': 'left', 'is_playing': False}
+                          'side': 'left', 'is_playing': True}
         self.rect = None
         # Génération d'un personnage
         self.player = Player(self)
@@ -58,24 +58,27 @@ class Jeu:
         self.loop_input(actions)
 
     def handle_input_controller(self, actions):
-            """
-            """
-            choice = pg.key.get_pressed()
-            # Réaffecte l'image de l'objet
-            self.object.image = images['punchingball']
-            # Modifie les animations en fonction de l'input
-            for event in actions:
-                #Gère les mouvements
-                self.player.move_controller(event)
-                # Gère les sauts
-                self.player.jump_controller(event)
-            if choice[pg.K_s]:
-                # Gère le bloquage
-                self.player.block()
-            # Système de gravité
-            self.player.gravity()
-            # Actions qui nécessitent une boucle 'for'
-            self.loop_input(actions)
+        """
+        """
+        # Récupère les touches préssées actuellement
+        choice = pg.key.get_pressed()
+        
+        self.player.stats_dict['pause'] = True
+        # Réaffecte l'image de l'objet
+        self.object.image = images['punchingball']
+        # Modifie les animations en fonction de l'input
+        for event in actions:
+            self.player.move_controller(event)
+            # Gère les sauts
+            #self.player.jump_controller(event)
+            """# Gère le bloquage
+            self.player.block()"""
+        if choice[pg.K_ESCAPE]:
+            self.dict_game['is_playing'] = False
+        # Système de gravité
+        # self.player.gravity()
+        # Actions qui nécessitent une boucle 'for'
+        self.loop_input(actions)
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.

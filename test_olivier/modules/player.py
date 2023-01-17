@@ -96,7 +96,7 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         '''Fonction saut'''
-        # Vérfie si le perso est inférieur à la hauteur de saut max
+        # Vérfie si ale perso est inférieur à la hauteur de saut mx
         if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
             # Vérifie si le perso n'a pas déjà sauté deux fois
             if self.stats_dict['jumps'] < 2:

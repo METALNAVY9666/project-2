@@ -12,7 +12,7 @@ class PunchingBall(pg.sprite.Sprite):
         self.image = images['punchingball']
         # Récupère le rectangle de l'image
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = 300, 510
+        self.rect.x, self.rect.y = 500, 510
         self.stats = {'health': 200, 'max_health': 200,
                       'fall': True, 'is_attacked': True}
 
@@ -29,5 +29,5 @@ class PunchingBall(pg.sprite.Sprite):
 
     def gravity_object(self):
         '''Gravité pour l'objet'''
-        if self.rect.y < 500:
+        if self.rect.y < 500 and self.game.player.stats_dict['fall']:
             self.rect.y += 5
