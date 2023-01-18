@@ -78,6 +78,7 @@ class Player(pg.sprite.Sprite):
         if event.key == pg.K_q:
             self.combo('attack', 'nbr_combo_q')
             self.attack_up(choice)
+            self.attack_down(choice)
         elif event.key == pg.K_w:
             self.combo('impact', 'nbr_combo_w')
         if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
@@ -203,9 +204,8 @@ class Player(pg.sprite.Sprite):
             self.stats_dict['fall'] = False
             if self.stats_dict['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.dict_game['side'] = 'impact'
-                self.stats_dict['pause'] = True
                 self.game.object.rect.x -= 100
-                self.stats_dict['fall'] = True
+                self.stats_dict['fall'] = False
 
     def damages(self):
         '''Focntion qui gère les dommages'''
@@ -233,3 +233,12 @@ class Player(pg.sprite.Sprite):
             print(self.stats_dict[key_name])
         # Actionne la mécanique de dégats quand il y a une collision
         self.game.strike_collision()
+    
+    def attack_down(self, choice):
+        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
+            self.game.dict_game['side'] = 'down'
+            while self.game.object.rect.y != 500:
+                self.game.object.rect.y += 1
+    
+    def update_pv(self):
+        return [self.stats_dict['health'], self.game.object.stats['health'] ]

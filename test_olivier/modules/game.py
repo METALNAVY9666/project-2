@@ -112,6 +112,8 @@ class Jeu:
         #self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
+        # Affiche les pv
+        print(self.player.update_pv())
         return self.rect
 
     def add_groups(self):
