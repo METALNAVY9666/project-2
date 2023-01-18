@@ -1,7 +1,7 @@
 '''Ce module est le jeu, il gère les inputs, les collisions ainsi que
 les différents événements dans le jeu.'''
 import pygame as pg
-from data.modules.player import Player
+from data.modules.fighter import Player
 from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
 
