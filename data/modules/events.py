@@ -1,7 +1,6 @@
 """contient la classe permettant de créer des évènements aléatoires"""
 from random import randint
 
-
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
     def __init__(self, pkg, prop, GFX):
@@ -74,17 +73,25 @@ class Countdown:
 
 class End:
     """gère l'état de la partie en fonction des pvs des joueurs"""
-    def __init__(self, pkg, prop):
+    def __init__(self, pkg, prop, settings):
         self.pkg = pkg
         self.prop = prop
+        self.settings = settings
         self.players = None
-        self.font = pkg["pygame"].font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 20)
+        self.font = pkg["pygame"].font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 60)
+        self.lock = True
     
     def death(self, player):
         """lance la fonction quand un joueur meurt"""
         txt = self.font.render(player + " wins", True, (0, 0, 0))
-        
-        return self.pkg["surface"].blit(txt, (0, 0)) 
+        width = self.settings["display"]["horizontal"]
+        height = self.settings["display"]["vertical"]
+        pos = (width//2, height//2)
+        if self.lock:
+            PATH = f"data/sfx/events/wins/win_{player}.mp3"
+            self.pkg["mixer"].Sound(PATH).play()
+            self.lock = False
+        return self.pkg["surface"].blit(txt, pos) 
 
     def update(self, players):
         """met à jour l'état de la partie"""

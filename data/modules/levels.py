@@ -69,7 +69,7 @@ class BaseLevel:
         """initialise les évènements"""
         self.cls["actions"] = self.pkg["pygame"].event.get()
         self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
-        self.cls["end"] = events.End(self.pkg, self.prop)
+        self.cls["end"] = events.End(self.pkg, self.prop, self.settings)
         self.cls["events"] = {}
         if "ae86" in self.prop["events"]:
             self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
