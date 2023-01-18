@@ -4,7 +4,8 @@ import pygame as pg
 from modules.menu import Menu
 from modules.game import Jeu
 from modules.texture_loader import images
-
+from pygame._sdl2.controller import Controller
+pg._sdl2.controller.init()
 
 def fps_moy(fps_list):
     '''Cette fonction permet de calculer la moyenne des fps'''

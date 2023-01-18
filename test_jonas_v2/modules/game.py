@@ -1,7 +1,7 @@
 '''Ce module est le jeu, il gère les inputs, les collisions ainsi que
 les différents événements dans le jeu.'''
 import pygame as pg
-from modules.player import Player
+from modules.player import Player, manage_controller
 from modules.object import PunchingBall
 from modules.texture_loader import images
 
@@ -60,15 +60,20 @@ class Jeu:
     def handle_input_controller(self, actions):
         """
         """
+        controller = manage_controller()
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
         for event in actions:
-            self.player.move_controller(event)
+            if event.type == pg.JOYAXISMOTION and event.axis == 0:
+                self.player.move_controller(event)
             # Gère les sauts
-            #self.player.jump(event)
-            """# Gère le bloquage
-            self.player.block()"""
+            self.player.jump_controller(event)
+            # Gère le bloquage
+            if controller.get_button(3):
+                self.player.block()
+        # Système de gravité
+        self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
@@ -87,6 +92,8 @@ class Jeu:
                 self.player.attack(event, choice)
                 # Esquive du joueur
                 self.player.vanish(event)
+            if event.type == pg.JOYBUTTONDOWN:
+                self.player.attack_controller(choice)
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -104,11 +111,13 @@ class Jeu:
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
         self.handle_input(actions)
-        self.handle_input_controller(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
+        self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
+        # Affiche les pv
+        print(self.player.update_pv())
         return self.rect
 
     def add_groups(self):

@@ -1,7 +1,16 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from modules.texture_loader import sprites_images, sprite_tab
+import pygame._sdl2
+from pygame._sdl2.controller import Controller
+pygame._sdl2.controller.init()
 
+def manage_controller():
+    joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
+    #Permet de savoir le nombre de manettes utilisés
+    for joystick in joysticks:
+        controller = Controller.from_joystick(joystick)
+        return controller
 
 class Player(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur, ainsi que son apparence.'''
@@ -52,49 +61,12 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action, donc on passe le bouléen sur False
         self.stats_dict['pause'] = False
 
-    def move_controller2(self, actions):
-        "Cette fonction gère les déplacements de droite à gauche a la manette"
-        # Vérifie s'il n'y a pas de collisions
-        test = not self.game.collision(self, self.game.all_objects)
-        if test:
-            if (actions.type == pg.JOYAXISMOTION and actions.axis == 0) or actions == "":
-                print(type(actions.value), actions.axis)
-                old_actions = [actions.value]
-                if actions in old_actions:
-                    old_actions = []
-                elif actions != old_actions:
-                    old_actions = [actions.value]
-                newactions = old_actions[0] * 10
-                print(old_actions)
-
-                if actions.value < -0.15//5 and self.rect.x > 0:
-                    self.motion[actions.axis] = newactions
-                    self.rect.x += self.motion[0]
-                    self.stats_dict['pause'] = False
-                    # On change l'image du joueur
-                    self.change_animation('left')
-                    
-                elif actions.value > 0.15//5 and self.rect.x < 950:
-                    self.motion[0] = newactions * 5
-                    self.rect.x += self.motion[0]
-                    self.stats_dict['pause'] = False
-                    self.change_animation('right')
-                else:
-                    self.motion[0] = 0
-
     def move_controller(self, actions):
+        "Cette fonction gère les déplacements de droite à gauche a la manette"
+        controller = manage_controller()
+        self.motion[0] = controller.get_axis(0) / 14000
+        self.rect.x += self.motion[0]
         
-        if actions.type == pg.JOYAXISMOTION:
-            if actions.axis == 0:
-                print(actions)
-                if abs(actions.value) > 0.1 and self.rect.left > 0: #If axis > 0.1 (control dead zone)
-                    self.motion[actions.axis] = actions.value #modify motion than allows move
-                else:
-                    self.motion[actions.axis] = 0 #modify motion than allow don't move
-                self.rect.x += self.motion[0] * 10 #Modifie les abscisses (déplace l'objet)
-        
-
-                    
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
@@ -103,6 +75,7 @@ class Player(pg.sprite.Sprite):
         if event.key == pg.K_q:
             self.combo('attack', 'nbr_combo_q')
             self.attack_up(choice)
+            self.attack_down(choice)
         elif event.key == pg.K_w:
             self.combo('impact', 'nbr_combo_w')
         if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
@@ -118,6 +91,29 @@ class Player(pg.sprite.Sprite):
             self.stats_dict['nbr_combo_q'] = 0
         # Augemente le nombre de combo
         # A voir ~~~~~
+    def attack_controller(self, choice):
+        '''Cette fonction permet de gérer l'attaque d'un perso.'''
+        collide = self.game.collision(self, self.game.all_objects)
+        controller = manage_controller()
+        # Le joueur fait une action
+        if controller.get_button(2):
+            self.combo('attack', 'nbr_combo_q')
+            self.attack_up(choice)
+            self.attack_down(choice)
+        elif controller.get_button(1):
+            self.combo('impact', 'nbr_combo_w')
+        if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
+            # pg.time.wait(1000)
+            print('AAAAAAAAH')
+            self.game.dict_game['side'] = 'spe'
+            self.game.object.rect.x -= 200
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nb_combo_q'] = 0
+        print(self.stats_dict['nbr_combo'], self.stats_dict['nbr_combo_w'], self.stats_dict['nbr_combo_q'])
+        if not collide:
+            self.stats_dict['nbr_combo'] = 0
+            self.stats_dict['nbr_combo_w'] = 0
+            self.stats_dict['nbr_combo_q'] = 0
 
     def jump(self):
         '''Fonction saut'''
@@ -133,18 +129,17 @@ class Player(pg.sprite.Sprite):
                 self.stats_dict['jumps'] = 3
 
     def jump_controller(self, actions):
-        #Fonction saut a la manette
-        if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
-            if self.stats_dict['jumps'] < 2 and actions.type == pg.JOYBUTTONDOWN:
-                if actions.button == 0:
-                    # Vérifie si le perso n'a pas déjà sauté deux fois
-                    if self.stats_dict['jumps'] < 2:
-                        # Saute
-                        self.rect.y -= 25
-                        self.stats_dict['current_height'] += 25
-                    # Si le joueur a atteint la hauteur maximale, il redescend
-                    if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
-                        self.stats_dict['jumps'] = 3
+        controller = manage_controller()
+        if controller.get_button(0):
+            if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
+                # Vérifie si le perso n'a pas déjà sauté deux fois
+                if self.stats_dict['jumps'] < 2:
+                    # Saute
+                    self.rect.y -= 30
+                    self.stats_dict['current_height'] += 30
+                # Si le joueur a atteint la hauteur maximale, il redescend
+                if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
+                    self.stats_dict['jumps'] = 3
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -228,9 +223,8 @@ class Player(pg.sprite.Sprite):
             self.stats_dict['fall'] = False
             if self.stats_dict['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.dict_game['side'] = 'impact'
-                self.stats_dict['pause'] = True
+                self.stats_dict['fall'] = False
                 self.game.object.rect.x -= 100
-                self.stats_dict['fall'] = True
 
     def damages(self):
         '''Focntion qui gère les dommages'''
@@ -244,6 +238,8 @@ class Player(pg.sprite.Sprite):
         self.change_animation('shield')
         if self.game.dict_game['right']:
             self.change_animation('shield_right')
+    
+
 
     def combo(self, atk_name, key_name):
         '''Fonction attaque qui prend en paramètre le nom de la touche preéssée,
@@ -253,8 +249,18 @@ class Player(pg.sprite.Sprite):
         self.game.dict_game['side'] = atk_name
         if collide:
             # attaque en l'air
-            #self.attack_up(choice)
+            # self.attack_up(choice)
             self.stats_dict[key_name] += 1
             print(self.stats_dict[key_name])
         # Actionne la mécanique de dégats quand il y a une collision
         self.game.strike_collision()
+
+    def attack_down(self, choice):
+        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
+            self.game.dict_game['side'] = 'down'
+            while self.game.object.rect.y != 500:
+                self.game.object.rect.y += 1
+
+    def update_pv(self):
+        return [[self.game.name, self.stats_dict['health']],
+                ['punchingball', self.game.object.stats['health']]]

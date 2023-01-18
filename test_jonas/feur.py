@@ -45,14 +45,15 @@ while True:
         
         if controller.get_button(1):
             print("Yo")
-        """
+        
+
+        if controller.get_button(0): #If button "0" is pressing:
+            carre.square_color = (carre.square_color + 1) % len(carre.color) #Change square color
+            pygame.time.get_ticks()
+
+
         if event.type == JOYBUTTONDOWN:
             print(event)
-
-
-            if event.button == 0: #If button "0" is pressing:
-                carre.square_color = (carre.square_color + 1) % len(carre.color) #Change square color
-
             if event.button == 1:
                 carre.jump()
             if event.button == 2:
@@ -62,32 +63,20 @@ while True:
             if event.button == 4:
                 pass
             if event.button == 5:
-                pass"""
+                pass
 
+        if event.type == JOYAXISMOTION:
+            if event.axis == 0:
+                carre.motion[0] = controller.get_axis(0) / 14000
+            if event.axis == 1:
+                carre.motion[1] = controller.get_axis(1) / 14000
 
 
         if event.type == JOYBUTTONUP:
-            """print(event)"""
+            print(event)
 
-        if event.type == JOYAXISMOTION: #If controller joys are moving:
-            if event.axis < 2: #If joy left is moving
-                if (abs(event.value) > 0.1 and carre.square.left > 0
-                and carre.square.right < screen.get_width()
-                and carre.square.y > 0
-                and carre.square.bottom < screen.get_height()): #If axis > 0.1 (control dead zone)
-                    print(event)
-                    carre.motion[event.axis] = event.value #modify motion than allows move
-                else:
-                    carre.motion[event.axis] = 0 #modify motion than allow don't move
-            """
-            #same but with the joy right
-            if event.axis >= 2 and event.axis < 4:
-                if abs(event.value) > 0.1:
-                    print("CA FONCTIONNE !!!")
-                    motion[event.axis - 2] = event.value
-                else:
-                    motion[event.axis - 2] = 0
-            """
+        
+            
 
         #Permet de savoir si une manette a été rajoutée
         if event.type == JOYDEVICEADDED:
