@@ -201,6 +201,6 @@ def main():
             for event in pygame.event.get():
                 pygame.display.update()
                 if event.type == pygame.display.quit:
-                    return suivant
+                    return "suivant"
                     
             

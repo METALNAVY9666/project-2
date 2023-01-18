@@ -88,7 +88,7 @@ class carre2:
     def __init__(self, pos):
         """ Cette fonction permet de permet d'initialiser la classe """
         self.presse = False
-        self.pos2 = pos
+        self.pos = pos
         self.j = 0
 
 
@@ -123,9 +123,10 @@ class perso1:
     """ Cette classe permet d'aficher le personnage choisi. """
     posi1 = (50, 400)
     posi2 = (700, 400)
-    
+
+
+
         
-    
 
 
 pygame.init()
@@ -183,11 +184,21 @@ def main():
         if retour:
             return "retour"
 
-        y = cadre_1.check_touche()
-        z = cadre_2.check_touche2()
-        print(y, z)
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    print("droit")
+                if event.key == pygame.K_LEFT:
+                    print("gauche")
+                if event.key == pygame.K_d:
+                    print("d")
+                if event.key == pygame.K_q:
+                    print("q")
+                if event.key == pygame.K_SPACE:
+                    print("espace")
 
-        print("")
+
+        
 
 
         # boucle pour quitter ou pas la console du menu
