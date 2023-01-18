@@ -3,7 +3,6 @@ import pygame
 from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
-from data.modules import level_choice
 
 game_settings = read_settings()
 x = game_settings["display"]["horizontal"]
@@ -31,8 +30,7 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-# level = read_levels()["neo_tokyo"]
-level = read_levels()[level_choice.pick_level()]
+level = read_levels()["neo_tokyo"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
 fps = FPS(pack_pygame)
