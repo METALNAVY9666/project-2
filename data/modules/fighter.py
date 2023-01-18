@@ -211,7 +211,7 @@ class Player(pg.sprite.Sprite):
         '''Focntion qui gère les dommages'''
         if self.game.collision(self, self.game.all_objects):
             if not self.stats_dict['attacked']:
-                self.stats_dict['health'] -= 0.1
+                self.stats_dict['health'] -= 1
 
     def block(self):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''

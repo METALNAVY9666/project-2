@@ -67,7 +67,6 @@ class BaseLevel:
 
     def init_events(self):
         """initialise les évènements"""
-        self.cls["actions"] = self.pkg["pygame"].event.get()
         self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
         self.cls["end"] = events.End(self.pkg, self.prop, self.settings)
         self.cls["events"] = {}
@@ -106,7 +105,7 @@ class BaseLevel:
             pos = [(width//2)-(width//3), height//1.5] 
             return surface.blit(GFX["platform"], pos)
 
-    def update(self, delta):
+    def update(self, delta, actions):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
 
@@ -120,7 +119,7 @@ class BaseLevel:
 
         #met à jour le jeu
         surface = self.pkg["surface"]
-        game = self.cls["game"].update(surface, delta, self.cls["actions"])
+        game = self.cls["game"].update(surface, delta, actions)
         self.update_list.append(game[0])
         self.update_list.append(self.cls["game"].update_objects(surface))
 

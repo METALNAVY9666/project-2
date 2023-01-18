@@ -40,8 +40,10 @@ while WIN:
     # important pour que le jeu reste fluide
     dt = pack_pygame["clock"].tick(pack_pygame["FPS"])
     current_map.delta = dt
+    # Récupère les événements courants
+    actions = pygame.event.get()
     # vérifie les évènements
-    for event in pygame.event.get():
+    for event in actions:
         if event.type == pygame.QUIT:
             WIN = False
         if event.type == pygame.KEYDOWN:
@@ -49,7 +51,7 @@ while WIN:
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
     # actualise la map, si elle renvoie "quit", alors quitter
-    if current_map.update(dt) == "exit":
+    if current_map.update(dt, actions) == "exit":
         WIN = False
     fps.record_fps()
 
