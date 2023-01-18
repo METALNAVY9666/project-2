@@ -1,4 +1,4 @@
-import pygame
+"""import pygame
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
 
@@ -22,9 +22,10 @@ class player():
     def jump(self):
         while self.square_rect_y > 10:
             self.square.y += 10
+            """
 
 
-"""
+
 import sys
 import pygame
 import pygame._sdl2
@@ -77,7 +78,7 @@ while True:
         for hat in range(joystick.get_numhats()):
             
             hat_message = 'Hat ' + str(hat) + ': ' + str(joystick.get_hat(hat))
-            js.append(hat_message, 'bonjour')
+            js.append(hat_message)
         
         debug_messages.append(js)
     
@@ -90,7 +91,7 @@ while True:
     clock.tick(60)
     debug_messages.clear()
 
-"""
+
 """
 import pygame
 import os

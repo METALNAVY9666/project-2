@@ -52,24 +52,49 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action, donc on passe le bouléen sur False
         self.stats_dict['pause'] = False
 
-    def move_controller(self, actions):
+    def move_controller2(self, actions):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test:
-            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
-                if actions.value < -0.25 and self.rect.x > 0:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
+            if (actions.type == pg.JOYAXISMOTION and actions.axis == 0) or actions == "":
+                print(type(actions.value), actions.axis)
+                old_actions = [actions.value]
+                if actions in old_actions:
+                    old_actions = []
+                elif actions != old_actions:
+                    old_actions = [actions.value]
+                newactions = old_actions[0] * 10
+                print(old_actions)
+
+                if actions.value < -0.15//5 and self.rect.x > 0:
+                    self.motion[actions.axis] = newactions
+                    self.rect.x += self.motion[0]
                     self.stats_dict['pause'] = False
                     # On change l'image du joueur
                     self.change_animation('left')
                     
-                elif actions.value > 0.15 and self.rect.x < 950:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
+                elif actions.value > 0.15//5 and self.rect.x < 950:
+                    self.motion[0] = newactions * 5
+                    self.rect.x += self.motion[0]
                     self.stats_dict['pause'] = False
                     self.change_animation('right')
+                else:
+                    self.motion[0] = 0
+
+    def move_controller(self, actions):
+        
+        if actions.type == pg.JOYAXISMOTION:
+            if actions.axis == 0:
+                print(actions)
+                if abs(actions.value) > 0.1 and self.rect.left > 0: #If axis > 0.1 (control dead zone)
+                    self.motion[actions.axis] = actions.value #modify motion than allows move
+                else:
+                    self.motion[actions.axis] = 0 #modify motion than allow don't move
+                self.rect.x += self.motion[0] * 10 #Modifie les abscisses (déplace l'objet)
+        
+
+                    
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
@@ -110,16 +135,13 @@ class Player(pg.sprite.Sprite):
     def jump_controller(self, actions):
         #Fonction saut a la manette
         if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
-            if self.stats_dict['jumps'] < 2 and actions.type == pg.button.get_pressed():
+            if self.stats_dict['jumps'] < 2 and actions.type == pg.JOYBUTTONDOWN:
                 if actions.button == 0:
                     # Vérifie si le perso n'a pas déjà sauté deux fois
                     if self.stats_dict['jumps'] < 2:
-                        print(self.stats_dict['current_height'], self.stats_dict['max_height'])
                         # Saute
-                        for _ in range(5):
-                            self.rect.y -= 20
-                            self.stats_dict['current_height'] += 30
-                        self.stats_dict['jumps'] += 1
+                        self.rect.y -= 25
+                        self.stats_dict['current_height'] += 25
                     # Si le joueur a atteint la hauteur maximale, il redescend
                     if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                         self.stats_dict['jumps'] = 3
@@ -200,12 +222,13 @@ class Player(pg.sprite.Sprite):
     def attack_up(self, choice):
         '''Attaque en l'air'''
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
-            self.game.dict_game['side'] = 'combo'
+            self.game.dict_game['side'] = 'up'
             self.game.object.rect.y = 250
         if self.game.collision(self, self.game.all_objects):
             self.stats_dict['fall'] = False
-            if self.stats_dict['nbr_combo_q'] > 1:
+            if self.stats_dict['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.dict_game['side'] = 'impact'
+                self.stats_dict['pause'] = True
                 self.game.object.rect.x -= 100
                 self.stats_dict['fall'] = True
 

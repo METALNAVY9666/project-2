@@ -60,23 +60,15 @@ class Jeu:
     def handle_input_controller(self, actions):
         """
         """
-        # Récupère les touches préssées actuellement
-        choice = pg.key.get_pressed()
-        
-        self.player.stats_dict['pause'] = True
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
         for event in actions:
             self.player.move_controller(event)
             # Gère les sauts
-            #self.player.jump_controller(event)
+            #self.player.jump(event)
             """# Gère le bloquage
             self.player.block()"""
-        if choice[pg.K_ESCAPE]:
-            self.dict_game['is_playing'] = False
-        # Système de gravité
-        # self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
@@ -112,9 +104,9 @@ class Jeu:
         self.rect = self.player.blit_sprite(screen, dlt)
         # Gère les inputs
         self.handle_input(actions)
+        self.handle_input_controller(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
-        self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
         return self.rect
