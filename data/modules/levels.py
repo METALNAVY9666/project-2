@@ -69,7 +69,7 @@ class BaseLevel:
         """initialise les évènements"""
         self.cls["actions"] = self.pkg["pygame"].event.get()
         self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
-        # self.cls["end"] = events.End(self.pkg, self.prop)
+        self.cls["end"] = events.End(self.pkg, self.prop)
         self.cls["events"] = {}
         if "ae86" in self.prop["events"]:
             self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
@@ -121,7 +121,7 @@ class BaseLevel:
         #met à jour le jeu
         surface = self.pkg["surface"]
         game = self.cls["game"].update(surface, delta, self.cls["actions"])
-        self.update_list.append(game)
+        self.update_list.append(game[0])
         self.update_list.append(self.cls["game"].update_objects(surface))
 
         # met à jour les obstacles
@@ -135,8 +135,8 @@ class BaseLevel:
         self.update_countdown()
 
         # màj l'état des personnages
-        # end = self.cls["end"]
-        # self.update_list.append(end.update())
+        end = self.cls["end"]
+        self.update_list.append(end.update(game[1]))
         
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()

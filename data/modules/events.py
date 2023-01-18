@@ -82,7 +82,8 @@ class End:
     
     def death(self, player):
         """lance la fonction quand un joueur meurt"""
-        txt = self.font.render(player, (0, 0, 0))
+        txt = self.font.render(player + " wins", True, (0, 0, 0))
+        
         return self.pkg["surface"].blit(txt, (0, 0)) 
 
     def update(self, players):
@@ -90,4 +91,4 @@ class End:
         self.players = players
         for i in [0, 1]:
             if players[i][1] <= 0:
-                return self.death(players[i][0])
+                return self.death(players[1-i][0])
