@@ -29,7 +29,7 @@ images = {}
 # Images pour le menu
 images["background"] = load_image(
     BG_PATH+'map_tuto.jpg', (1080, 720)).convert()
-images["square"] = load_image(BG_PATH+'square.png', (160, 160))
+images["square"] = load_image(BG_PATH+'square.png', (160, 160)).convert_alpha()
 images['punchingball'] = load_image(BG_PATH+'image.png', (120, 120))
 images['hit'] = load_image(BG_PATH+'punched.png', (120, 120))
 images['goku_face'] = load_image(BG_PATH+'face_goku.png', (90, 90))

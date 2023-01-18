@@ -4,6 +4,7 @@ from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
 from data.modules import events
+from data.modules.game import Jeu
 
 
 class Background:
@@ -36,7 +37,7 @@ class BaseLevel:
         self.init_prop(pygame_pack, prop, game_settings)
         self.init_ui()
         self.init_audio()
-        self.init_players()
+        self.init_game()
         self.init_events()
 
     def init_prop(self, pygame_pack, prop, game_settings):
@@ -60,13 +61,15 @@ class BaseLevel:
         bg_music.play()
         self.cls["pause"].bg_music = bg_music
 
-    def init_players(self):
-        """initialise les joueurs"""
-        pass
+    def init_game(self):
+        """initialise le jeu"""
+        self.cls["game"] = Jeu("goku")
 
     def init_events(self):
         """initialise les évènements"""
+        self.cls["actions"] = self.pkg["pygame"].event.get()
         self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
+        # self.cls["end"] = events.End(self.pkg, self.prop)
         self.cls["events"] = {}
         if "ae86" in self.prop["events"]:
             self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
@@ -115,8 +118,14 @@ class BaseLevel:
         # met à jour le fond
         self.update_list.append(self.cls["bg"].update())
 
+        #met à jour le jeu
+        surface = self.pkg["surface"]
+        game = self.cls["game"].update(surface, delta, self.cls["actions"])
+        self.update_list.append(game)
+        self.update_list.append(self.cls["game"].update_objects(surface))
+
         # met à jour les obstacles
-        self.update_list.append(self.update_obstacles())
+        # self.update_list.append(self.update_obstacles())
 
         # met à jour les évènements
         self.update_list += self.update_events(self.cls["pause"].bool,
@@ -125,11 +134,16 @@ class BaseLevel:
         # met à jour le décompte
         self.update_countdown()
 
+        # màj l'état des personnages
+        # end = self.cls["end"]
+        # self.update_list.append(end.update())
+        
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)
+
 
         self.pkg["display"].update(self.update_list)
         self.update_list = []

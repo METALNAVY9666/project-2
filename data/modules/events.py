@@ -71,3 +71,23 @@ class Countdown:
         if clock > counts[-1][0]:
             return "end", None
         return "idle", None
+
+class End:
+    """gère l'état de la partie en fonction des pvs des joueurs"""
+    def __init__(self, pkg, prop):
+        self.pkg = pkg
+        self.prop = prop
+        self.players = None
+        self.font = pkg["pygame"].font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 20)
+    
+    def death(self, player):
+        """lance la fonction quand un joueur meurt"""
+        txt = self.font.render(player, (0, 0, 0))
+        return self.pkg["surface"].blit(txt, (0, 0)) 
+
+    def update(self, players):
+        """met à jour l'état de la partie"""
+        self.players = players
+        for i in [0, 1]:
+            if players[i][1] <= 0:
+                return self.death(players[i][0])
