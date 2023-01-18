@@ -64,7 +64,7 @@ class Player(pg.sprite.Sprite):
                     self.stats_dict['pause'] = False
                     # On change l'image du joueur
                     self.change_animation('left')
-                    
+
                 elif actions.value > 0.15 and self.rect.x < 950:
                     self.motion[actions.axis] = actions.value * 5
                     self.rect.x += self.motion[actions.axis]
@@ -109,7 +109,7 @@ class Player(pg.sprite.Sprite):
                 self.stats_dict['jumps'] = 3
 
     def jump_controller(self, actions):
-        #Fonction saut a la manette
+        # Fonction saut a la manette
         if self.stats_dict['current_height'] <= self.stats_dict['max_height']:
             if self.stats_dict['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
                 if actions.button == 0:
@@ -204,8 +204,8 @@ class Player(pg.sprite.Sprite):
             self.stats_dict['fall'] = False
             if self.stats_dict['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.dict_game['side'] = 'impact'
-                self.game.object.rect.x -= 100
                 self.stats_dict['fall'] = False
+                self.game.object.rect.x -= 100
 
     def damages(self):
         '''Focntion qui gère les dommages'''
@@ -228,17 +228,18 @@ class Player(pg.sprite.Sprite):
         self.game.dict_game['side'] = atk_name
         if collide:
             # attaque en l'air
-            #self.attack_up(choice)
+            # self.attack_up(choice)
             self.stats_dict[key_name] += 1
             print(self.stats_dict[key_name])
         # Actionne la mécanique de dégats quand il y a une collision
         self.game.strike_collision()
-    
+
     def attack_down(self, choice):
         if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'down'
             while self.game.object.rect.y != 500:
                 self.game.object.rect.y += 1
-    
+
     def update_pv(self):
-        return [self.stats_dict['health'], self.game.object.stats['health'] ]
+        return [[self.game.name, self.stats_dict['health']],
+                ['punchingball', self.game.object.stats['health']]]
