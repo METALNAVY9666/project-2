@@ -26,36 +26,37 @@ class Jeu:
         # Ajout dans des groupes de sprites
         self.add_groups()
 
-    def handle_input(self, actions):
+    def handle_input(self, actions, pause):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
-        # Récupère les touches préssées actuellement
-        choice = pg.key.get_pressed()
-        self.player.stats_dict['pause'] = True
-        # Réaffecte l'image de l'objet
-        self.object.image = GFX['punchingball']
-        # Modifie les animations en fonction de l'input
-        if choice[pg.K_RIGHT]:
-            self.player.move()
-            self.dict_game['right'] = True
-        elif choice[pg.K_LEFT]:
-            self.player.move()
-            self.dict_game['right'] = False
-            self.dict_game['side'] = 'left'
-        elif choice[pg.K_SPACE]:
-            # Gère les sauts
-            self.player.jump()
-        elif choice[pg.K_s]:
-            # Gère le bloquage
-            self.player.block()
-        elif choice[pg.K_ESCAPE]:
-            self.dict_game['is_playing'] = False
-        # Système de gravité
-        self.player.gravity()
-        # Actions qui nécessitent une boucle 'for'
-        self.loop_input(actions)
+        if not pause:
+            # Récupère les touches préssées actuellement
+            choice = pg.key.get_pressed()
+            self.player.stats_dict['pause'] = True
+            # Réaffecte l'image de l'objet
+            self.object.image = GFX['punchingball']
+            # Modifie les animations en fonction de l'input
+            if choice[pg.K_RIGHT]:
+                self.player.move()
+                self.dict_game['right'] = True
+            elif choice[pg.K_LEFT]:
+                self.player.move()
+                self.dict_game['right'] = False
+                self.dict_game['side'] = 'left'
+            elif choice[pg.K_SPACE]:
+                # Gère les sauts
+                self.player.jump()
+            elif choice[pg.K_s]:
+                # Gère le bloquage
+                self.player.block()
+            elif choice[pg.K_ESCAPE]:
+                self.dict_game['is_playing'] = False
+            # Système de gravité
+            self.player.gravity()
+            # Actions qui nécessitent une boucle 'for'
+            self.loop_input(actions)
 
     def handle_input_controller(self, actions):
         """
@@ -100,13 +101,13 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dlt, actions):
+    def update(self, screen, dlt, actions, pause):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
-        self.rect = self.player.blit_sprite(screen, dlt)
+        self.rect = self.player.blit_sprite(screen, dlt, pause)
         # Gère les inputs
-        self.handle_input(actions)
+        self.handle_input(actions, pause)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
         #self.handle_input_controller(actions)

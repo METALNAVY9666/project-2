@@ -87,6 +87,7 @@ class End:
         width = self.settings["display"]["horizontal"]
         height = self.settings["display"]["vertical"]
         pos = (width//2, height//2)
+        pos = txt.get_rect(center = pos)
         if self.lock:
             PATH = f"data/sfx/events/wins/win_{player}.mp3"
             self.pkg["mixer"].Sound(PATH).play()

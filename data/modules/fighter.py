@@ -145,12 +145,12 @@ class Player(pg.sprite.Sprite):
         self.images_dict = sprites_images(self.game.name)
         self.image = self.images_dict[name]
 
-    def blit_sprite(self, screen, dlt):
+    def blit_sprite(self, screen, dlt, pause):
         '''Cette fonction sert à afficher le sprite du joueur en continu
         des coordonées demandes.'''
         # On affiche les actions que le joueur fait
         screen.blit(self.image, (self.rect))
-        if self.stats_dict['pause']:
+        if not pause:
             # Changement d'image
             self.image = self.position()
             self.stats_dict['delta_sum'] += dlt
@@ -210,8 +210,9 @@ class Player(pg.sprite.Sprite):
     def damages(self):
         '''Focntion qui gère les dommages'''
         if self.game.collision(self, self.game.all_objects):
-            if not self.stats_dict['attacked']:
-                self.stats_dict['health'] -= 1
+            """if not self.stats_dict['attacked']:
+                self.stats_dict['health'] -= 1"""
+            pass
 
     def block(self):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''
