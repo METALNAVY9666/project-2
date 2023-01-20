@@ -120,7 +120,8 @@ class BaseLevel:
         #met à jour le jeu
         surface = self.pkg["surface"]
         pause = self.cls["pause"].bool
-        game = self.cls["game"].update(surface, delta, actions, pause)
+        busy = self.cls["busy"]
+        game = self.cls["game"].update(surface, delta, actions, pause, busy)
         self.update_list.append(game[0])
         self.update_list.append(self.cls["game"].update_objects(surface))
 
