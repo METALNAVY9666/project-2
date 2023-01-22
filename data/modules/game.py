@@ -26,12 +26,12 @@ class Jeu:
         # Ajout dans des groupes de sprites
         self.add_groups()
 
-    def handle_input(self, actions, pause):
+    def handle_input(self, actions, pause, busy):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
-        if not pause:
+        if not pause and not busy:
             # Récupère les touches préssées actuellement
             choice = pg.key.get_pressed()
             self.player.stats_dict['pause'] = True
@@ -101,15 +101,15 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dlt, actions, pause):
+    def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         self.rect = self.player.blit_sprite(screen, dlt, pause)
         # Gère les inputs
-        self.handle_input(actions, pause)
+        self.handle_input(actions, pause, busy)
         # Renvoi le rectangle du joueur
-        self.update_health(screen)
+        self.update_health(screen, busy)
         #self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
@@ -139,22 +139,23 @@ class Jeu:
                 # Change l'animation en cas d'attaque
                 self.object.image = GFX['hit']
 
-    def update_health(self, surface):
+    def update_health(self, surface, busy):
         '''Cette fonction dessine la barre de vie, d'énergie, et de défense du perso.
         Chaque barre possède une longueur propre au montant de sa variable respective.
         On dessine d'abord une barre grise, afin de faire le fond, puis on dessine celle
         avec de la couleur. Les deux, sur la surface donnée en paramètre.'''
-        # Dessin de la barre de vie
-        pg.draw.rect(surface, (140, 138, 137), [
-                     950, 50, self.player.stats_dict['max_health'], 15])
-        pg.draw.rect(surface, (1, 88, 33), [
-                     950, 50, self.player.stats_dict['health'], 15])
-        # Barre de vie de l'objet
-        pg.draw.rect(surface, (140, 138, 137), [
-                     10, 50, self.object.stats['max_health'], 15])
-        pg.draw.rect(surface, (1, 88, 33), [
-                     10, 50, self.object.stats['health'], 15])
-        # Nombre d'esquive possible
-        pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
-        pg.draw.rect(surface, (255, 200, 133), [
-                     950, 100, self.player.stats_dict['nbr_vanish']*30, 15])
+        if not busy:
+            # Dessin de la barre de vie
+            pg.draw.rect(surface, (140, 138, 137), [
+                        950, 50, self.player.stats_dict['max_health'], 15])
+            pg.draw.rect(surface, (1, 88, 33), [
+                        950, 50, self.player.stats_dict['health'], 15])
+            # Barre de vie de l'objet
+            pg.draw.rect(surface, (140, 138, 137), [
+                        10, 50, self.object.stats['max_health'], 15])
+            pg.draw.rect(surface, (1, 88, 33), [
+                        10, 50, self.object.stats['health'], 15])
+            # Nombre d'esquive possible
+            pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
+            pg.draw.rect(surface, (255, 200, 133), [
+                        950, 100, self.player.stats_dict['nbr_vanish']*30, 15])
