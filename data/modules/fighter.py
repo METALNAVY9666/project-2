@@ -3,7 +3,7 @@ import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
 
 
-class Player(pg.sprite.Sprite):
+class Fighter(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur, ainsi que son apparence.'''
 
     def __init__(self, game):
@@ -75,11 +75,11 @@ class Player(pg.sprite.Sprite):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         collide = self.game.collision(self, self.game.all_objects)
         # Le joueur fait une action
-        if event.key == pg.K_q:
+        if event.key == pg.K_y:
             self.combo('attack', 'nbr_combo_q')
             self.attack_up(choice)
             self.attack_down(choice)
-        elif event.key == pg.K_w:
+        elif event.key == pg.K_u:
             self.combo('impact', 'nbr_combo_w')
         if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
             # pg.time.wait(1000)

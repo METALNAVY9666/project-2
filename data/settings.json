@@ -4,9 +4,27 @@
         "effects": 100
     },
     "display": {
-        "horizontal": 1366,
-        "vertical": 768,
+        "horizontal": 1920,
+        "vertical": 1080,
         "fullscreen": true,
         "FPS": 60
-    }
+    },
+    "keys": [
+        {
+            "jump": "z",
+            "block": "s",
+            "left": "q",
+            "right": "d",
+            "l_attack": "y",
+            "h_attack": "u"
+        },
+        {
+            "jump": "up",
+            "block": "down",
+            "left": "left",
+            "right": "right",
+            "l_attack": "kp_1",
+            "h_attack": "kp_2"
+        }
+    ]
 }

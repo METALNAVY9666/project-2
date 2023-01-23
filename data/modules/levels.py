@@ -63,7 +63,7 @@ class BaseLevel:
 
     def init_game(self):
         """initialise le jeu"""
-        self.cls["game"] = Jeu("goku")
+        self.cls["game"] = Jeu("goku", self.pkg, self.prop)
 
     def init_events(self):
         """initialise les évènements"""
@@ -122,11 +122,11 @@ class BaseLevel:
         pause = self.cls["pause"].bool
         busy = self.cls["busy"]
         game = self.cls["game"].update(surface, delta, actions, pause, busy)
-        self.update_list.append(game[0])
+        self.update_list += game[0]
         self.update_list.append(self.cls["game"].update_objects(surface))
 
         # met à jour les obstacles
-        # self.update_list.append(self.update_obstacles())
+        self.update_list.append(self.update_obstacles())
 
         # met à jour les évènements
         self.update_list += self.update_events(self.cls["pause"].bool,
@@ -144,7 +144,6 @@ class BaseLevel:
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)
-
 
         self.pkg["display"].update(self.update_list)
         self.update_list = []

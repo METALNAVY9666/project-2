@@ -9,16 +9,19 @@ x = game_settings["display"]["horizontal"]
 y = game_settings["display"]["vertical"]
 dimensions = [x, y]
 
+
 pack_pygame = {
     "pygame": pygame,
     "FPS": game_settings["display"]["FPS"],
     "display": pygame.display,
     "surface": pygame.display.set_mode(dimensions),
+    "Rect" : pygame.Rect,
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
     "time": pygame.time,
     "mouse": pygame.mouse,
     "rect": pygame.Rect,
+    "key" : pygame.key,
     "dimensions": dimensions
 }
 
@@ -30,7 +33,7 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-level = read_levels()["tenkaichi_budokai"]
+level = read_levels()["highway"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
 fps = FPS(pack_pygame)
