@@ -36,7 +36,7 @@ class Jeu:
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
-        
+
         if not pause and not busy:
             # Récupère les touches préssées actuellement
             choice = pg.key.get_pressed()
@@ -116,7 +116,7 @@ class Jeu:
         self.handle_input(actions, pause, busy)
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
-        #self.handle_input_controller(actions)
+        # self.handle_input_controller(actions)
         # Dommages
         self.player_0.damages()
         return rects, self.player_0.update_pv()
@@ -153,15 +153,15 @@ class Jeu:
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
-                        950, 50, self.player_0.stats_dict['max_health'], 15])
+                950, 50, self.player_0.stats_dict['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                        950, 50, self.player_0.stats_dict['health'], 15])
+                950, 50, self.player_0.stats_dict['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
-                        10, 50, self.object.stats['max_health'], 15])
+                10, 50, self.object.stats['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                        10, 50, self.object.stats['health'], 15])
+                10, 50, self.object.stats['health'], 15])
             # Nombre d'esquive possible
             pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
-                        950, 100, self.player_0.stats_dict['nbr_vanish']*30, 15])
+                950, 100, self.player_0.stats_dict['nbr_vanish']*30, 15])

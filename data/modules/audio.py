@@ -4,10 +4,11 @@ from os import listdir
 
 class Music:
     """joue de la musique en fonction du type de musique"""
+
     def __init__(self, pkg, prop, settings):
         self.pkg = pkg
         self.loader = self.pkg["mixer"].music
-        
+
         self.music = prop["music"]
         self.folder = prop["music_folder"]
 
@@ -22,7 +23,7 @@ class Music:
     def get_segment(self, segment):
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
-        
+
     def play(self):
         if self.folder:
             for elt in range(1, len(self.playlist)):

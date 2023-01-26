@@ -4,6 +4,7 @@ from math import floor
 
 class FPS:
     """crée un objet permettant de stocker les fps et des les analyser"""
+
     def __init__(self, pkg):
         self.record = 0
         self.record_n = 0

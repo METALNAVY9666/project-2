@@ -1,8 +1,10 @@
 """cotient les fonctions permettant de gérer les touches du claiver"""
 import pygame
 
+
 class KeyChecker:
     """contient les fonction permettant de tester les touches"""
+
     def __init__(self, pkg, pause_menu):
         self.pkg = pkg
         self.pause_menu = pause_menu
@@ -30,15 +32,16 @@ class KeyChecker:
                     self.pause_menu.bool = True
                 self.pause_menu.switch()
 
+
 NUMPAD = {
-    "kp_0" : pygame.K_KP0,
-    "kp_1" : pygame.K_KP1,
-    "kp_2" : pygame.K_KP2,
-    "kp_3" : pygame.K_KP3,
-    "kp_4" : pygame.K_KP4,
-    "kp_5" : pygame.K_KP5,
-    "kp_6" : pygame.K_KP6,
-    "kp_7" : pygame.K_KP7,
-    "kp_8" : pygame.K_KP8,
-    "kp_9" : pygame.K_KP9
+    "kp_0": pygame.K_KP0,
+    "kp_1": pygame.K_KP1,
+    "kp_2": pygame.K_KP2,
+    "kp_3": pygame.K_KP3,
+    "kp_4": pygame.K_KP4,
+    "kp_5": pygame.K_KP5,
+    "kp_6": pygame.K_KP6,
+    "kp_7": pygame.K_KP7,
+    "kp_8": pygame.K_KP8,
+    "kp_9": pygame.K_KP9
 }

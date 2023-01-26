@@ -3,8 +3,10 @@ from data.modules.texture_loader import GFX
 from data.modules.keyboard import NUMPAD
 from data.modules.settings import read_settings
 
+
 class Gunner():
     """créee un objet joueur"""
+
     def __init__(self, pkg, prop):
         """initialise les propriétés du joueur"""
         self.pkg = pkg
@@ -30,7 +32,7 @@ class Gunner():
         width, height = self.pkg["dimensions"]
         self.player = {}
         self.player["hp"] = 20
-        self.player["size"] = [width//8,height//6]
+        self.player["size"] = [width//8, height//6]
         self.player["weapon"] = "fist"
         self.player["keys"] = read_settings()["keys"][1]
 
@@ -58,7 +60,7 @@ class Gunner():
         keys = self.player["keys"]
 
         pressed = []
-        
+
         for key in list(keys.keys()):
             try:
                 # renvoie un couple ("jump", True) si le joueur appuie
@@ -85,7 +87,6 @@ class Gunner():
                 elif couple[0] == "h_attack":
                     print("grosse patate")
 
-
     def get_code(self, key):
         "renvoie la valeur de la touche"
         return self.pkg["key"].key_code(key)
@@ -93,7 +94,7 @@ class Gunner():
     def handle_input(self):
         """gère les movuements du personnage"""
 
-    def jump_start(self,force):
+    def jump_start(self, force):
         """initialise la fonction de saut"""
         if self.is_grounded:
             self.jump_frame = -int(force*10)

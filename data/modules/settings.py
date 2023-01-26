@@ -9,6 +9,7 @@ def read_settings():
         file.close()
     return data
 
+
 def read_levels():
     """lis les niveaux"""
     with open("data/gfx/levels/levels.json", "r", encoding="utf-8") as file:

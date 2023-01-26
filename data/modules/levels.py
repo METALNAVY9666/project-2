@@ -9,6 +9,7 @@ from data.modules.game import Jeu
 
 class Background:
     """créée un fond qui s'adapte à la position des 2 joueurs"""
+
     def __init__(self, pkg, prop):
         self.pkg = pkg
         self.prop = prop
@@ -29,6 +30,7 @@ class Background:
 
 class BaseLevel:
     """générateur de niveaux"""
+
     def __init__(self, pygame_pack, prop, game_settings):
         """mettre pack_pygame, les propriétés du niveau et les paramètres
         du jeu en parametres afin de pouvoir modifier la scène sans recharger
@@ -82,7 +84,7 @@ class BaseLevel:
             if rect is not None:
                 rects.append(rect)
         return rects
-    
+
     def update_countdown(self):
         """met à jour le décompte"""
         ctn = self.cls["countdown"].update(self.cls["pause"].bool)
@@ -90,19 +92,19 @@ class BaseLevel:
             number = GFX[ctn[1]]
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
-            pos = [(width//2)-(width//12), (height//2)-(height//12)] 
+            pos = [(width//2)-(width//12), (height//2)-(height//12)]
             self.update_list.append(self.pkg["surface"].blit(number, pos))
         else:
             if ctn[0] == "end":
                 self.cls["busy"] = False
-    
+
     def update_obstacles(self):
         """met à jour la position des obstacles"""
         if self.prop["bg"] == "neo_tokyo":
             surface = self.pkg["surface"]
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
-            pos = [(width//2)-(width//3), height//1.5] 
+            pos = [(width//2)-(width//3), height//1.5]
             return surface.blit(GFX["platform"], pos)
 
     def update(self, delta, actions):
@@ -117,7 +119,7 @@ class BaseLevel:
         # met à jour le fond
         self.update_list.append(self.cls["bg"].update())
 
-        #met à jour le jeu
+        # met à jour le jeu
         surface = self.pkg["surface"]
         pause = self.cls["pause"].bool
         busy = self.cls["busy"]
@@ -130,15 +132,15 @@ class BaseLevel:
 
         # met à jour les évènements
         self.update_list += self.update_events(self.cls["pause"].bool,
-        self.cls["busy"])
-        
+                                               self.cls["busy"])
+
         # met à jour le décompte
         self.update_countdown()
 
         # màj l'état des personnages
         end = self.cls["end"]
         self.update_list.append(end.update(game[1]))
-        
+
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
         if pause_rects is not None:

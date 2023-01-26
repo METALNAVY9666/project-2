@@ -15,13 +15,13 @@ pack_pygame = {
     "FPS": game_settings["display"]["FPS"],
     "display": pygame.display,
     "surface": pygame.display.set_mode(dimensions),
-    "Rect" : pygame.Rect,
+    "Rect": pygame.Rect,
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
     "time": pygame.time,
     "mouse": pygame.mouse,
     "rect": pygame.Rect,
-    "key" : pygame.key,
+    "key": pygame.key,
     "dimensions": dimensions
 }
 

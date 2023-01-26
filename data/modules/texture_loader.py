@@ -10,6 +10,7 @@ def load_image(path=str, dimensions=tuple):
         temp = pg.transform.scale(temp, dimensions)
     return temp
 
+
 def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
     sprites_dict = {'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
@@ -19,6 +20,7 @@ def sprites_images(name):
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
     return sprites_dict
+
 
 def sprite_tab(name, position):
     '''Fonction qui permet de charger les images à gauche ou à gauche
@@ -31,6 +33,7 @@ def sprite_tab(name, position):
            pg.image.load(f'test_olivier/gfx/{name}/base_{position}4.png'),
            pg.image.load(f'test_olivier/gfx/{name}/base_{position}5.png')]
     return tab
+
 
 levels = read_levels()
 prop = read_settings()

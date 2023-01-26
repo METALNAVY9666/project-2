@@ -4,6 +4,7 @@ from data.modules.texture_loader import GFX
 
 class PauseMenu:
     """menu pause"""
+
     def __init__(self, pkg):
         self.bool = False
         self.pkg = pkg
