@@ -182,7 +182,7 @@ class Fighter(pg.sprite.Sprite):
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision(self, self.game.all_objects):
             # On vérifie le ombre de tentatives autorisées
-            if self.stats_dict['nbr_vanish'] > 0 and event.key == pg.K_d:
+            if self.stats_dict['nbr_vanish'] > 0 and event.key == pg.K_a:
                 # Relance l'animation à zéro
                 self.stats_dict['nbr_sprite'] = 0
                 # Change l'animation
