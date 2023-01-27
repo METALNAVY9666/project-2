@@ -50,7 +50,8 @@ class Jeu:
             elif choice[self.get_code("q")]:
                 self.player_0.move()
                 self.dict_game['right'] = False
-                self.dict_game['side'] = 'left'
+                if self.name in ['goku', 'vegeta']:
+                    self.dict_game['side'] = 'left'
             elif choice[self.get_code("z")]:
                 # Gère les sauts
                 self.player_0.jump()

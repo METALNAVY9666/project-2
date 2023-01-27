@@ -44,13 +44,22 @@ class Fighter(pg.sprite.Sprite):
             if self.game.dict_game['right'] and self.rect.x < 950:
                 self.rect.x += 10
                 # On change l'image du joueur
-                self.change_animation('right')
+                if self.game.name in ['goku', 'vegeta']:
+                    self.change_animation('right')
+                    self.stats_dict['pause'] = False
+                else:
+                    self.game.dict_game['side'] = 'run'
             # Déplacement vers la droite
             elif not self.game.dict_game['right'] and self.rect.x > 5:
                 self.rect.x -= 10
-                self.change_animation('left')
-        # Le joueur fait une action, donc on passe le bouléen sur False
-        self.stats_dict['pause'] = False
+                # Vérifie si le perso vole ou pas (si c'est vegeta ou goku)
+                if self.game.name in ['goku', 'vegeta']:
+                    # Si oui, il n'y a pas d'animation quand il se déplace
+                    self.change_animation('left')
+                    # Le joueur fait une action, donc on passe le bouléen sur False
+                    self.stats_dict['pause'] = False
+                else:
+                    self.game.dict_game['side'] = 'run'
 
     def move_controller(self, actions):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
