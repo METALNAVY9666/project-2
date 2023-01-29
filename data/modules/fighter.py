@@ -153,7 +153,11 @@ class Fighter(pg.sprite.Sprite):
         # On réaffecte le dictionnaire d'images
         self.images_dict = sprites_images(self.game.name)
         self.image = self.images_dict[name]
-        self.image = pg.transform.scale(self.image, (120, 120))
+        # On redimensionne les images d'Itachi
+        if self.game.name in ['itachi']:
+            self.image = pg.transform.scale(self.image, (120, 120))
+            if name in ['shield', 'shield_right']:
+                self.image = pg.transform.scale(self.image, (70, 120))
 
     def blit_sprite(self, screen, dlt, pause):
         '''Cette fonction sert à afficher le sprite du joueur en continu
@@ -185,7 +189,12 @@ class Fighter(pg.sprite.Sprite):
         if self.game.dict_game['right']:
             self.image = pg.transform.flip(
                 self.tab[self.stats_dict['nbr_sprite']], True, False)
-        return pg.transform.scale(self.image, (120, 120))
+        # Change l'image si le personnage est itachi
+        if self.game.name in ['itachi']:
+            if self.game.dict_game['side'] in ['left', 'right', 'run', 'vanish']:
+                return pg.transform.scale(self.image, (70, 120))
+            return pg.transform.scale(self.image, (120, 120))
+        return self.image
 
     def vanish(self, event):
         '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
