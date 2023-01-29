@@ -1,12 +1,12 @@
 {
     "audio": {
-        "music": 20,
+        "music": 0,
         "effects": 100
     },
     "display": {
-        "horizontal": 1920,
-        "vertical": 1080,
-        "fullscreen": true,
+        "horizontal": 1280,
+        "vertical": 720,
+        "fullscreen": false,
         "FPS": 60
     },
     "keys": [

@@ -22,6 +22,7 @@ pack_pygame = {
     "mouse": pygame.mouse,
     "rect": pygame.Rect,
     "key": pygame.key,
+    "transform": pygame.transform,
     "dimensions": dimensions
 }
 
@@ -41,8 +42,8 @@ fps = FPS(pack_pygame)
 while WIN:
     # dt est le temps qui s'écoule entre chaque image,
     # important pour que le jeu reste fluide
-    dt = pack_pygame["clock"].tick(pack_pygame["FPS"])
-    current_map.delta = dt
+    dlt = pack_pygame["clock"].tick(pack_pygame["FPS"])
+    current_map.delta = dlt
     # Récupère les événements courants
     actions = pygame.event.get()
     # vérifie les évènements
@@ -54,7 +55,7 @@ while WIN:
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
     # actualise la map, si elle renvoie "quit", alors quitter
-    if current_map.update(dt, actions) == "exit":
+    if current_map.update(dlt, actions) == "exit":
         WIN = False
     fps.record_fps()
 

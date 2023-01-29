@@ -1,15 +1,31 @@
 """stocke toutes les textures afin de ne pas faire beuger pygame"""
+from os import listdir
 import pygame as pg
 from data.modules.settings import read_settings, read_levels
 
 
-def load_image(path=str, dimensions=tuple):
+def load_image(path=str, dimensions=None):
     """charge l'image et modifie les dimensions de cette dernière"""
-    temp = pg.image.load(path+".png")
-    if dimensions is not None:
-        temp = pg.transform.scale(temp, dimensions)
-    return temp
+    image = pg.image.load(path+".png")
+    return resize(image, dimensions)
 
+def resize(image, dimensions):
+    """redimensionne l'image"""
+    if dimensions is None:
+        return image
+    return pg.transform.scale(image, dimensions)
+
+def load_dir(path=str, dimensions=tuple):
+    """renvoie un dictionnaire nom/sprite de tout les sprites
+    contenus dans un dossier"""
+    sprites = {}
+    for file in listdir(path):
+        name = file[0:-4]
+        image = load_image(path+name)
+        image = resize(image, dimensions)
+        image.convert_alpha()
+        sprites[name] = image
+    return sprites
 
 def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
@@ -94,3 +110,5 @@ bro_tab = ["C'est quoi la blague ?",
            "Je vais faire sonner le gros Ben",
            "Je fais donc péter le logarithme",
            "Je fais donc péter l'exponentielle", ]
+
+GFX["kim"] = load_dir("data/gfx/players/kim/", (X//12, Y//12))

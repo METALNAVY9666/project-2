@@ -7,13 +7,13 @@ from data.modules.settings import read_settings
 class Gunner():
     """créee un objet joueur"""
 
-    def __init__(self, pkg, prop):
+    def __init__(self, pkg, prop, id):
         """initialise les propriétés du joueur"""
         self.pkg = pkg
         self.prop = prop
 
         self.init_physics()
-        self.init_player()
+        self.init_player(id)
         self.init_graphics()
         self.init_weapons()
 
@@ -26,22 +26,28 @@ class Gunner():
         self.physics["jump_height"] = 0
         self.physics["jump_frame"] = round(-100*self.pkg["FPS"])//100
         self.physics["pos"] = [0, 0]
+        self.physics["speed"] = self.pkg["dimensions"][0]/1920 * 16
+        self.physics["side"] = 1
 
-    def init_player(self):
+    def init_player(self, id):
         """initialise les propriétés du joueur"""
         width, height = self.pkg["dimensions"]
         self.player = {}
         self.player["hp"] = 20
         self.player["size"] = [width//8, height//6]
         self.player["weapon"] = "fist"
-        self.player["keys"] = read_settings()["keys"][1]
+        self.player["keys"] = read_settings()["keys"][id]
 
     def init_graphics(self):
         """le nom est équivoque je pense"""
         self.gfx = {}
         self.gfx["frame"] = 0
+        # cool est le temps à attendre entre 2 sprites
+        self.gfx["cool"] = 0 
         self.gfx["side"] = False
+        self.gfx["sprite"] = GFX["kim"]["wait"]
         self.gfx["old_sprite"] = ""
+        self.gfx["delta_sum"] = 0
 
     def init_weapons(self):
         """initialise l'arsenal"""
@@ -50,11 +56,69 @@ class Gunner():
         for weapon in ["makarov", "barrett", "kick"]:
             self.player["reload"][weapon] = 0
 
-    def update(self):
-        """met à jour le sprite du joueur"""
-        self.update_keys()
+    def get_code(self, key):
+        "renvoie la valeur de la touche"
+        return self.pkg["key"].key_code(key)
 
-    def update_keys(self):
+    def flip(self, sprite):
+        """renvoie le sprite retourné"""
+        image = self.pkg["transform"].flip(sprite, True, False)
+        return image.convert_alpha()
+
+    def play_animation(self, animation, dlt):
+        """joue l'animation demandée"""
+        # ------ attends ------
+        if animation == "wait":
+            sprite = GFX["kim"]["wait"]
+        # ------ tire ------
+        if animation == "shoot":
+            sprite = GFX["kim"]["sneak"]
+        # ------ cours ------
+        elif animation == "run":
+            self.gfx["delta_sum"] += dlt
+            if self.gfx["delta_sum"] >= 100:
+                self.gfx["delta_sum"] = 0
+                self.gfx["frame"] += 1
+            
+            frame = self.gfx["frame"]
+            key = "run_" + str(frame)
+            try:
+                sprite = GFX["kim"][key]
+            except KeyError:
+                self.gfx["frame"] = 0
+                sprite = GFX["kim"]["run_0"]
+        # ------ renvoie le sprite ------
+        return sprite
+
+    def barrett_shoot(self):
+        """tire une balle de calibre 50"""
+        return self.play_animation("shoot")
+
+    def move(self, dlt):
+        """déplace le gunner"""
+        side = self.physics["side"]
+        speed = self.physics["speed"]
+        pos = self.physics["pos"]
+        pos[0] += int(speed * side)
+        return self.play_animation("run", dlt)
+
+    def blit_sprite(self, sprite, pos):
+        """affiche le sprite sur la surface de jeu"""
+        side = self.physics["side"]
+        if side == -1:
+            sprite = self.flip(sprite)
+        return self.pkg["surface"].blit(sprite, pos)
+
+    def gravity(self):
+        """applique la gravité au joueur"""
+        pos = self.physics["pos"]
+        dims = self.pkg["dimensions"]
+        pos[1] += self.physics["gravity"]
+        if pos[1] > dims[1] - dims[1]//12:
+            pos[1] = dims[1] - dims[1]//12
+        print(pos)
+
+    def update_keys(self, dlt, pause, busy):
         """met à jour les mouvements du joueur"""
         choice = self.pkg["key"].get_pressed()
         keys = self.player["keys"]
@@ -69,33 +133,37 @@ class Gunner():
             except ValueError:
                 # si le joueur appuie sur une touche du pavé numérique
                 # alors renvoyer le code depuis un dictionnnaire
-                # pygame ne prend pas en compte le numpad
+                # car pygame ne prend pas en compte le numpad
                 pressed.append([key, choice[NUMPAD[keys[key]]]])
 
-        for couple in pressed:
-            if couple[1]:
-                if couple[0] == "jump":
-                    print("jump")
-                elif couple[0] == "block":
-                    print("block")
-                elif couple[0] == "left":
-                    print("left")
-                elif couple[0] == "right":
-                    print("right")
-                elif couple[0] == "l_attack":
-                    print("patate")
-                elif couple[0] == "h_attack":
-                    print("grosse patate")
+        if not pause:
+            sprite = GFX["kim"]["wait"]
+            for couple in pressed:
+                if couple[1]:
+                    if couple[0] == "jump":
+                        print("jump")
+                    elif couple[0] == "block":
+                        print("block")
+                    elif couple[0] == "right":
+                        self.physics["side"] = 1
+                        sprite = self.move(dlt)
+                    elif couple[0] == "left":
+                        self.physics["side"] = -1
+                        sprite = self.move(dlt)
+                    elif couple[0] == "l_attack":
+                        print("patate")
+                    elif couple[0] == "h_attack":
+                        sprite = self.barrett_shoot()
+            self.gfx["sprite"] = sprite
 
-    def get_code(self, key):
-        "renvoie la valeur de la touche"
-        return self.pkg["key"].key_code(key)
+        return self.blit_sprite(self.gfx["sprite"], self.physics["pos"])
 
-    def handle_input(self):
-        """gère les movuements du personnage"""
+    def update(self, dlt, pause, busy):
+        """met à jour le sprite du joueur"""
+        self.gravity()
+        return self.update_keys(dlt, pause, busy)
 
-    def jump_start(self, force):
-        """initialise la fonction de saut"""
+    """def jump_start(self, force):
         if self.is_grounded:
             self.jump_frame = -int(force*10)
             self.y -= 2
@@ -103,7 +171,6 @@ class Gunner():
             self.isFalling = False
 
     def jump_check(self):
-        """vérifie l'état du saut du joueur"""
         if self.y >= ground_level:
             self.is_grounded = True
         else:
@@ -114,3 +181,4 @@ class Gunner():
             if self.jump_frame < 0:
                 self.y -= int(abs(self.jump_frame)*0.75)
             self.jump_frame += 1
+"""

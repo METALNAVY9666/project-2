@@ -146,7 +146,6 @@ class BaseLevel:
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)
-
         self.pkg["display"].update(self.update_list)
         self.update_list = []
         return next_op

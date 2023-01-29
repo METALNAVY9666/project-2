@@ -18,7 +18,7 @@ class Jeu:
                           'side': 'left', 'is_playing': True}
         # Génération de personnages
         self.player_0 = Fighter(self)
-        self.player_1 = Gunner(pkg, prop)
+        self.player_1 = Gunner(pkg, prop, 1)
         # Génération d'un objet
         self.object = PunchingBall(self)
         # Crée des groupes de sprites vide
@@ -112,7 +112,7 @@ class Jeu:
         # Affiche le personnage sur l'écran
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update())
+        rects.append(self.player_1.update(dlt, pause, busy))
         # Gère les inputs
         self.handle_input(actions, pause, busy)
         # Renvoi le rectangle du joueur
