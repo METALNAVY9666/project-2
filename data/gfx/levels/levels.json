@@ -47,7 +47,7 @@
             "trueno_drift"
         ],
         "drop": 0,
-        "ground_level": 100
+        "ground_level": 25
     },
     "laboratory": {
       "scale": [

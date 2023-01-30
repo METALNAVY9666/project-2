@@ -27,6 +27,15 @@ def load_dir(path=str, dimensions=tuple):
         sprites[name] = image
     return sprites
 
+def convert_alpha_dict(dicti):
+    """renvoie le dictionnaire de sprites convertis"""
+    keys = list(dicti.keys())
+    new = {}
+    for key in keys:
+        new[key] = resize(dicti[key], (X//12, Y//12))
+        new[key].convert_alpha()
+    return new
+
 def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
     sprites_dict = {'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
@@ -35,19 +44,20 @@ def sprites_images(name):
                     'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png'),
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
-    return sprites_dict
+    
+    return convert_alpha_dict(sprites_dict)
 
 
 def sprite_tab(name, position):
     '''Fonction qui permet de charger les images à gauche ou à gauche
     A besoin d'un nom de perso, ainsi que du nom de l'action qu'il réalise'''
     # Name est le nom du perso, position permet de savoir si il est à gauche ou non
-    tab = [pg.image.load(f'test_olivier/gfx/{name}/base_{position}0.png'),
-           pg.image.load(f'test_olivier/gfx/{name}/base_{position}1.png'),
-           pg.image.load(f'test_olivier/gfx/{name}/base_{position}2.png'),
-           pg.image.load(f'test_olivier/gfx/{name}/base_{position}3.png'),
-           pg.image.load(f'test_olivier/gfx/{name}/base_{position}4.png'),
-           pg.image.load(f'test_olivier/gfx/{name}/base_{position}5.png')]
+    tab = [None] * 6
+    scale = (X//12, Y//12)
+    for ind in range(6):
+        string = f'test_olivier/gfx/{name}/base_{position}{ind}'
+        tab[ind] = load_image(string, scale)
+        tab[ind].convert_alpha()
     return tab
 
 

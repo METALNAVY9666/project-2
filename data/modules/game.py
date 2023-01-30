@@ -18,7 +18,7 @@ class Jeu:
                           'side': 'left', 'is_playing': True,
                           'pkg': pkg}
         # Génération de personnages
-        self.player_0 = Fighter(self)
+        self.player_0 = Fighter(self, pkg, prop)
         self.player_1 = Gunner(pkg, prop, 1)
         # Génération d'un objet
         self.object = PunchingBall(self)
@@ -41,7 +41,7 @@ class Jeu:
         if not pause and not busy:
             # Récupère les touches préssées actuellement
             choice = pg.key.get_pressed()
-            self.player_0.stats_dict['pause'] = True
+            self.player_0.vals['pause'] = True
             # Réaffecte l'image de l'objet
             self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
@@ -92,7 +92,7 @@ class Jeu:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
                 # Le perso tombe
-                self.player_0.stats_dict['fall'] = True
+                self.player_0.vals['fall'] = True
                 # Attaque du joueur
                 self.player_0.attack(event, choice)
                 # Esquive du joueur
@@ -121,9 +121,6 @@ class Jeu:
         # self.handle_input_controller(actions)
         # Dommages
         self.player_0.damages()
-        print(self.player_0.stats_dict['surface_height'], self.player_0.rect.y)
-        if self.player_0.stats_dict['surface_height'] > self.player_0.rect.y:
-            print('on est en bas')
         return rects, self.player_0.update_pv()
 
     def add_groups(self):
@@ -158,9 +155,9 @@ class Jeu:
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
-                950, 50, self.player_0.stats_dict['max_health'], 15])
+                950, 50, self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                950, 50, self.player_0.stats_dict['health'], 15])
+                950, 50, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
                 10, 50, self.object.stats['max_health'], 15])
@@ -169,4 +166,4 @@ class Jeu:
             # Nombre d'esquive possible
             pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
-                950, 100, self.player_0.stats_dict['nbr_vanish']*30, 15])
+                950, 100, self.player_0.vals['nbr_vanish']*30, 15])

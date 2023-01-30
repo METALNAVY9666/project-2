@@ -33,7 +33,7 @@ class Jeu:
         et gère des actions en continu comme le fait d'avancer.'''
         # Récupère les touches préssées actuellement
         choice = pg.key.get_pressed()
-        self.player.stats_dict['pause'] = True
+        self.player.vals['pause'] = True
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
@@ -88,7 +88,7 @@ class Jeu:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
                 # Le perso tombe
-                self.player.stats_dict['fall'] = True
+                self.player.vals['fall'] = True
                 # Attaque du joueur
                 self.player.attack(event, choice)
                 # Esquive du joueur
@@ -152,9 +152,9 @@ class Jeu:
         avec de la couleur. Les deux, sur la surface donnée en paramètre.'''
         # Dessin de la barre de vie
         pg.draw.rect(surface, (140, 138, 137), [
-                     950, 50, self.player.stats_dict['max_health'], 15])
+                     950, 50, self.player.vals['max_health'], 15])
         pg.draw.rect(surface, (1, 88, 33), [
-                     950, 50, self.player.stats_dict['health'], 15])
+                     950, 50, self.player.vals['health'], 15])
         # Barre de vie de l'objet
         pg.draw.rect(surface, (140, 138, 137), [
                      10, 50, self.object.stats['max_health'], 15])
@@ -163,4 +163,4 @@ class Jeu:
         # Nombre d'esquive possible
         pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
         pg.draw.rect(surface, (255, 200, 133), [
-                     950, 100, self.player.stats_dict['nbr_vanish']*30, 15])
+                     950, 100, self.player.vals['nbr_vanish']*30, 15])

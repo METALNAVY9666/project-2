@@ -28,6 +28,9 @@ class Gunner():
         self.physics["pos"] = [0, 0]
         self.physics["speed"] = self.pkg["dimensions"][0]/1920 * 16
         self.physics["side"] = 1
+        level = self.prop["ground_level"]
+        dims = self.pkg["dimensions"]
+        self.physics["ground"] = (level * dims[1]) // 100
 
     def init_player(self, id):
         """initialise les propriétés du joueur"""
@@ -114,9 +117,9 @@ class Gunner():
         pos = self.physics["pos"]
         dims = self.pkg["dimensions"]
         pos[1] += self.physics["gravity"]
-        if pos[1] > dims[1] - dims[1]//12:
-            pos[1] = dims[1] - dims[1]//12
-        print(pos)
+        ground = self.physics["ground"]
+        if pos[1] > dims[1] - dims[1]//12 - ground:
+            pos[1] = dims[1] - dims[1]//12 - ground
 
     def update_keys(self, dlt, pause, busy):
         """met à jour les mouvements du joueur"""

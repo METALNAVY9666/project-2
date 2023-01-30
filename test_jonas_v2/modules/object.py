@@ -29,5 +29,5 @@ class PunchingBall(pg.sprite.Sprite):
 
     def gravity_object(self):
         '''Gravité pour l'objet'''
-        if self.rect.y < 500 and self.game.player.stats_dict['fall']:
+        if self.rect.y < 500 and self.game.player.vals['fall']:
             self.rect.y += 5
