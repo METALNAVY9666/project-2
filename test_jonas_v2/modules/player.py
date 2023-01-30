@@ -128,7 +128,7 @@ class Player(pg.sprite.Sprite):
             if self.stats_dict['current_height'] >= self.stats_dict['max_height']:
                 self.stats_dict['jumps'] = 3
 
-    def jump_controller(self, actions):
+    def jump_controller(self):
         controller = manage_controller()
         if controller.get_button(0):
             if self.stats_dict['current_height'] <= self.stats_dict['max_height']:

@@ -4,6 +4,7 @@ import pygame as pg
 from modules.player import Player
 from modules.object import PunchingBall
 from modules.texture_loader import images
+from modules.controller import manage_controller
 
 
 class Jeu:
@@ -60,7 +61,7 @@ class Jeu:
     def handle_input_controller(self, actions):
         """
         """
-        choice = pg.key.get_pressed()
+        controller = manage_controller()
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
@@ -68,10 +69,8 @@ class Jeu:
             self.player.move_controller(event)
             # Gère les sauts
             self.player.jump()
-            """# Gère le bloquage
-            self.player.block()"""
-        # Système de gravité
-        self.player.gravity()
+            if event.type == pg.JOYBUTTONDOWN and controller.get_button(3):
+                self.player.block()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 

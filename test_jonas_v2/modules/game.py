@@ -70,7 +70,7 @@ class Jeu:
             # Gère les sauts
             self.player.jump_controller(event)
             # Gère le bloquage
-            if controller.get_button(3):
+            if event.type == pg.JOYBUTTONDOWN and controller.get_button(3):
                 self.player.block()
         # Système de gravité
         self.player.gravity()
