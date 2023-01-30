@@ -1,6 +1,7 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from modules.texture_loader import sprites_images, sprite_tab
+from modules.controller import manage_controller
 
 
 class Player(pg.sprite.Sprite):
@@ -94,6 +95,30 @@ class Player(pg.sprite.Sprite):
             self.stats_dict['nbr_combo_q'] = 0
         # Augemente le nombre de combo
         # A voir ~~~~~
+
+    def attack_controller(self, choice):
+            '''Cette fonction permet de gérer l'attaque d'un perso.'''
+            collide = self.game.collision(self, self.game.all_objects)
+            controller = manage_controller()
+            # Le joueur fait une action
+            if controller.get_button(2):
+                self.combo('attack', 'nbr_combo_q')
+                self.attack_up(choice)
+                self.attack_down(choice)
+            elif controller.get_button(1):
+                self.combo('impact', 'nbr_combo_w')
+            if self.stats_dict['nbr_combo_w'] == 2 and self.stats_dict['nbr_combo_q'] == 2:
+                # pg.time.wait(1000)
+                print('AAAAAAAAH')
+                self.game.dict_game['side'] = 'spe'
+                self.game.object.rect.x -= 200
+                self.stats_dict['nbr_combo_w'] = 0
+                self.stats_dict['nb_combo_q'] = 0
+            print(self.stats_dict['nbr_combo'], self.stats_dict['nbr_combo_w'], self.stats_dict['nbr_combo_q'])
+            if not collide:
+                self.stats_dict['nbr_combo'] = 0
+                self.stats_dict['nbr_combo_w'] = 0
+                self.stats_dict['nbr_combo_q'] = 0
 
     def jump(self):
         '''Fonction saut'''

@@ -65,12 +65,20 @@ class Jeu:
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
-        for event in actions:
-            self.player.move_controller(event)
-            # Gère les sauts
-            self.player.jump()
-            if event.type == pg.JOYBUTTONDOWN and controller.get_button(3):
-                self.player.block()
+
+        # Gère le bloquage
+        if controller.get_button(3):
+            print('Je suis la !')
+            self.player.block()
+            
+        else:
+            for event in actions:
+                if event.type == pg.JOYAXISMOTION and event.axis == 0:
+                    self.player.move_controller(event)
+                # Gère les sauts
+                self.player.jump_controller(event)
+        # Système de gravité
+        #self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
@@ -89,6 +97,8 @@ class Jeu:
                 self.player.attack(event, choice)
                 # Esquive du joueur
                 self.player.vanish(event)
+            if event.type == pg.JOYBUTTONDOWN:
+                self.player.attack_controller(choice)
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -108,7 +118,7 @@ class Jeu:
         self.handle_input(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
-        #self.handle_input_controller(actions)
+        self.handle_input_controller(actions)
         # Dommages
         self.player.damages()
         # Affiche les pv

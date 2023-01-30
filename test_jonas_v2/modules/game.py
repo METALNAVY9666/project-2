@@ -68,7 +68,8 @@ class Jeu:
             if event.type == pg.JOYAXISMOTION and event.axis == 0:
                 self.player.move_controller(event)
             # Gère les sauts
-            self.player.jump_controller(event)
+            if event.type == pg.JOYBUTTONDOWN and controller.get_button(0):
+                self.player.jump_controller()
             # Gère le bloquage
             if event.type == pg.JOYBUTTONDOWN and controller.get_button(3):
                 self.player.block()
