@@ -15,7 +15,8 @@ class Jeu:
         # On récupère le nom du perso choisi.
         self.name = name
         self.dict_game = {'right': False, 'fps': 60,
-                          'side': 'left', 'is_playing': True}
+                          'side': 'left', 'is_playing': True,
+                          'pkg': pkg}
         # Génération de personnages
         self.player_0 = Fighter(self)
         self.player_1 = Gunner(pkg, prop, 1)

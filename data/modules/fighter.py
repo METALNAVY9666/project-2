@@ -26,7 +26,8 @@ class Fighter(pg.sprite.Sprite):
         # Récupération du rectangle de l'image
         self.rect = self.image.get_rect()
         # Coordonées en x et y
-        self.rect.x, self.rect.y = 900, 400
+        self.rect.x = self.game.dict_game['pkg']['surface'].get_height() // 9
+        self.rect.y = self.game.dict_game['pkg']['surface'].get_width() // 3
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name)
         # Tableau d'actions
