@@ -121,6 +121,9 @@ class Jeu:
         # self.handle_input_controller(actions)
         # Dommages
         self.player_0.damages()
+        print(self.player_0.stats_dict['surface_height'], self.player_0.rect.y)
+        if self.player_0.stats_dict['surface_height'] > self.player_0.rect.y:
+            print('on est en bas')
         return rects, self.player_0.update_pv()
 
     def add_groups(self):

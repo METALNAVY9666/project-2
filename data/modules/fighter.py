@@ -18,7 +18,9 @@ class Fighter(pg.sprite.Sprite):
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
             'attacked': False, 'fall': True,
-            'nbr_combo_q': 0, 'nbr_combo_w': 0}
+            'nbr_combo_q': 0, 'nbr_combo_w': 0,
+            'surface_height': self.game.dict_game['pkg']['surface'].get_height(),
+            'surface_width': self.game.dict_game['pkg']['surface'].get_width()}
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.dict_game['side'])
         # Affectation de l'image
@@ -26,8 +28,8 @@ class Fighter(pg.sprite.Sprite):
         # Récupération du rectangle de l'image
         self.rect = self.image.get_rect()
         # Coordonées en x et y
-        self.rect.x = self.game.dict_game['pkg']['surface'].get_height() // 9
-        self.rect.y = self.game.dict_game['pkg']['surface'].get_width() // 3
+        self.rect.x = self.stats_dict['surface_height'] // 9
+        self.rect.y = self.stats_dict['surface_width'] // 3
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name)
         # Tableau d'actions
@@ -42,7 +44,7 @@ class Fighter(pg.sprite.Sprite):
         test = not self.game.collision(self, self.game.all_objects)
         if test or (not test and self.rect.y <= 500):
             # Déplacement vers la gauche
-            if self.game.dict_game['right'] and self.rect.x < 950:
+            if self.game.dict_game['right'] and self.rect.x < self.stats_dict['surface_width']-100:
                 self.rect.x += 10
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
@@ -134,9 +136,10 @@ class Fighter(pg.sprite.Sprite):
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
+        test = not self.game.collision(self, self.game.all_objects)
         # Le joueur tombe tant qu'il n'est pas au sol
         if self.stats_dict['fall']:
-            if self.rect.y <= 500 and not self.game.collision(self, self.game.all_objects):
+            if self.rect.y <= self.stats_dict['surface_height']-100 and test:
                 self.rect.y += 10
                 if not self.game.collision(self, self.game.all_objects):
                     self.change_animation('jump')
@@ -144,10 +147,14 @@ class Fighter(pg.sprite.Sprite):
                 if self.game.dict_game['right']:
                     self.change_animation('jump_right')
             # Sinon, on réinitialise son nombre de sauts à zéro
-            elif self.rect.y >= 500 or self.game.collision(self, self.game.all_objects):
+            elif self.rect.y >= self.stats_dict['surface_height']-100 or test:
                 self.stats_dict['jumps'] = 0
                 # Réaffecte à zéro la hauteur actuelle
                 self.stats_dict['current_height'] = 0
+
+    def gravity2(self):
+        if self.rect.y < self.stats_dict['surface_height']-100:
+            self.rect.y += 5
 
     def change_animation(self, name):
         '''Fonction qui change l'image du personnage'''
@@ -228,7 +235,7 @@ class Fighter(pg.sprite.Sprite):
                 self.game.object.rect.x -= 100
 
     def damages(self):
-        '''Focntion qui gère les dommages'''
+        '''Fonction qui gère les dommages'''
         if self.game.collision(self, self.game.all_objects):
             """if not self.stats_dict['attacked']:
                 self.stats_dict['health'] -= 1"""
@@ -258,7 +265,7 @@ class Fighter(pg.sprite.Sprite):
     def attack_down(self, choice):
         if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'down'
-            while self.game.object.rect.y != 500:
+            while self.game.object.rect.y <= 500:
                 self.game.object.rect.y += 1
 
     def update_pv(self):

@@ -46,7 +46,7 @@
         "events": [
             "trueno_drift"
         ],
-        "drop": 12,
+        "drop": 0,
         "ground_level": 100
     },
     "laboratory": {
