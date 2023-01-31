@@ -55,29 +55,32 @@ class carre1:
 
     def dessin(self):
         """ Cette fonction permet de dessiner le cadre  """
-        self.check_touche()
+        self.move_rect1()
 
     
-    def check_touche(self):
+    def move_rect1(self, dir):
         """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
-
+        
         aff_surface.blit(cadre2, self.pos)
         list_pos1 = [(67, 143), (205, 143)]
         # print(self.pos)
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_d:
-                    self.i += 1
-                    if self.i == len(list_pos1):
-                        self.i = len(list_pos1) - 1
-                    self.pos = list_pos1[self.i]
-                    print(self.i)
-                if event.key == pygame.K_q:
-                    self.i -= 1
-                    if self.i == -1:
-                        self.i = 0
-                    self.pos = list_pos1[self.i]
-                    print(self.i)
+        
+        if dir == 1:
+
+            self.i -= 1
+            if self.i == -1:
+                self.i = 0
+            self.pos = list_pos1[self.i]
+            print(self.i)
+        
+        if dir == 2:
+            
+            self.i += 1
+            if self.i == len(list_pos1):
+                self.i = len(list_pos1) - 1
+            self.pos = list_pos1[self.i]
+            print(self.i)
+
         return self.i
         
                     
@@ -88,45 +91,42 @@ class carre2:
     def __init__(self, pos):
         """ Cette fonction permet de permet d'initialiser la classe """
         self.presse = False
-        self.pos = pos
+        self.pos2 = pos
         self.j = 0
 
 
-    def dessin(self):
+    def dessin2(self):
         """ Cette fonction permet de dessiner le cadre  """
-        self.check_touche2()
+        self.move_rect2()
     
-    def check_touche2(self):
+    def move_rect2(self, dir):
         """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
         aff_surface.blit(cadre1, self.pos2)
         list_pos2 = [(698, 143), (838, 143)]
         # print(self.pos)
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    print("DROITE")
-                    self.j += 1
-                    if self.j == len(list_pos2):
-                        self.j = len(list_pos2) - 1
-                    self.pos2 = list_pos2[self.j]
-                    print(self.j)
-                if event.key == pygame.K_LEFT:
-                    print("GAUCHE")
-                    self.j -= 1
-                    if self.j == -1:
-                        self.j = 0
-                    self.pos2 = list_pos2[self.j]
-                    print(self.j)
+        
+        if dir == 1:
+            
+            self.j -= 1
+            if self.j == -1:
+                self.j = 0
+            self.pos2 = list_pos2[self.j]
+            print(self.j)
+            
+        if dir == 2:
+            
+            self.j += 1
+            if self.j == len(list_pos2):
+                self.j = len(list_pos2) - 1
+            self.pos2 = list_pos2[self.j]
+            print(self.j)
+
         return self.j
 
 class perso1:
     """ Cette classe permet d'aficher le personnage choisi. """
     posi1 = (50, 400)
     posi2 = (700, 400)
-
-
-
-        
 
 
 pygame.init()
@@ -184,26 +184,30 @@ def main():
         if retour:
             return "retour"
 
+        # boucle permettant de détecter les touchent pressées : 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     print("droit")
+                    cadre_2.move_rect2(2)
                 if event.key == pygame.K_LEFT:
                     print("gauche")
+                    cadre_2.move_rect2(1)
                 if event.key == pygame.K_d:
                     print("d")
+                    cadre_1.move_rect1(2)
                 if event.key == pygame.K_q:
-                    print("q")
+                    cadre_1.move_rect1(1)
                 if event.key == pygame.K_SPACE:
                     print("espace")
 
 
         
 
-
+        pygame.display.update()
         # boucle pour quitter ou pas la console du menu
         for event in pygame.event.get():
-            pygame.display.update()
+            
             if event.type == pygame.display.quit:
 
                 pygame.display.quit()

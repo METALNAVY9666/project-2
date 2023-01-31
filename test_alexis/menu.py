@@ -197,9 +197,11 @@ def main():
         Bouton5.dessin()
 
         if test is True:
+            
+            pygame.display.update()
             # boucle pour quitter ou pas la console du menu
             for event in pygame.event.get():
-                pygame.display.update()
+                
                 if event.type == pygame.display.quit:
                     return "suivant"
                     
