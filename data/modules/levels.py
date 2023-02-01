@@ -1,5 +1,6 @@
 """ce module contient les différents niveaux"""
 from data.modules.texture_loader import GFX
+from data.modules.sound_loader import SFX
 from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
