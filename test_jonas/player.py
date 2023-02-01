@@ -1,4 +1,4 @@
-import pygame
+"""import pygame
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
 
@@ -20,8 +20,21 @@ class player():
         self.sqare_color = (self.square_color + 1) % (len(self.color))
             
 
+class player2:
 
-""""
+    def __init__(self):
+        self.square = pygame.Rect(30, 30, 30, 30)
+        self.square_color = 0
+        self.color = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+        self.motion = [0, 0]
+        self.square_rect_x = self.square.x
+        self.square_rect_y = self.square.y
+
+    def change_color(self):
+        self.sqare_color = (self.square_color + 1) % (len(self.color))
+
+
+
 import sys
 import pygame
 import pygame._sdl2
@@ -141,3 +154,58 @@ def display():
 if __name__ == '__main__':
     display()
     """
+
+import pygame
+pygame.init()
+
+win = pygame.display.set_mode((500,500))
+pygame.display.set_caption("First Game")
+
+x = 50
+y = 50
+width = 40
+height = 60
+vel = 5
+
+isJump = False
+jumpCount = 10
+
+run = True
+
+while run:
+    pygame.time.delay(100)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    keys = pygame.key.get_pressed()
+    
+    if keys[pygame.K_LEFT] and x > vel: 
+        x -= vel
+
+    if keys[pygame.K_RIGHT] and x < 500 - vel - width:  
+        x += vel
+        
+    if not(isJump): 
+        if keys[pygame.K_UP] and y > vel:
+            y -= vel
+
+        if keys[pygame.K_DOWN] and y < 500 - height - vel:
+            y += vel
+
+        if keys[pygame.K_SPACE]:
+            isJump = True
+    else:
+        if jumpCount >= -7:
+            y -= (jumpCount * abs(jumpCount)) * 0.7
+            jumpCount -= 1
+        else: 
+            jumpCount = 7
+            isJump = False
+    
+    win.fill((0,0,0))
+    pygame.draw.rect(win, (255,0,0), (x, y, width, height))   
+    pygame.display.update() 
+    
+pygame.quit()
