@@ -69,6 +69,28 @@ class Fighter(pg.sprite.Sprite):
                     self.vals['pause'] = False
                 else:
                     self.game.elms['side'] = 'run'
+        if not test:
+            self.move_collide()
+
+    def move_collide(self):
+        """
+        Mouvement en cas de collision(s)
+        """
+        if self.game.elms['right'] and self.game.object.rect.x < self.rect.x:
+            self.rect.x += 10
+            # On change l'image du joueur
+            if self.game.name in ['goku', 'vegeta']:
+                self.change_animation('right')
+                self.vals['pause'] = False
+            else:
+                self.game.elms['side'] = 'run'
+        elif not self.game.elms['right'] and self.game.object.rect.x > self.rect.x:
+            self.rect.x -= 10
+            if self.game.name in ['goku', 'vegeta']:
+                self.change_animation('left')
+                self.vals['pause'] = False
+            else:
+                self.game.elms['side'] = 'run'
 
     def move_controller(self, actions):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
@@ -159,10 +181,6 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['jumps'] = 0
                 # Réaffecte à zéro la hauteur actuelle
                 self.vals['current_height'] = 0
-
-    def gravity2(self):
-        if self.rect.y < self.vals['surface_height']-100:
-            self.rect.y += 5
 
     def change_animation(self, name):
         '''Fonction qui change l'image du personnage'''
