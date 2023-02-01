@@ -51,7 +51,7 @@ class carre1:
         self.presse = False
         self.pos = pos
         self.i = 0
-
+        
 
     def dessin(self):
         """ Cette fonction permet de dessiner le cadre  """
@@ -94,11 +94,10 @@ class carre2:
         self.pos2 = pos
         self.j = 0
 
-
     def dessin2(self):
         """ Cette fonction permet de dessiner le cadre  """
         self.move_rect2()
-    
+
     def move_rect2(self, dir):
         """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
         aff_surface.blit(cadre1, self.pos2)
@@ -141,9 +140,6 @@ Y = 720
 # On défini la surface de la console grâce aux coordonées
 aff_surface = pygame.display.set_mode((X, Y))
 
-xa = (67, 143)
-xb = (698, 143)
-
 
 # On nomme notre console
 pygame.display.set_caption('Choix du perso')
@@ -151,10 +147,6 @@ pygame.display.set_caption('Choix du perso')
 police = pygame.font.Font(None, 30)
 
 Bouton = Bouton_quit("QUITTER", 100, 50, (0, 670))
-
-cadre_1 = carre1(xa)
-
-cadre_2 = carre2(xb)
 
 
 
@@ -169,49 +161,45 @@ def main():
     
     y = 7687
     z = 6787
-    
+
+    xa = (67, 143)
+    xb = (698, 143)
+
+    # On applique la surface de la console ainsi que sa couleur
+    aff_surface.fill(color)
+
+    # On ajoute l'image et on la place au coordonnée (0 ; 0)
+
     test = True
     while test:
         
-        # On applique la surface de la console ainsi que sa couleur
-        aff_surface.fill(color)
-
-        # On ajoute l'image et on la place au coordonnée (0 ; 0)
         aff_surface.blit(fond2, (0, 0))
+        aff_surface.blit(cadre2, xa)
+        aff_surface.blit(cadre2, xb) 
 
         retour = Bouton.dessin()
         
         if retour:
             return "retour"
-
         # boucle permettant de détecter les touchent pressées : 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     print("droit")
-                    cadre_2.move_rect2(2)
+                    xa = (1, 1) 
+                    print(xa, xb)
                 if event.key == pygame.K_LEFT:
                     print("gauche")
-                    cadre_2.move_rect2(1)
+                    
                 if event.key == pygame.K_d:
                     print("d")
-                    cadre_1.move_rect1(2)
+                    
                 if event.key == pygame.K_q:
-                    cadre_1.move_rect1(1)
+                    print("q")
                 if event.key == pygame.K_SPACE:
                     print("espace")
 
+            pygame.display.update()
 
-        
-
-        pygame.display.update()
-        # boucle pour quitter ou pas la console du menu
-        for event in pygame.event.get():
-            
-            if event.type == pygame.display.quit:
-
-                pygame.display.quit()
-
-                sys.exit()
 
 
