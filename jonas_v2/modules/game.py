@@ -1,9 +1,10 @@
 '''Ce module est le jeu, il gère les inputs, les collisions ainsi que
 les différents événements dans le jeu.'''
 import pygame as pg
-from modules.player import Player, manage_controller
+from modules.player import Player
 from modules.object import PunchingBall
 from modules.texture_loader import images
+from modules.controller import manage_controller
 
 
 class Jeu:
@@ -53,6 +54,7 @@ class Jeu:
         elif choice[pg.K_ESCAPE]:
             self.dict_game['is_playing'] = False
         # Système de gravité
+        #self.player.gravity()
         self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
@@ -64,17 +66,20 @@ class Jeu:
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
-        for event in actions:
-            if event.type == pg.JOYAXISMOTION and event.axis == 0:
-                self.player.move_controller(event)
-            # Gère les sauts
-            if event.type == pg.JOYBUTTONDOWN and controller.get_button(0):
-                self.player.jump_controller()
-            # Gère le bloquage
-            if event.type == pg.JOYBUTTONDOWN and controller.get_button(3):
-                self.player.block()
+
+        # Gère le bloquage
+        if controller.get_button(3):
+            self.player.block()
+            
+        if controller.get_button(0):
+            self.player.jump_controller(8)
+    
+        else:
+            for event in actions:
+                if event.type == pg.JOYAXISMOTION and event.axis == 0:
+                    self.player.move_controller(event)
         # Système de gravité
-        self.player.gravity()
+        #self.player.gravity()
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 

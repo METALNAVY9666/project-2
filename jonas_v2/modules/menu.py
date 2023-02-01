@@ -23,7 +23,7 @@ class Menu:
 
     def perso(self):
         '''Tableau qui renvoie les personnages, à modifier si inutile.'''
-        tab = [['goku', 'vegeta', 'Prend pas', 'Prend pas'],
+        tab = [['goku', 'vegeta', 'luffy', 'Prend pas'],
                ['Prend pas', 'Prend pas', 'Prend pas', 'Prend pas'],
                ['Prend pas', 'Prend pas', 'Prend pas', 'Prend pas']
                ]

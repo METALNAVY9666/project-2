@@ -16,15 +16,16 @@ clock = pygame.time.Clock() #Create a clock for manage fps
 pygame.joystick.init() #initialise le module joystick
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 #Permet de savoir le nombre de manettes utilisés
-for joystick in joysticks:
-    print(joystick.get_name()) #Permet de connaitre la manette utilisée.
-    controller = Controller.from_joystick(joystick)
 
+for joystick in joysticks:
+    controller = Controller.from_joystick(joystick)
+    
 
 
 
 #Create a square
 carre = player()
+carre2 = player2()
 
 while True:
 
@@ -32,13 +33,15 @@ while True:
     screen.fill((0, 0, 0))
 
     pygame.draw.rect(screen, carre.color[carre.square_color], carre.square)
+    pygame.draw.rect(screen, carre2.color[carre2.square_color], carre2.square)
+    
+
     if abs(carre.motion[0]) < 0.1:
         carre.motion[0] = 0
     if abs(carre.motion[1]) < 0.1:
         carre.motion[1] = 0
     carre.square.x += carre.motion[0] * 10 #Modifie les abscisses (déplace l'objet)
     carre.square.y += carre.motion[1] * 10 #Modifie les ordonnées (déplace l'objet)
-    #print(my_square.x, my_square.y)
 
     for event in pygame.event.get():
 
@@ -53,9 +56,6 @@ while True:
 
 
         if event.type == JOYBUTTONDOWN:
-            print(event)
-            if event.button == 1:
-                carre.jump()
             if event.button == 2:
                 pass
             if event.button == 3:
@@ -81,8 +81,6 @@ while True:
         #Permet de savoir si une manette a été rajoutée
         if event.type == JOYDEVICEADDED:
             joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-            for joystick in joysticks:
-                print(joystick.get_name())
 
         #Permet de savoir si une manette a été enlevée
         if event.type == JOYDEVICEREMOVED:

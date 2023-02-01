@@ -14,9 +14,9 @@ class Jeu:
     def __init__(self, name, pkg, prop):
         # On récupère le nom du perso choisi.
         self.name = name
-        self.dict_game = {'right': False, 'fps': 60,
-                          'side': 'left', 'is_playing': True,
-                          'pkg': pkg}
+        self.elms = {'right': False, 'fps': 60,
+                     'side': 'left', 'is_playing': True,
+                     'pkg': pkg}
         # Génération de personnages
         self.player_0 = Fighter(self, pkg, prop)
         self.player_1 = Gunner(pkg, prop, 1)
@@ -46,13 +46,17 @@ class Jeu:
             self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
             if choice[self.get_code("d")]:
+                if choice[self.get_code("z")]:
+                    self.player_0.jump()
                 self.player_0.move()
-                self.dict_game['right'] = True
+                self.elms['right'] = True
             elif choice[self.get_code("q")]:
+                if choice[self.get_code("z")]:
+                    self.player_0.jump()
                 self.player_0.move()
-                self.dict_game['right'] = False
+                self.elms['right'] = False
                 if self.name in ['goku', 'vegeta']:
-                    self.dict_game['side'] = 'left'
+                    self.elms['side'] = 'left'
             elif choice[self.get_code("z")]:
                 # Gère les sauts
                 self.player_0.jump()

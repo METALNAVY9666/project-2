@@ -1,5 +1,6 @@
 """contient la classe d'un joueur"""
 from data.modules.texture_loader import GFX
+from data.modules.sound_loader import SFX
 from data.modules.keyboard import NUMPAD
 from data.modules.settings import read_settings
 
@@ -40,6 +41,10 @@ class Gunner():
         self.player["size"] = [width//8, height//6]
         self.player["weapon"] = "fist"
         self.player["keys"] = read_settings()["keys"][id]
+        self.player["cooldown"] = {
+            "barrett": 0,
+            "kick": 0,
+            }
 
     def init_graphics(self):
         """le nom est équivoque je pense"""
@@ -51,6 +56,8 @@ class Gunner():
         self.gfx["sprite"] = GFX["kim"]["wait"]
         self.gfx["old_sprite"] = ""
         self.gfx["delta_sum"] = 0
+        self.gfx["current"] = "wait"
+        # current est [nom_sprite, temps_animation]
 
     def init_weapons(self):
         """initialise l'arsenal"""
@@ -68,17 +75,29 @@ class Gunner():
         image = self.pkg["transform"].flip(sprite, True, False)
         return image.convert_alpha()
 
+    def init_animation(self, animation):
+        """initialise l'animation"""
+        if self.gfx["current"] != animation:
+            self.gfx["current"] = animation
+            self.gfx["delta_sum"] = 0
+
     def play_animation(self, animation, dlt):
         """joue l'animation demandée"""
+        self.gfx["delta_sum"] += dlt
+        cooldown = self.player["cooldown"]
         # ------ attends ------
         if animation == "wait":
             sprite = GFX["kim"]["wait"]
         # ------ tire ------
         if animation == "shoot":
-            sprite = GFX["kim"]["sneak"]
+            if cooldown["barrett"] < 1:
+                cooldown["barrett"] = 3000
+                SFX[animation].play()
+                sprite = GFX["kim"]["sneak"]
+            elif cooldown["barrett"] >= 2500:
+                sprite = GFX["kim"]["sneak"]
         # ------ cours ------
-        elif animation == "run":
-            self.gfx["delta_sum"] += dlt
+        if animation == "run":
             if self.gfx["delta_sum"] >= 100:
                 self.gfx["delta_sum"] = 0
                 self.gfx["frame"] += 1
@@ -93,9 +112,15 @@ class Gunner():
         # ------ renvoie le sprite ------
         return sprite
 
-    def barrett_shoot(self):
+    def barrett_shoot(self, dlt):
         """tire une balle de calibre 50"""
-        return self.play_animation("shoot")
+        return self.play_animation("shoot", dlt)
+
+    def update_cooldowns(self, dlt):
+        """met à jour les cooldowns"""
+        cooldown = self.player["cooldown"]
+        if cooldown["barrett"] > 0:
+            cooldown["barrett"] -= dlt 
 
     def move(self, dlt):
         """déplace le gunner"""
@@ -156,7 +181,7 @@ class Gunner():
                     elif couple[0] == "l_attack":
                         print("patate")
                     elif couple[0] == "h_attack":
-                        sprite = self.barrett_shoot()
+                        sprite = self.barrett_shoot(dlt)
             self.gfx["sprite"] = sprite
 
         return self.blit_sprite(self.gfx["sprite"], self.physics["pos"])
@@ -164,6 +189,7 @@ class Gunner():
     def update(self, dlt, pause, busy):
         """met à jour le sprite du joueur"""
         self.gravity()
+        self.update_cooldowns(dlt)
         return self.update_keys(dlt, pause, busy)
 
     """def jump_start(self, force):

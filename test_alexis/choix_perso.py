@@ -51,6 +51,11 @@ class carre1:
         self.presse = False
         self.pos = pos
         self.i = 0
+        
+
+    def dessin(self):
+        """ Cette fonction permet de dessiner le cadre  """
+        self.move_rect1()
 
     
     def move_rect1(self, dir):
@@ -89,32 +94,33 @@ class carre2:
         self.pos2 = pos
         self.j = 0
 
+    def dessin2(self):
+        """ Cette fonction permet de dessiner le cadre  """
+        self.move_rect2()
 
-    def move_rect2(self):
+    def move_rect2(self, dir):
         """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
-        
+        aff_surface.blit(cadre1, self.pos2)
         list_pos2 = [(698, 143), (838, 143)]
-        dir = 2
-        print(dir)
-        
+        # print(self.pos)
         
         if dir == 1:
             
             self.j -= 1
             if self.j == -1:
                 self.j = 0
-                
-                            
+            self.pos2 = list_pos2[self.j]
+            print(self.j)
+            
         if dir == 2:
             
             self.j += 1
             if self.j == len(list_pos2):
                 self.j = len(list_pos2) - 1
-        
-        return list_pos2[self.j]
-            
+            self.pos2 = list_pos2[self.j]
+            print(self.j)
 
-        
+        return self.j
 
 class perso1:
     """ Cette classe permet d'aficher le personnage choisi. """
@@ -164,10 +170,6 @@ def main():
 
     # On ajoute l'image et on la place au coordonnée (0 ; 0)
 
-    dir = 1
-    rect1 = carre1
-    rect2 = carre2
-    
     test = True
     while test:
         
@@ -197,6 +199,7 @@ def main():
                     xa = (67, 143)
                 if event.key == pygame.K_SPACE:
                     print("espace")
+                    
 
             pygame.display.update()
 
