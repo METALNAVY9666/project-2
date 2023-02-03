@@ -71,6 +71,7 @@ class Jeu:
         if controller.get_button(3):
             self.player.block()
             
+            
         if controller.get_button(0):
             self.player.jump_controller(8)
     

@@ -137,7 +137,6 @@ class Player(pg.sprite.Sprite):
         # Fonction saut a la manette
         if self.vals['current_height'] <= self.vals['max_height'] and jumpCount >= -8:
             print("yo")
-
             self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
             self.vals['current_height'] += (jumpCount * abs(jumpCount)) * 0.5
             jumpCount -= 1

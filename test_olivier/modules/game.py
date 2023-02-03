@@ -58,6 +58,7 @@ class Jeu:
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
+
     def handle_input_controller(self, actions):
         """
         """
@@ -68,18 +69,18 @@ class Jeu:
 
         # Gère le bloquage
         if controller.get_button(3):
-            print('Je suis la !')
             self.player.block()
             
-        else:
-            for event in actions:
-                if event.type == pg.JOYAXISMOTION and event.axis == 0:
-                    self.player.move_controller(event)
-                # Gère les sauts
-                self.player.jump_controller(event)
-        # Système de gravité
-        #self.player.gravity()
-        # Actions qui nécessitent une boucle 'for'
+        if controller.get_axis(0) / 3500 > 5 or controller.get_axis(0) / 3500 < -5:
+            self.player.move_controller(controller.get_axis(0))
+        
+        # Gère les sauts
+        if controller.get_button(0) and self.player.vals['current_height'] < 400:
+            self.player.jump_controller(8)
+
+        elif self.player.vals['current_height']:
+            pass
+
         self.loop_input(actions)
 
     def loop_input(self, actions):
@@ -122,7 +123,7 @@ class Jeu:
         # Dommages
         self.player.damages()
         # Affiche les pv
-        print(self.player.update_pv())
+        #print(self.player.update_pv())
         return self.rect
 
     def add_groups(self):

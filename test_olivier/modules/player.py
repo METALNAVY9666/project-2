@@ -53,22 +53,21 @@ class Player(pg.sprite.Sprite):
         # Le joueur fait une action, donc on passe le bouléen sur False
         self.vals['pause'] = False
 
-    def move_controller(self, actions):
+    def move_controller(self, valeur):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test:
-            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
-                if actions.value < -0.15 and self.rect.x > 0:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
-                    self.vals['pause'] = False
+                if valeur / 1500 < -0.15 and self.rect.x > 0:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     # On change l'image du joueur
                     self.change_animation('left')
+                    self.vals['pause'] = False
 
-                elif actions.value > 0.15 and self.rect.x < 950:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
+                elif valeur / 1500 > 0.15 and self.rect.x < 950:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     self.vals['pause'] = False
                     self.change_animation('right')
 
@@ -133,19 +132,15 @@ class Player(pg.sprite.Sprite):
             if self.vals['current_height'] >= self.vals['max_height']:
                 self.vals['jumps'] = 3
 
-    def jump_controller(self, actions):
+    def jump_controller(self, jumpCount):
         # Fonction saut a la manette
-        if self.vals['current_height'] <= self.vals['max_height']:
-            if self.vals['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
-                if actions.button == 0:
-                    # Vérifie si le perso n'a pas déjà sauté deux fois
-                    if self.vals['jumps'] < 2:
-                        # Saute
-                        self.rect.y -= 25
-                        self.vals['current_height'] += 25
-                    # Si le joueur a atteint la hauteur maximale, il redescend
-                    if self.vals['current_height'] >= self.vals['max_height']:
-                        self.vals['jumps'] = 3
+        if jumpCount >= -8:
+            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
+            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.5
+            jumpCount -= 1
+        else: 
+            jumpCount = 8
+            
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
