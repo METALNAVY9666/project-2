@@ -22,11 +22,15 @@ class Fighter(pg.sprite.Sprite):
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg,
-            "prop": prop
+            "prop": prop, 'tab': []
         }
-        dims = self.vals["pkg"]["dimensions"]
-        level = self.vals["prop"]["ground_level"]
-        self.vals["ground"] = (level * dims[1]) // 100
+        self.settings = {
+            'dims': self.vals["pkg"]["dimensions"],
+            'level': self.vals["prop"]["ground_level"],
+
+        }
+        self.vals["ground"] = (self.settings['level'] *
+                               self.settings['dims'][1]) // 100
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.elms['side'])
         # Affectation de l'image
@@ -39,16 +43,19 @@ class Fighter(pg.sprite.Sprite):
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name)
         # Tableau d'actions
-        self.combo_tab = ['attack', 'combo',
-                          'final', 'impact', 'spe']
+        self.actions_tab = ['attack', 'combo',
+                            'final', 'impact', 'spe']
         # Axe droite-gauche
         self.motion = [0]
+
+    # Déplacement horizontal du joueur
 
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
-        if test or (not test and self.rect.y <= self.vals['ground']):
+        self.settings['dims'] = self.vals["pkg"]["dimensions"]
+        if test or (not test and self.rect.y < self.game.object.rect.y):
             # Déplacement vers la gauche
             if self.game.elms['right'] and self.rect.x < self.vals['surface_width']-100:
                 self.rect.x += 10
@@ -111,29 +118,7 @@ class Fighter(pg.sprite.Sprite):
                     self.vals['pause'] = False
                     self.change_animation('right')
 
-    def attack(self, event, choice):
-        '''Cette fonction permet de gérer l'attaque d'un perso.'''
-        collide = self.game.collision(self, self.game.all_objects)
-        # Le joueur fait une action
-        if event.key == pg.K_y:
-            self.combo('attack', 'nbr_combo_q')
-            self.attack_up(choice)
-            self.attack_down(choice)
-        elif event.key == pg.K_u:
-            self.combo('impact', 'nbr_combo_w')
-        if self.vals['nbr_combo_w'] == 2 and self.vals['nbr_combo_q'] == 2:
-            # pg.time.wait(1000)
-            print('AAAAAAAAH')
-            self.game.elms['side'] = 'spe'
-            self.game.object.rect.x -= 200
-            self.vals['nbr_combo_w'] = 0
-            self.vals['nb_combo_q'] = 0
-        if not collide:
-            self.vals['nbr_combo'] = 0
-            self.vals['nbr_combo_w'] = 0
-            self.vals['nbr_combo_q'] = 0
-        # Augemente le nombre de combo
-        # A voir ~~~~~
+    # Saut du joueur
 
     def jump(self):
         '''Fonction saut'''
@@ -142,8 +127,8 @@ class Fighter(pg.sprite.Sprite):
             # Vérifie si le perso n'a pas déjà sauté deux fois
             if self.vals['jumps'] < 2:
                 # Saute
-                self.rect.y -= 30
-                self.vals['current_height'] += 30
+                self.rect.y -= 25
+                self.vals['current_height'] += 25
             # Si le joueur a atteint la hauteur maximale, il redescend
             if self.vals['current_height'] >= self.vals['max_height']:
                 self.vals['jumps'] = 3
@@ -165,22 +150,26 @@ class Fighter(pg.sprite.Sprite):
     def gravity(self):
         '''Fonction qui simule une gravité'''
         test = not self.game.collision(self, self.game.all_objects)
+        size_max = self.settings['dims'][1] - \
+            self.settings['dims'][1]//12 - self.vals['ground']
+        if not test and self.rect.y < self.vals['ground']:
+            self.vals['fall'] = False
         # Le joueur tombe tant qu'il n'est pas au sol
-        ground = self.vals["ground"]
-        dims = self.vals["pkg"]["dimensions"]
         if self.vals['fall']:
-            if self.rect.y <= dims[1] - dims[1]//12 - ground and test:
+            if self.rect.y <= size_max and test:
                 self.rect.y += 10
                 if not self.game.collision(self, self.game.all_objects):
                     self.change_animation('jump')
                 # Change l'animation si on est à droite ou à gauche
-                if self.game.elms['right']:
+                elif self.game.elms['right']:
                     self.change_animation('jump_right')
             # Sinon, on réinitialise son nombre de sauts à zéro
-            elif self.rect.y >= dims[1] - dims[1]//12 - ground or test:
+            elif self.rect.y >= size_max or not test:
                 self.vals['jumps'] = 0
                 # Réaffecte à zéro la hauteur actuelle
                 self.vals['current_height'] = 0
+
+     # Gestion de l'animation/affichage du joueur
 
     def change_animation(self, name):
         '''Fonction qui change l'image du personnage'''
@@ -231,6 +220,91 @@ class Fighter(pg.sprite.Sprite):
             return pg.transform.scale(self.image, (120, 120))"""
         return self.image
 
+    # Gestion des attaques/combos
+
+    def attack(self, event, choice):
+        '''Cette fonction permet de gérer l'attaque d'un perso.'''
+        dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
+        # Le joueur fait une action
+        if event.key in dict_keys:
+            self.combo_tab(event)
+            self.vals['nbr_sprite'] = 0
+            self.game.elms['side'] = dict_keys[event.key]
+            if event.key == pg.K_y:
+                self.attack_up(choice)
+                self.attack_down(choice)
+        if self.vals['tab'] == [121, 121, 117, 117]:
+            # pg.time.wait(1000)
+            print('AAAAAAAAH')
+            self.game.elms['side'] = 'spe'
+            self.game.object.rect.x -= 200
+            self.vals['tab'] = []
+        # Augemente le nombre de combo
+        # A voir ~~~~~
+
+    def combo_tab(self, event):
+        """
+        Cette fonction récupère les touches actuellement préssées si il y a une collision.
+        Tant qu'il y a moins de 10 éléments dans le tableau on en rajoute.
+        """
+        if self.game.collision(self, self.game.all_objects):
+            if len(self.vals['tab']) < 4:
+                self.vals['tab'].append(event.key)
+            else:
+                self.vals['tab'] = []
+        return self.vals['tab']
+
+    def attack_up(self, choice):
+        '''Attaque en l'air'''
+        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
+            self.game.elms['side'] = 'up'
+            self.game.object.rect.y = 250
+        if self.game.collision(self, self.game.all_objects):
+            self.vals['fall'] = False
+            if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
+                self.game.elms['side'] = 'impact'
+                self.vals['fall'] = False
+                self.game.object.rect.x -= 100
+
+    def combo(self, atk_name, key_name):
+        '''Fonction attaque qui prend en paramètre le nom de la touche preéssée,
+        et qui fait les animations ainsi que le comptage des combos'''
+        collide = self.game.collision(self, self.game.all_objects)
+        self.vals['nbr_sprite'] = 0
+        self.game.elms['side'] = atk_name
+        if collide:
+            # attaque en l'air
+            # self.attack_up(choice)
+            self.vals[key_name] += 1
+            print(self.vals[key_name])
+        # Actionne la mécanique de dégats quand il y a une collision
+        self.game.strike_collision()
+
+    def attack_down(self, choice):
+        """
+        Attaque vers le bas
+        """
+        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
+            self.game.elms['side'] = 'down'
+            while self.game.object.rect.y <= 500:
+                self.game.object.rect.y += 1
+
+    def damages(self):
+        '''Fonction qui gère les dommages'''
+        if self.game.collision(self, self.game.all_objects):
+            """if not self.vals['attacked']:
+                self.vals['health'] -= 1"""
+            pass
+
+    # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
+
+    def block(self):
+        '''Fonction qui empêche de se prendre des dégats durant une attaque'''
+        self.vals['attacked'] = True
+        self.change_animation('shield')
+        if self.game.elms['right']:
+            self.change_animation('shield_right')
+
     def vanish(self, event):
         '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
@@ -249,52 +323,9 @@ class Fighter(pg.sprite.Sprite):
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
-    def attack_up(self, choice):
-        '''Attaque en l'air'''
-        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
-            self.game.elms['side'] = 'up'
-            self.game.object.rect.y = 250
-        if self.game.collision(self, self.game.all_objects):
-            self.vals['fall'] = False
-            if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
-                self.game.elms['side'] = 'impact'
-                self.vals['fall'] = False
-                self.game.object.rect.x -= 100
-
-    def damages(self):
-        '''Fonction qui gère les dommages'''
-        if self.game.collision(self, self.game.all_objects):
-            """if not self.vals['attacked']:
-                self.vals['health'] -= 1"""
-            pass
-
-    def block(self):
-        '''Fonction qui empêche de se prendre des dégats durant une attaque'''
-        self.vals['attacked'] = True
-        self.change_animation('shield')
-        if self.game.elms['right']:
-            self.change_animation('shield_right')
-
-    def combo(self, atk_name, key_name):
-        '''Fonction attaque qui prend en paramètre le nom de la touche preéssée,
-        et qui fait les animations ainsi que le comptage des combos'''
-        collide = self.game.collision(self, self.game.all_objects)
-        self.vals['nbr_sprite'] = 0
-        self.game.elms['side'] = atk_name
-        if collide:
-            # attaque en l'air
-            # self.attack_up(choice)
-            self.vals[key_name] += 1
-            print(self.vals[key_name])
-        # Actionne la mécanique de dégats quand il y a une collision
-        self.game.strike_collision()
-
-    def attack_down(self, choice):
-        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
-            self.game.elms['side'] = 'down'
-            while self.game.object.rect.y <= 500:
-                self.game.object.rect.y += 1
+    # Autres
 
     def update_pv(self):
+        '''renvoi les pvs'''
         return [[self.game.name, self.vals['health']],
                 ['punchingball', self.game.object.stats['health']]]
