@@ -18,10 +18,11 @@ class Fighter(pg.sprite.Sprite):
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
             'attacked': False, 'fall': True,
+            'nbr_combo_q': 0, 'nbr_combo_w': 0,
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg, "prop": prop,
-            'tab': [], "percent_ult": 0
+            'tab': [], 'percent_ult': 0
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],
