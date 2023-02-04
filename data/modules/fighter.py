@@ -18,11 +18,10 @@ class Fighter(pg.sprite.Sprite):
             'nbr_combo': 0, 'nbr_vanish': 4,
             'max_health': 100, 'health': 100,
             'attacked': False, 'fall': True,
-            'nbr_combo_q': 0, 'nbr_combo_w': 0,
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
-            "pkg": pkg,
-            "prop": prop, 'tab': []
+            "pkg": pkg, "prop": prop,
+            'tab': [], "percent_ult": 0
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],
@@ -224,23 +223,8 @@ class Fighter(pg.sprite.Sprite):
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
-        dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
-        # Le joueur fait une action
-        if event.key in dict_keys:
-            self.combo_tab(event)
-            self.vals['nbr_sprite'] = 0
-            self.game.elms['side'] = dict_keys[event.key]
-            if event.key == pg.K_y:
-                self.attack_up(choice)
-                self.attack_down(choice)
-        if self.vals['tab'] == [121, 121, 117, 117]:
-            # pg.time.wait(1000)
-            print('AAAAAAAAH')
-            self.game.elms['side'] = 'spe'
-            self.game.object.rect.x -= 200
-            self.vals['tab'] = []
-        # Augemente le nombre de combo
-        # A voir ~~~~~
+        self.single_tap(event, choice)
+        self.combo()
 
     def combo_tab(self, event):
         """
@@ -254,6 +238,30 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['tab'] = []
         return self.vals['tab']
 
+    def single_tap(self, event, choice):
+        """
+        Attaque normale de base avec y et u
+        """
+        dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
+        # Le joueur fait une action
+        if event.key in dict_keys:
+            self.game.strike_collision()
+            self.combo_tab(event)
+            self.vals['nbr_sprite'] = 0
+            self.game.elms['side'] = dict_keys[event.key]
+            if event.key == pg.K_y:
+                self.attack_up(choice)
+                self.attack_down(choice)
+
+    def combo(self):
+        """
+        Dégats du combo final
+        """
+        if self.vals['tab'] == [121, 121, 117, 117]:
+            self.game.elms['side'] = 'spe'
+            self.game.object.rect.x -= 200
+            self.vals['tab'] = []
+
     def attack_up(self, choice):
         '''Attaque en l'air'''
         if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
@@ -265,20 +273,6 @@ class Fighter(pg.sprite.Sprite):
                 self.game.elms['side'] = 'impact'
                 self.vals['fall'] = False
                 self.game.object.rect.x -= 100
-
-    def combo(self, atk_name, key_name):
-        '''Fonction attaque qui prend en paramètre le nom de la touche preéssée,
-        et qui fait les animations ainsi que le comptage des combos'''
-        collide = self.game.collision(self, self.game.all_objects)
-        self.vals['nbr_sprite'] = 0
-        self.game.elms['side'] = atk_name
-        if collide:
-            # attaque en l'air
-            # self.attack_up(choice)
-            self.vals[key_name] += 1
-            print(self.vals[key_name])
-        # Actionne la mécanique de dégats quand il y a une collision
-        self.game.strike_collision()
 
     def attack_down(self, choice):
         """

@@ -5,6 +5,7 @@ from data.modules.fighter import Fighter
 from data.modules.gunner import Gunner
 from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
+from data.modules.spe import Special
 
 
 class Jeu:
@@ -20,6 +21,7 @@ class Jeu:
         # Génération de personnages
         self.player_0 = Fighter(self, pkg, prop)
         self.player_1 = Gunner(pkg, prop, 1)
+        self.ulti = Special(self)
         # Génération d'un objet
         self.object = PunchingBall(self)
         # Crée des groupes de sprites vide
@@ -101,6 +103,8 @@ class Jeu:
                 self.player_0.attack(event, choice)
                 # Esquive du joueur
                 self.player_0.vanish(event)
+            if event.type == pg.KEYUP and self.elms['side'] == 'run':
+                self.player_0.vals['nbr_sprite'] = 5
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
