@@ -174,8 +174,21 @@ def main():
     while test:
         
         aff_surface.blit(fond2, (0, 0))
+        
         aff_surface.blit(cadre2, xa)
         aff_surface.blit(cadre2, xb) 
+        
+        aff_surface.blit(gokured, (77, 154))
+        aff_surface.blit(gokubleu, (708, 154))
+        
+        aff_surface.blit(vegetared, (215, 154))
+        aff_surface.blit(vegetableu, (848, 154))
+        
+        aff_surface.blit(kimred, (353, 154))
+        aff_surface.blit(kimbleu, (989, 154))
+        
+        aff_surface.blit(luffyred, (491, 154))
+        aff_surface.blit(luffybleu, (1130, 154))
 
         retour = Bouton.dessin()
         
