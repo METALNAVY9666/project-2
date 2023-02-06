@@ -122,11 +122,6 @@ class carre2:
 
         return self.j
 
-class perso1:
-    """ Cette classe permet d'aficher le personnage choisi. """
-    posi1 = (50, 400)
-    posi2 = (700, 400)
-
 
 pygame.init()
 
