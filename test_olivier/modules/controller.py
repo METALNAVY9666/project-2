@@ -9,3 +9,4 @@ def manage_controller():
     for joystick in joysticks:
         controller = Controller.from_joystick(joystick)
         return controller
+

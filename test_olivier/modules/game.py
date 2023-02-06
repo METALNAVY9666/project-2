@@ -7,6 +7,7 @@ from modules.texture_loader import images
 from modules.controller import manage_controller
 
 
+
 class Jeu:
     '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les collisions,
     les dessins, les dégats etc...'''
@@ -61,27 +62,33 @@ class Jeu:
 
     def handle_input_controller(self, actions):
         """
+        Cette fonction récupère les actions effectuées à la manette et 
+        effectue des opérations spécifiques correspondantes. La fonction 
+        get.button(n) avec n un nombre entier permet de savoir si la touche 
+        correspondante au nombre n est pressé
         """
-        controller = manage_controller()
+        contro = manage_controller()
         # Réaffecte l'image de l'objet
         self.object.image = images['punchingball']
         # Modifie les animations en fonction de l'input
 
         # Gère le bloquage
-        if controller.get_button(3):
+        if contro.get_button(3):
             self.player.block()
             
-        if controller.get_axis(0) / 3500 > 5 or controller.get_axis(0) / 3500 < -5:
-            self.player.move_controller(controller.get_axis(0))
+        # Gère les mouvements à la manette
+        if contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
+            self.player.move_controller(contro.get_axis(0))
         
         # Gère les sauts
-        if controller.get_button(0) and self.player.vals['current_height'] < 400:
+        if contro.get_button(0) and self.player.vals['current_height'] < 400:
             self.player.jump_controller(8)
 
         elif self.player.vals['current_height']:
             pass
 
         self.loop_input(actions)
+
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -101,6 +108,7 @@ class Jeu:
             if event.type == pg.JOYBUTTONDOWN:
                 self.player.attack_controller(choice)
 
+
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
         qui est sur True quand il y a une collision entre
@@ -109,6 +117,7 @@ class Jeu:
         # Vérifie si il y a collision ou non
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
+
 
     def update(self, screen, dlt, actions):
         '''Cette fonction permet de mettre à jour les événements
@@ -119,7 +128,12 @@ class Jeu:
         self.handle_input(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen)
-        self.handle_input_controller(actions)
+
+        #Gère mes inputs à la manette
+        # Si il y a au moins une manette de connecté:
+        if manage_controller() != None: 
+            self.handle_input_controller(actions)
+
         # Dommages
         self.player.damages()
         # Affiche les pv
