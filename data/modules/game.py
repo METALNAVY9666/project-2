@@ -66,7 +66,8 @@ class Jeu:
                 # Gère le bloquage
                 self.player_0.block()
             elif choice[self.get_code("r")]:
-                self.ulti.spe(lock=True)
+                if self.player_0.vals["percent_ult"] >= 130:
+                    self.ulti.spe(lock=True)
             # Système de gravité
             self.player_0.gravity()
             # Actions qui nécessitent une boucle 'for'
@@ -117,28 +118,32 @@ class Jeu:
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
 
-    def update(self, screen, dlt, actions, pause, busy):
-        '''Cette fonction permet de mettre à jour les événements
-        du jeu.'''
-        # Affiche le personnage sur l'écran
-        rects = []
-        rects.append(self.player_0.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update(dlt, pause, busy))
-        # Gère les inputs
-        self.handle_input(actions, pause, busy)
-        # Renvoi le rectangle du joueur
-        self.update_health(screen, busy)
-        # self.handle_input_controller(actions)
-        # Dommages
-        self.player_0.damages()
-        return rects, self.player_0.update_pv()
-
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
         # Ajout de l'objet dans le groue de sprite de tout les objets
         self.all_objects.add(self.object)
         # Ajoute un joueur au groupe de sprite de tout les joueurs
         self.all_players.add(self.player_0)
+
+    def strike_collision(self):
+        '''Actionne l'attaque du personnage'''
+        if self.collision(self.player_0, self.all_objects):
+            for objects in self.collision(self.player_0, self.all_objects):
+                objects.damage()
+                # Change l'animation en cas d'attaque
+                self.object.image = GFX['hit']
+
+    def update_stats(self):
+        """
+        Met à jour les caractéristiques spéciale comme les barres,
+        les attaques spéciales, et les stats.
+        """
+        if self.name == "luffy" and self.player_0.vals["percent_ult"] <= 130:
+            self.player_0.vals["percent_ult"] += 0.1
+        elif self.name == 'gear4' and self.player_0.vals["percent_ult"] > 0:
+            self.player_0.vals["percent_ult"] -= 0.1
+        elif self.name == 'gear4' and self.player_0.vals["percent_ult"] <= 0:
+            self.name = 'luffy'
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
@@ -148,14 +153,6 @@ class Jeu:
         self.object.gravity_object()
         # Met le punching ball à jour
         return screen.blit(self.object.image, (self.object.rect))
-
-    def strike_collision(self):
-        '''Actionne l'attaque du personnage'''
-        if self.collision(self.player_0, self.all_objects):
-            for objects in self.collision(self.player_0, self.all_objects):
-                objects.damage()
-                # Change l'animation en cas d'attaque
-                self.object.image = GFX['hit']
 
     def update_health(self, surface, busy):
         '''Cette fonction dessine la barre de vie, d'énergie, et de défense du perso.
@@ -177,3 +174,24 @@ class Jeu:
             pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
                 950, 100, self.player_0.vals['nbr_vanish']*30, 15])
+            if self.name in ['luffy', 'gear4']:
+                pg.draw.rect(surface, (107, 43, 6), [950, 150, 130, 15])
+                pg.draw.rect(surface, (255, 87, 51), [
+                             950, 150, self.player_0.vals['percent_ult'], 15])
+
+    def update(self, screen, dlt, actions, pause, busy):
+        '''Cette fonction permet de mettre à jour les événements
+        du jeu.'''
+        # Affiche le personnage sur l'écran
+        rects = []
+        rects.append(self.player_0.blit_sprite(screen, dlt, pause))
+        rects.append(self.player_1.update(dlt, pause, busy))
+        # Gère les inputs
+        self.handle_input(actions, pause, busy)
+        # Renvoi le rectangle du joueur
+        self.update_health(screen, busy)
+        # self.handle_input_controller(actions)
+        # Dommages
+        self.player_0.damages()
+        self.update_stats()
+        return rects, self.player_0.update_pv()
