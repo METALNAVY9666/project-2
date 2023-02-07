@@ -67,7 +67,7 @@ class Jeu:
                 self.player_0.block()
             elif choice[self.get_code("r")]:
                 if self.player_0.vals["percent_ult"] >= 130:
-                    self.ulti.spe(lock=True)
+                    self.ulti.spe()
             # Système de gravité
             self.player_0.gravity()
             # Actions qui nécessitent une boucle 'for'

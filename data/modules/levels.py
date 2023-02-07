@@ -66,7 +66,7 @@ class BaseLevel:
 
     def init_game(self):
         """initialise le jeu"""
-        self.cls["game"] = Jeu("itachi", self.pkg, self.prop)
+        self.cls["game"] = Jeu("luffy", self.pkg, self.prop)
 
     def init_events(self):
         """initialise les évènements"""

@@ -8,8 +8,9 @@ class Special(pg.sprite.Sprite):
         self.game = game
         print('la spé de', self.game.name, 'est chargée.')
 
-    def spe(self, lock):
-        if self.game.name == 'luffy' and lock:
+    def spe(self):
+        if self.game.name == 'luffy':
             self.game.name = 'gear4'
+            self.game.player_0.vals['strike'] = 30
         elif self.game.name == 'gear4':
             self.game.name = 'luffy'
