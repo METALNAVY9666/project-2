@@ -45,7 +45,8 @@ class Bouton_quit:
             self.top_color = (255, 0, 0)
 
 class carre1:
-    """ Cette classe est un cadre qui se déplace en fonction du choix du personnage """
+    """ Cette classe est un cadre qui se déplace en fonction du choix du 
+    personnage """
     def __init__(self, pos):
         """ Cette fonction permet de permet d'initialiser la classe """
         self.presse = False
@@ -59,7 +60,8 @@ class carre1:
 
     
     def move_rect1(self, dir):
-        """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
+        """ Cette fonction permet de detecter le clic de certaine touche et 
+        exécuter certaines actions """
         
         aff_surface.blit(cadre2, self.pos)
         list_pos1 = [(67, 143), (205, 143)]
@@ -87,7 +89,8 @@ class carre1:
                 
 
 class carre2:
-    """ Cette classe est un cadre qui se déplace en fonction du choix du personnage """
+    """ Cette classe est un cadre qui se déplace en fonction du choix du 
+    personnage """
     def __init__(self, pos):
         """ Cette fonction permet de permet d'initialiser la classe """
         self.presse = False
@@ -99,7 +102,8 @@ class carre2:
         self.move_rect2()
 
     def move_rect2(self, dir):
-        """ Cette fonction permet de detecter le clic de certaine touche et exécuter certaines actions """
+        """ Cette fonction permet de detecter le clic de certaine touche et 
+        exécuter certaines actions """
         aff_surface.blit(cadre1, self.pos2)
         list_pos2 = [(698, 143), (838, 143)]
         # print(self.pos)
@@ -159,7 +163,11 @@ def main():
 
     xa = (67, 143)
     xb = (698, 143)
-
+    list_pos1 = [(67, 143), (205, 143), (343, 143), (481, 143)]
+    list_pos2 = [(698, 143), (838, 143), (979, 143), (1120, 143)]
+    i = 0
+    j = 0    
+    
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
 
@@ -191,20 +199,37 @@ def main():
             return "retour"
         # boucle permettant de détecter les touchent pressées : 
         for event in pygame.event.get():
+            
             if event.type == pygame.KEYDOWN:
+                
                 if event.key == pygame.K_RIGHT:
                     print("droit")
-                    xb = (838, 143)
-                    print(xa, xb)
+                    j += 1
+                    if j == len(list_pos2):
+                        j = len(list_pos2) - 1
+                    xb = list_pos2[j]
+                    
                 if event.key == pygame.K_LEFT:
                     print("gauche")
-                    xb = (698, 143)
+                    j -= 1
+                    if j == -1:
+                        j = 0
+                    xb = list_pos2[j]
+                    
                 if event.key == pygame.K_d:
                     print("d")
-                    xa = (205, 143)
+                    i += 1
+                    if i == len(list_pos1):
+                        i = len(list_pos1) - 1
+                    xa = list_pos1[i]
+                    
                 if event.key == pygame.K_q:
                     print("q")
-                    xa = (67, 143)
+                    i -= 1
+                    if i == -1:
+                        i = 0
+                    xa = list_pos1[i]
+                    
                 if event.key == pygame.K_SPACE:
                     print("espace")
                     

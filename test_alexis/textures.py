@@ -25,7 +25,7 @@ vegeta = pygame.transform.scale(vegeta, (131,215))
 
 # Import des logo des personnages
 gokubleu = pygame.image.load("img/gokuBleu.jpg").convert_alpha()
-gokured = pygame.image.load("img/gokuRed.jpg").convert_alpha()
+gokured = pygame.image.load("img/gokuRed.png").convert_alpha()
 
 vegetableu = pygame.image.load("img/vegetableu.jpg").convert_alpha()
 vegetared = pygame.image.load("img/vegetaRed.jpg").convert_alpha()
