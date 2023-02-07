@@ -1,10 +1,13 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
-import pygame as pg
+import pygame as pg 
 from data.modules.texture_loader import sprites_images, sprite_tab
 
 
 class Fighter(pg.sprite.Sprite):
-    '''Cette classe permet de gérer les actions du joueur, ainsi que son apparence.'''
+    '''
+    Cette classe permet de gérer les actions du joueur, ainsi que son 
+    apparence.
+    '''
 
     def __init__(self, game, pkg, prop):
         super().__init__()
@@ -48,8 +51,8 @@ class Fighter(pg.sprite.Sprite):
         # Axe droite-gauche
         self.motion = [0]
 
-    # Déplacement horizontal du joueur
 
+    # Déplacement horizontal du joueur
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
@@ -57,7 +60,8 @@ class Fighter(pg.sprite.Sprite):
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if test or (not test and self.rect.y < self.game.object.rect.y):
             # Déplacement vers la gauche
-            if self.game.elms['right'] and self.rect.x < self.vals['surface_width']-100:
+            if self.game.elms['right'] and
+            self.rect.x < self.vals['surface_width']-100:
                 self.rect.x += 10
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
@@ -72,12 +76,13 @@ class Fighter(pg.sprite.Sprite):
                 if self.game.name in ['goku', 'vegeta']:
                     # Si oui, il n'y a pas d'animation quand il se déplace
                     self.change_animation('left')
-                    # Le joueur fait une action, donc on passe le bouléen sur False
+                    # Le joueur fait une action, donc le booléen pase sur False
                     self.vals['pause'] = False
                 else:
                     self.game.elms['side'] = 'run'
         if not test:
             self.move_collide()
+
 
     def move_collide(self):
         """
@@ -91,7 +96,8 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['pause'] = False
             else:
                 self.game.elms['side'] = 'run'
-        elif not self.game.elms['right'] and self.game.object.rect.x > self.rect.x:
+        elif not self.game.elms['right'] and 
+        (self.game.object.rect.x > self.rect.x):
             self.rect.x -= 10
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('left')
@@ -99,27 +105,27 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.game.elms['side'] = 'run'
 
-    def move_controller(self, actions):
+
+    def move_controller(self, valeur):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test:
-            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
-                if actions.value < -0.15 and self.rect.x > 0:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
-                    self.vals['pause'] = False
+                if valeur / 1500 < -0.15 and self.rect.x > 0:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     # On change l'image du joueur
                     self.change_animation('left')
+                    self.vals['pause'] = False
 
-                elif actions.value > 0.15 and self.rect.x < 950:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
+                elif valeur / 1500 > 0.15 and self.rect.x < 950:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     self.vals['pause'] = False
                     self.change_animation('right')
 
-    # Saut du joueur
 
+    # Saut du joueur
     def jump(self):
         '''Fonction saut'''
         # Vérfie si ale perso est inférieur à la hauteur de saut mx
@@ -133,19 +139,16 @@ class Fighter(pg.sprite.Sprite):
             if self.vals['current_height'] >= self.vals['max_height']:
                 self.vals['jumps'] = 3
 
-    def jump_controller(self, actions):
+
+    def jump_controller(self, jumpCount):
         # Fonction saut a la manette
-        if self.vals['current_height'] <= self.vals['max_height']:
-            if self.vals['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
-                if actions.button == 0:
-                    # Vérifie si le perso n'a pas déjà sauté deux fois
-                    if self.vals['jumps'] < 2:
-                        # Saute
-                        self.rect.y -= 25
-                        self.vals['current_height'] += 25
-                    # Si le joueur a atteint la hauteur maximale, il redescend
-                    if self.vals['current_height'] >= self.vals['max_height']:
-                        self.vals['jumps'] = 3
+        if jumpCount >= -8:
+            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
+            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.5
+            jumpCount -= 1
+        else: 
+            jumpCount = 8
+
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -169,8 +172,8 @@ class Fighter(pg.sprite.Sprite):
                 # Réaffecte à zéro la hauteur actuelle
                 self.vals['current_height'] = 0
 
-     # Gestion de l'animation/affichage du joueur
 
+     # Gestion de l'animation/affichage du joueur
     def change_animation(self, name):
         '''Fonction qui change l'image du personnage'''
         # On réaffecte le dictionnaire d'images
@@ -182,6 +185,7 @@ class Fighter(pg.sprite.Sprite):
             self.image = pg.transform.scale(self.image, (120, 120))
             if name in ['shield', 'shield_right']:
                 self.image = pg.transform.scale(self.image, (70, 120))"""
+
 
     def blit_sprite(self, screen, dlt, pause):
         '''Cette fonction sert à afficher le sprite du joueur en continu
@@ -200,11 +204,16 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['delta_sum'] = 0
             if self.vals['nbr_sprite'] >= 5:
                 self.vals['nbr_sprite'] = 0
-                # Si le joueur ne fait pas d'attaque, on remet l'animation de base
+                # Si le joueur ne fait pas d'attaque, on remet l'animation de 
+                # base
                 self.game.elms['side'] = 'left'
 
+
     def position(self):
-        '''Fonction qui change le tableau d'image en fonction de la position du persos'''
+        '''
+        Fonction qui change le tableau d'image en fonction de la position 
+        du perso.
+        '''
         # Vérifie si le personnage est à droite ou à gauche
         self.tab = sprite_tab(self.game.name, self.game.elms['side'])
         # Réaffecte l'image en fonction de la position
@@ -220,17 +229,44 @@ class Fighter(pg.sprite.Sprite):
             return pg.transform.scale(self.image, (120, 120))"""
         return self.image
 
-    # Gestion des attaques/combos
 
+    # Gestion des attaques/combos
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         self.single_tap(event, choice)
         self.combo()
 
+
+    def attack_controller(self, choice):
+            '''Cette fonction permet de gérer l'attaque d'un perso.'''
+            collide = self.game.collision(self, self.game.all_objects)
+            controller = manage_controller()
+            # Le joueur fait une action
+            if controller.get_button(2):
+                self.combo('attack', 'nbr_combo_q')
+                self.attack_up(choice)
+                self.attack_down(choice)
+            elif controller.get_button(1):
+                self.combo('impact', 'nbr_combo_w')
+            if self.vals['nbr_combo_w'] == 2 and self.vals['nbr_combo_q'] == 2:
+                print('AAAAAAAAH')
+                self.game.dict_game['side'] = 'spe'
+                self.game.object.rect.x -= 200
+                self.vals['nbr_combo_w'] = 0
+                self.vals['nb_combo_q'] = 0
+            print(self.vals['nbr_combo'], self.vals['nbr_combo_w'], 
+            self.vals['nbr_combo_q'])
+            if not collide:
+                self.vals['nbr_combo'] = 0
+                self.vals['nbr_combo_w'] = 0
+                self.vals['nbr_combo_q'] = 0
+
+
     def combo_tab(self, event):
         """
-        Cette fonction récupère les touches actuellement préssées si il y a une collision.
-        Tant qu'il y a moins de 10 éléments dans le tableau on en rajoute.
+        Cette fonction récupère les touches actuellement préssées si il y a 
+        une collision. Tant qu'il y a moins de 10 éléments dans le tableau on 
+        en rajoute.
         """
         if self.game.collision(self, self.game.all_objects):
             if len(self.vals['tab']) < 4:
@@ -238,6 +274,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.vals['tab'] = []
         return self.vals['tab']
+
 
     def single_tap(self, event, choice):
         """
@@ -254,6 +291,7 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_up(choice)
                 self.attack_down(choice)
 
+
     def combo(self):
         """
         Dégats du combo final
@@ -263,9 +301,11 @@ class Fighter(pg.sprite.Sprite):
             self.game.object.rect.x -= 200
             self.vals['tab'] = []
 
+
     def attack_up(self, choice):
         '''Attaque en l'air'''
-        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
+        if choice[pg.K_UP] and 
+        (self.game.collision(self, self.game.all_objects)):
             self.game.elms['side'] = 'up'
             self.game.object.rect.y = 250
         if self.game.collision(self, self.game.all_objects):
@@ -275,14 +315,17 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['fall'] = False
                 self.game.object.rect.x -= 100
 
+
     def attack_down(self, choice):
         """
         Attaque vers le bas
         """
-        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
+        if choice[pg.K_DOWN] and 
+        (self.game.collision(self, self.game.all_objects)):
             self.game.elms['side'] = 'down'
             while self.game.object.rect.y <= 500:
                 self.game.object.rect.y += 1
+
 
     def damages(self):
         '''Fonction qui gère les dommages'''
@@ -291,8 +334,8 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['health'] -= 1"""
             pass
 
-    # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
+    # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
     def block(self):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''
         self.vals['attacked'] = True
@@ -300,8 +343,12 @@ class Fighter(pg.sprite.Sprite):
         if self.game.elms['right']:
             self.change_animation('shield_right')
 
+
     def vanish(self, event):
-        '''Fonction qui actionne une esquive, le personnage peut esquiver une attaque 4 fois'''
+        '''
+        Fonction qui actionne une esquive, le personnage peut esquiver 
+        une attaque 4 fois
+        '''
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision(self, self.game.all_objects):
             # On vérifie le ombre de tentatives autorisées
@@ -310,16 +357,39 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['nbr_sprite'] = 0
                 # Change l'animation
                 self.game.elms['side'] = 'vanish'
-                # Si le joueuer appuie sur la touche, on diminue le nombre de tentative
+                # Si le joueuer appuie sur la touche, on diminue le nombre de 
+                # tentative
                 self.vals['nbr_vanish'] -= 1
-                # Effectue l'esquive en fonction de la position du perso (droite/gauche)
+                # Effectue l'esquive en fonction de la position du perso 
+                # (droite/gauche)
                 if self.game.elms['right'] and self.rect.x > 5:
                     self.rect.x -= 100
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
-    # Autres
+    def vanish_controller(self):
+        '''
+        Fonction qui actionne une esquive, le personnage peut esquiver 
+        une attaque 4 fois
+        '''
+        # L'esquve se fait que si le joueur se prend des dégats
+        if self.game.collision(self, self.game.all_objects):
+            # On vérifie le ombre de tentatives autorisées
+            if self.vals['nbr_vanish'] > 0:
+                 # Change l'animation
+                self.game.elms['side'] = 'vanish'
+                # Si le joueuer appuie sur la touche, on diminue le nombre de 
+                # tentative
+                self.vals['nbr_vanish'] -= 1
+                # Effectue l'esquive en fonction de la position du perso 
+                # (droite/gauche)
+                if self.game.elms['right'] and self.rect.x > 5:
+                    self.rect.x -= 100
+                elif not self.game.elms['right'] and self.rect.x < 950:
+                    self.rect.x += 100
 
+
+    # Autres
     def update_pv(self):
         '''renvoi les pvs'''
         return [[self.game.name, self.vals['health']],
