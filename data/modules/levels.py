@@ -93,7 +93,8 @@ class BaseLevel:
             number = GFX[ctn[1]]
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
-            pos = [(width//2)-(width//12), (height//2)-(height//12)]
+            pos = [(width // 2) - (width // 12),
+                   (height // 2) - (height // 12)]
             self.update_list.append(self.pkg["surface"].blit(number, pos))
         else:
             if ctn[0] == "end":
@@ -105,7 +106,7 @@ class BaseLevel:
             surface = self.pkg["surface"]
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
-            pos = [(width//2)-(width//3), height//1.5]
+            pos = [(width // 2) - (width // 3), height // 1.5]
             return surface.blit(GFX["platform"], pos)
 
     def update(self, delta, actions):

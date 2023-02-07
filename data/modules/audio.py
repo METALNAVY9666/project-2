@@ -20,9 +20,11 @@ class Music:
 
         self.loader.set_volume(settings["audio"]["music"]/100)
 
+
     def get_segment(self, segment):
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
+
 
     def play(self):
         if self.folder:
@@ -33,6 +35,7 @@ class Music:
         else:
             self.loader.play()
             self.loader.queue(self.get_segment("loop"), loops=-1)
+
 
     def pause(self, condition):
         if condition:

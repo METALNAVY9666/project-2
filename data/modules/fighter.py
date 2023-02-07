@@ -2,6 +2,8 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
+from data.modules.controllers import (manage_controller, 
+                                            removed_and_added_controller)
 
 
 class Fighter(pg.sprite.Sprite):
@@ -59,7 +61,8 @@ class Fighter(pg.sprite.Sprite):
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if test or (not test and self.rect.y < self.game.object.rect.y):
             # Déplacement vers la gauche
-            if self.game.elms['right'] and self.rect.x < self.vals['surface_width'] - 100:
+            if self.game.elms['right'] and (
+                self.rect.x < self.vals['surface_width'] - 100):
                 self.rect.x += 10
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
@@ -74,7 +77,8 @@ class Fighter(pg.sprite.Sprite):
                 if self.game.name in ['goku', 'vegeta']:
                     # Si oui, il n'y a pas d'animation quand il se déplace
                     self.change_animation('left')
-                    # Le joueur fait une action, donc on passe le bouléen sur False
+                    # Le joueur fait une action, donc on passe le bouléen 
+                    # sur False
                     self.vals['pause'] = False
                 else:
                     self.game.elms['side'] = 'run'
@@ -93,7 +97,8 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['pause'] = False
             else:
                 self.game.elms['side'] = 'run'
-        elif not self.game.elms['right'] and self.game.object.rect.x > self.rect.x:
+        elif not self.game.elms['right'] and (
+            self.game.object.rect.x > self.rect.x):
             self.rect.x -= 10
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('left')
@@ -101,27 +106,26 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.game.elms['side'] = 'run'
 
-    def move_controller(self, actions):
+    def move_controller(self, valeur):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test:
-            if actions.type == pg.JOYAXISMOTION and actions.axis == 0:
-                if actions.value < -0.15 and self.rect.x > 0:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
-                    self.vals['pause'] = False
+                if valeur / 1500 < -0.15 and self.rect.x > 0:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     # On change l'image du joueur
                     self.change_animation('left')
+                    self.vals['pause'] = False
 
-                elif actions.value > 0.15 and self.rect.x < 950:
-                    self.motion[actions.axis] = actions.value * 5
-                    self.rect.x += self.motion[actions.axis]
+                elif valeur / 1500 > 0.15 and self.rect.x < 950:
+                    self.motion[0] = valeur / 2500
+                    self.rect.x += self.motion[0]
                     self.vals['pause'] = False
                     self.change_animation('right')
 
-    # Saut du joueur
 
+    # Saut du joueur
     def jump(self):
         '''Fonction saut'''
         # Vérfie si ale perso est inférieur à la hauteur de saut mx
@@ -135,18 +139,16 @@ class Fighter(pg.sprite.Sprite):
             if self.vals['current_height'] >= self.vals['max_height']:
                 self.vals['jumps'] = 3
 
-    def jump_controller(self, actions):
+
+    def jump_controller(self, jumpCount):
         # Fonction saut a la manette
-        if self.vals['current_height'] <= self.vals['max_height']:
-            if self.vals['jumps'] < 2 and actions.type == pg.JOYBUTTONUP:
-                if actions.button == 0:
-                    # Vérifie si le perso n'a pas déjà sauté deux fois
-                    if self.vals['jumps'] < 2:
-                        # Saute
-                        self.rect.y -= 25
-                        self.vals['current_height'] += 25
-                    if self.vals['current_height'] >= self.vals['max_height']:
-                        self.vals['jumps'] = 3
+        if jumpCount >= -8:
+            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
+            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.5
+            jumpCount -= 1
+        else: 
+            jumpCount = 8
+
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -228,6 +230,14 @@ class Fighter(pg.sprite.Sprite):
         self.single_tap(event, choice)
         self.combo()
 
+
+    def attack_controller(self, choice):
+            '''
+            Cette fonction permet de gérer l'attaque d'un perso à la manette.
+            '''
+            self.single_tap_controller(choice)
+            self.combo()
+
     def combo_tab(self, event):
         """
         Cette fonction récupère les touches actuellement
@@ -256,6 +266,15 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_up(choice)
                 self.attack_down(choice)
 
+    #A modifier
+    def single_tap_controller(self, choice):
+        controller = manage_controller()
+        if controller.get_button(2):
+            self.game.strike_collision()
+            #self.combo_tab(choice)
+            self.vals['nbr_sprite'] = 0
+            self.game.elms['side'] = 'attack'
+
     def combo(self):
         """
         Dégats du combo final
@@ -281,7 +300,8 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaque vers le bas
         """
-        if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
+        if choice[pg.K_DOWN] and (
+            self.game.collision(self, self.game.all_objects)):
             self.game.elms['side'] = 'down'
             while self.game.object.rect.y <= 500:
                 self.game.object.rect.y += 1

@@ -1,4 +1,4 @@
-"""import pygame
+import pygame
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
 
@@ -34,7 +34,7 @@ class player2:
         self.sqare_color = (self.square_color + 1) % (len(self.color))
 
 
-"""
+
 import sys
 import pygame
 import pygame._sdl2
@@ -101,7 +101,7 @@ while True:
     debug_messages.clear()
 
 
-"""
+
 import pygame
 import os
 from time import sleep
@@ -208,4 +208,4 @@ while run:
     pygame.draw.rect(win, (255,0,0), (x, y, width, height))   
     pygame.display.update() 
     
-pygame.quit()"""
+pygame.quit()

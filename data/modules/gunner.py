@@ -21,13 +21,13 @@ class Gunner():
     def init_physics(self):
         """initialise les propriétés physiques du gunner"""
         self.physics = {}
-        self.physics["gravity"] = 9.81*2
+        self.physics["gravity"] = 9.81 * 2
         self.physics["grounded"] = True
         self.physics["falling"] = False
         self.physics["jump_height"] = 0
-        self.physics["jump_frame"] = round(-100*self.pkg["FPS"])//100
+        self.physics["jump_frame"] = round(-100 * self.pkg["FPS"]) // 100
         self.physics["pos"] = [0, 0]
-        self.physics["speed"] = self.pkg["dimensions"][0]/1920 * 16
+        self.physics["speed"] = self.pkg["dimensions"][0] / 1920 * 16
         self.physics["side"] = 1
         level = self.prop["ground_level"]
         dims = self.pkg["dimensions"]
@@ -38,20 +38,20 @@ class Gunner():
         width, height = self.pkg["dimensions"]
         self.player = {}
         self.player["hp"] = 20
-        self.player["size"] = [width//8, height//6]
+        self.player["size"] = [width // 8, height // 6]
         self.player["weapon"] = "fist"
         self.player["keys"] = read_settings()["keys"][id]
         self.player["cooldown"] = {
             "barrett": 0,
             "kick": 0,
-            }
+                    }
 
     def init_graphics(self):
         """le nom est équivoque je pense"""
         self.gfx = {}
         self.gfx["frame"] = 0
         # cool est le temps à attendre entre 2 sprites
-        self.gfx["cool"] = 0 
+        self.gfx["cool"] = 0
         self.gfx["side"] = False
         self.gfx["sprite"] = GFX["kim"]["wait"]
         self.gfx["old_sprite"] = ""
@@ -101,7 +101,7 @@ class Gunner():
             if self.gfx["delta_sum"] >= 100:
                 self.gfx["delta_sum"] = 0
                 self.gfx["frame"] += 1
-            
+
             frame = self.gfx["frame"]
             key = "run_" + str(frame)
             try:
@@ -120,7 +120,7 @@ class Gunner():
         """met à jour les cooldowns"""
         cooldown = self.player["cooldown"]
         if cooldown["barrett"] > 0:
-            cooldown["barrett"] -= dlt 
+            cooldown["barrett"] -= dlt
 
     def move(self, dlt):
         """déplace le gunner"""
@@ -143,8 +143,8 @@ class Gunner():
         dims = self.pkg["dimensions"]
         pos[1] += self.physics["gravity"]
         ground = self.physics["ground"]
-        if pos[1] > dims[1] - dims[1]//12 - ground:
-            pos[1] = dims[1] - dims[1]//12 - ground
+        if pos[1] > dims[1] - dims[1] // 12 - ground:
+            pos[1] = dims[1] - dims[1] // 12 - ground
 
     def update_keys(self, dlt, pause, busy):
         """met à jour les mouvements du joueur"""
@@ -210,4 +210,4 @@ class Gunner():
             if self.jump_frame < 0:
                 self.y -= int(abs(self.jump_frame)*0.75)
             self.jump_frame += 1
-"""
+    """

@@ -9,4 +9,4 @@ pygame.mixer.init()
 PATH = "data/sfx/kim/"
 for file in listdir(PATH):
     name = file[0:-4]
-    SFX[name] = pygame.mixer.Sound(PATH+file)
+    SFX[name] = pygame.mixer.Sound(PATH + file)

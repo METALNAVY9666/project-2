@@ -113,7 +113,8 @@ class Player(pg.sprite.Sprite):
                 self.game.object.rect.x -= 200
                 self.vals['nbr_combo_w'] = 0
                 self.vals['nb_combo_q'] = 0
-            print(self.vals['nbr_combo'], self.vals['nbr_combo_w'], self.vals['nbr_combo_q'])
+            print(self.vals['nbr_combo'], self.vals['nbr_combo_w'], 
+            self.vals['nbr_combo_q'])
             if not collide:
                 self.vals['nbr_combo'] = 0
                 self.vals['nbr_combo_w'] = 0
@@ -255,6 +256,7 @@ class Player(pg.sprite.Sprite):
         self.game.strike_collision()
 
     def attack_down(self, choice):
+        print("En bas")
         if choice[pg.K_DOWN] and self.game.collision(self, self.game.all_objects):
             self.game.dict_game['side'] = 'down'
             while self.game.object.rect.y != 500:

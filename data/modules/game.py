@@ -6,11 +6,12 @@ from data.modules.gunner import Gunner
 from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
 from data.modules.spe import Special
+from data.modules.controllers import manage_controller
 
 
 class Jeu:
-    '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les collisions,
-    les dessins, les dégats etc...'''
+    '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les 
+    collisions, les dessins, les dégats etc...'''
 
     def __init__(self, name, pkg, prop):
         # On récupère le nom du perso choisi.
@@ -75,27 +76,39 @@ class Jeu:
 
     def handle_input_controller(self, actions):
         """
+        Cette fonction récupère les actions effectuées à la manette et 
+        effectue des opérations spécifiques correspondantes. La fonction 
+        get.button(n) avec n un nombre entier permet de savoir si la touche 
+        correspondante au nombre n est pressé
         """
-        choice = pg.key.get_pressed()
+        contro = manage_controller()
         # Réaffecte l'image de l'objet
         self.object.image = GFX['punchingball']
         # Modifie les animations en fonction de l'input
-        for event in actions:
-            self.player_0.move_controller(event)
-            # Gère les sauts
-            self.player_0.jump()
-            """# Gère le bloquage
-            self.player_0.block()"""
-        # Système de gravité
-        self.player_0.gravity()
-        # Actions qui nécessitent une boucle 'for'
+
+        # Gère le bloquage
+        if contro.get_button(3):
+            self.player_0.block()
+            
+        # Gère les mouvements à la manette
+        if contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
+            self.player_0.move_controller(contro.get_axis(0))
+        
+        # Gère les sauts
+        if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
+            self.player_0.jump_controller(8)
+
+        elif self.player_0.vals['current_height']:
+            pass
+
         self.loop_input(actions)
+
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
-        Celle-ci gère les actions unique, par exemple, une attaque qui ne doit pas être lancée
-        en continu. Ces actions se déclenchent uniquement quand le joueur appuie sur une touche,
-        et non quand il la maintient.'''
+        Celle-ci gère les actions unique, par exemple, une attaque qui ne doit 
+        pas être lancée en continu. Ces actions se déclenchent uniquement quand
+        le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
@@ -108,6 +121,9 @@ class Jeu:
                 self.player_0.vanish(event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
+            if event.type == pg.JOYBUTTONDOWN:
+                self.player_0.attack_controller(choice)
+
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -155,10 +171,11 @@ class Jeu:
         return screen.blit(self.object.image, (self.object.rect))
 
     def update_health(self, surface, busy):
-        '''Cette fonction dessine la barre de vie, d'énergie, et de défense du perso.
-        Chaque barre possède une longueur propre au montant de sa variable respective.
-        On dessine d'abord une barre grise, afin de faire le fond, puis on dessine celle
-        avec de la couleur. Les deux, sur la surface donnée en paramètre.'''
+        '''Cette fonction dessine la barre de vie, d'énergie, et de défense du 
+        perso.Chaque barre possède une longueur propre au montant de sa 
+        variable respective. On dessine d'abord une barre grise, afin de faire 
+        le fond, puis on dessine celleavec de la couleur. Les deux, sur la 
+        surface donnée en paramètre.'''
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
@@ -179,6 +196,7 @@ class Jeu:
                 pg.draw.rect(surface, (255, 87, 51), [
                              950, 150, self.player_0.vals['percent_ult'], 15])
 
+
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
@@ -188,6 +206,10 @@ class Jeu:
         rects.append(self.player_1.update(dlt, pause, busy))
         # Gère les inputs
         self.handle_input(actions, pause, busy)
+        #Gère les inputs à la manette
+        # Si il y a au moins une manette de connecté:
+        if manage_controller() != None: 
+            self.handle_input_controller(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
