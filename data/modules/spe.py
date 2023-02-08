@@ -8,11 +8,16 @@ class Special(pg.sprite.Sprite):
         super().__init__()
         self.game = game
         print('la spé de', self.game.name, 'est chargée.')
+        self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
+        
 
     def spe(self):
         "Docstring à faire"
         if self.game.name == 'luffy':
-            self.game.name = 'gear4'
-            self.game.player_0.vals['strike'] = 30
+            if self.game.player_0.vals["percent_ult"] >= 130:
+                self.game.name = 'gear4'
+                self.game.player_0.vals['strike'] = 30
         elif self.game.name == 'gear4':
             self.game.name = 'luffy'
+        elif self.game.name == 'itachi':
+            self.game.player_1.physics["speed"] = self.pl1_speed

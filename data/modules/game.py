@@ -67,8 +67,7 @@ class Jeu:
                 # Gère le bloquage
                 self.player_0.block()
             elif choice[self.get_code("r")]:
-                if self.player_0.vals["percent_ult"] >= 130:
-                    self.ulti.spe()
+                self.ulti.spe()
             # Système de gravité
             self.player_0.gravity()
             # Actions qui nécessitent une boucle 'for'
@@ -123,13 +122,12 @@ class Jeu:
                 self.player_0.vanish(event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
-            if event.type == pg.JOYBUTTONDOWN:
+            """if event.type == pg.JOYBUTTONDOWN:
                 self.player_0.attack_controller(choice)
             if contro.get_axis(0) / 1500 >= -0.08 and (
             contro.get_axis(0) / 1500 <= -0.08 and
             self.elms['side'] == 'run'):
-                self.player_0.vals['nbr_sprite'] = 5
-
+                self.player_0.vals['nbr_sprite'] = 5 """
 
 
     def collision(self, sprite, group):
