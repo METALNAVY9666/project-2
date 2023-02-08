@@ -85,21 +85,22 @@ class Jeu:
         # Réaffecte l'image de l'objet
         self.object.image = GFX['punchingball']
         # Modifie les animations en fonction de l'input
-
-        # Gère le bloquage
-        if contro.get_button(3):
-            self.player_0.block()
-            
         # Gère les mouvements à la manette
         if contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
+            if contro.get_axis(0) < 0:
+                self.elms['right'] = False
+            else:
+                self.elms['right'] = True
             self.player_0.move_controller(contro.get_axis(0))
         
         # Gère les sauts
         if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
             self.player_0.jump_controller(8)
 
-        elif self.player_0.vals['current_height']:
-            pass
+        # Gère le blocage
+        elif contro.get_button(3):
+            self.player_0.block()
+
 
         self.loop_input(actions)
 
@@ -110,6 +111,7 @@ class Jeu:
         pas être lancée en continu. Ces actions se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
+        contro = manage_controller()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
@@ -123,6 +125,11 @@ class Jeu:
                 self.player_0.vals['nbr_sprite'] = 5
             if event.type == pg.JOYBUTTONDOWN:
                 self.player_0.attack_controller(choice)
+            if contro.get_axis(0) / 1500 >= -0.08 and (
+            contro.get_axis(0) / 1500 <= -0.08 and
+            self.elms['side'] == 'run'):
+                self.player_0.vals['nbr_sprite'] = 5
+
 
 
     def collision(self, sprite, group):

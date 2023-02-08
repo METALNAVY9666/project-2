@@ -90,6 +90,7 @@ class Fighter(pg.sprite.Sprite):
         Mouvement en cas de collision(s)
         """
         if self.game.elms['right'] and self.game.object.rect.x < self.rect.x:
+            print("Par la droite")
             self.rect.x += 10
             # On change l'image du joueur
             if self.game.name in ['goku', 'vegeta']:
@@ -99,6 +100,7 @@ class Fighter(pg.sprite.Sprite):
                 self.game.elms['side'] = 'run'
         elif not self.game.elms['right'] and (
             self.game.object.rect.x > self.rect.x):
+            print("Par la gauche")
             self.rect.x -= 10
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('left')
@@ -110,20 +112,33 @@ class Fighter(pg.sprite.Sprite):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
-        if test:
-                if valeur / 1500 < -0.15 and self.rect.x > 0:
-                    self.motion[0] = valeur / 2500
+        self.settings['dims'] = self.vals["pkg"]["dimensions"]
+        if test or (not test and self.rect.y < self.game.object.rect.y):
+                if not self.game.elms['right'] and self.rect.x > 5:
+                    #self.game.elms['right'] = False
+                    self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
                     # On change l'image du joueur
-                    self.change_animation('left')
-                    self.vals['pause'] = False
+                    if self.game.name in ['goku', 'vegeta']:
+                        self.change_animation('left')
+                        self.vals['pause'] = False
+                    else:
+                        self.game.elms['side'] = 'run'
 
-                elif valeur / 1500 > 0.15 and self.rect.x < 950:
-                    self.motion[0] = valeur / 2500
+                elif self.game.elms['right'] and (
+                self.rect.x < self.vals['surface_width'] - 100):
+                    #self.game.elms['right'] = True
+                    self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
-                    self.vals['pause'] = False
-                    self.change_animation('right')
+                    #On change l'image du joueur
+                    if self.game.name in ['goku', 'vegeta']:
+                        self.change_animation('right')
+                        self.vals['pause'] = False
+                    else:
+                        self.game.elms['side'] = 'run'
 
+        if not test:
+            self.move_collide()
 
     # Saut du joueur
     def jump(self):
@@ -143,8 +158,8 @@ class Fighter(pg.sprite.Sprite):
     def jump_controller(self, jumpCount):
         # Fonction saut a la manette
         if jumpCount >= -8:
-            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
-            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.5
+            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.39
+            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.39
             jumpCount -= 1
         else: 
             jumpCount = 8
@@ -274,6 +289,12 @@ class Fighter(pg.sprite.Sprite):
             #self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'attack'
+
+        elif controller.get_button(2):
+            self.game.strike_collision()
+            #self.combo_tab(choice)
+            self.vals['nbr_sprite'] = 0
+            self.game.elms['side'] = 'impact'
 
     def combo(self):
         """

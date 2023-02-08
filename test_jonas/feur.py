@@ -1,5 +1,5 @@
 #Partie de Jonas: les controles a la manette
-from player import *
+#from player import *
 import sys
 import pygame
 from pygame.locals import *
@@ -8,7 +8,20 @@ from pygame._sdl2.controller import Controller
 pygame.init()
 pygame._sdl2.controller.init()
 
+pygame.joystick.init() #initialise le module joystick
+joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
+#Permet de savoir le nombre de manettes utilisés
+dict_controller = {}
 
+for joystick in range(len(joysticks)):
+    controller = Controller.from_joystick(joysticks[joystick])
+    dict_controller[joystick] = controller
+
+print(dict_controller)
+
+
+
+"""
 pygame.display.set_caption('test_manettes') #Create the name of the game
 screen = pygame.display.set_mode((500, 500), 0, 32) #Create a screen
 clock = pygame.time.Clock() #Create a clock for manage fps
@@ -97,3 +110,5 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
+"""
+
