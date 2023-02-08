@@ -37,3 +37,6 @@ luffybleu = pygame.image.load("img/luffybleu.png").convert_alpha()
 luffyred = pygame.image.load("img/luffyred.png").convert_alpha()
 luffybleu = pygame.transform.scale(luffybleu, (100, 100))
 luffyred = pygame.transform.scale(luffyred, (100, 100))
+
+itachired = pygame.image.load("img/itachirouge.png").convert_alpha()
+itachibleu = pygame.image.load("img/itachibleu.png").convert_alpha()

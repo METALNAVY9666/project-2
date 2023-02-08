@@ -39,93 +39,12 @@ class Bouton_quit:
                 self.presse = True
             else:
                 if self.presse is True:
+                    self.presse = False
                     return True
                     
         else:
             self.top_color = (255, 0, 0)
-
-class carre1:
-    """ Cette classe est un cadre qui se déplace en fonction du choix du 
-    personnage """
-    def __init__(self, pos):
-        """ Cette fonction permet de permet d'initialiser la classe """
-        self.presse = False
-        self.pos = pos
-        self.i = 0
-        
-
-    def dessin(self):
-        """ Cette fonction permet de dessiner le cadre  """
-        self.move_rect1()
-
-    
-    def move_rect1(self, dir):
-        """ Cette fonction permet de detecter le clic de certaine touche et 
-        exécuter certaines actions """
-        
-        aff_surface.blit(cadre2, self.pos)
-        list_pos1 = [(67, 143), (205, 143)]
-        # print(self.pos)
-        
-        if dir == 1:
-
-            self.i -= 1
-            if self.i == -1:
-                self.i = 0
-            self.pos = list_pos1[self.i]
-            print(self.i)
-        
-        if dir == 2:
-            
-            self.i += 1
-            if self.i == len(list_pos1):
-                self.i = len(list_pos1) - 1
-            self.pos = list_pos1[self.i]
-            print(self.i)
-
-        return self.i
-        
                     
-                
-
-class carre2:
-    """ Cette classe est un cadre qui se déplace en fonction du choix du 
-    personnage """
-    def __init__(self, pos):
-        """ Cette fonction permet de permet d'initialiser la classe """
-        self.presse = False
-        self.pos2 = pos
-        self.j = 0
-
-    def dessin2(self):
-        """ Cette fonction permet de dessiner le cadre  """
-        self.move_rect2()
-
-    def move_rect2(self, dir):
-        """ Cette fonction permet de detecter le clic de certaine touche et 
-        exécuter certaines actions """
-        aff_surface.blit(cadre1, self.pos2)
-        list_pos2 = [(698, 143), (838, 143)]
-        # print(self.pos)
-        
-        if dir == 1:
-            
-            self.j -= 1
-            if self.j == -1:
-                self.j = 0
-            self.pos2 = list_pos2[self.j]
-            print(self.j)
-            
-        if dir == 2:
-            
-            self.j += 1
-            if self.j == len(list_pos2):
-                self.j = len(list_pos2) - 1
-            self.pos2 = list_pos2[self.j]
-            print(self.j)
-
-        return self.j
-
 
 pygame.init()
 
@@ -138,7 +57,6 @@ Y = 720
 
 # On défini la surface de la console grâce aux coordonées
 aff_surface = pygame.display.set_mode((X, Y))
-
 
 # On nomme notre console
 pygame.display.set_caption('Choix du perso')
@@ -163,10 +81,18 @@ def main():
 
     xa = (67, 143)
     xb = (698, 143)
-    list_pos1 = [(67, 143), (205, 143), (343, 143), (481, 143)]
-    list_pos2 = [(698, 143), (838, 143), (979, 143), (1120, 143)]
+    
+    list_pos1 = ([(67, 143), (205, 143), (343, 143), (481, 143)],
+                 [(67, 312)])
+    
+    list_pos2 = ([(698, 143), (838, 143), (979, 143), (1120, 143)],
+                 [(698, 312)])
+    
     i = 0
-    j = 0    
+    j = 0  
+    
+    x = 0
+    z = 0  
     
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
@@ -192,6 +118,9 @@ def main():
         
         aff_surface.blit(luffyred, (491, 154))
         aff_surface.blit(luffybleu, (1130, 154))
+        
+        aff_surface.blit(itachired, (77, 323))
+        aff_surface.blit(itachibleu, (708, 323))
 
         retour = Bouton.dessin()
         
@@ -205,33 +134,64 @@ def main():
                 if event.key == pygame.K_RIGHT:
                     print("droit")
                     j += 1
-                    if j == len(list_pos2):
-                        j = len(list_pos2) - 1
-                    xb = list_pos2[j]
+                    if j == 4:
+                        j = 4 - 1
+                    xb = list_pos2[z][j]
                     
                 if event.key == pygame.K_LEFT:
                     print("gauche")
                     j -= 1
                     if j == -1:
                         j = 0
-                    xb = list_pos2[j]
+                    xb = list_pos2[z][j]
                     
                 if event.key == pygame.K_d:
                     print("d")
                     i += 1
-                    if i == len(list_pos1):
-                        i = len(list_pos1) - 1
-                    xa = list_pos1[i]
+                    if i == 4:
+                        i = 4 - 1
+                    xa = list_pos1[x][i]
                     
                 if event.key == pygame.K_q:
                     print("q")
                     i -= 1
                     if i == -1:
                         i = 0
-                    xa = list_pos1[i]
+                    xa = list_pos1[x][i]
                     
                 if event.key == pygame.K_SPACE:
                     print("espace")
+                    choix_j_1 = i
+                    choix_j_2 = j
+                    print(perso1, perso2)
+                    
+                if event.key == pygame.K_DOWN:
+                    print("bas")
+                    z = z + 1
+                    if z == len(list_pos2):
+                        z = z - 1
+                    xb = list_pos2[z][j]
+
+                if event.key == pygame.K_s:
+                    print("s")
+                    x = x + 1
+                    if x == len(list_pos1):
+                        x = x - 1
+                    xa = list_pos1[x][i]
+                    
+                if event.key == pygame.K_UP:
+                    print("haut")
+                    z = z - 1
+                    if z == -1:
+                        z = 0
+                    xb = list_pos2[z][j]
+                    
+                if event.key == pygame.K_z:
+                    print("haut")
+                    x = x - 1
+                    if x == -1:
+                        x = 0
+                    xa = list_pos1[x][i]
                     
 
             pygame.display.update()

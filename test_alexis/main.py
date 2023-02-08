@@ -14,9 +14,12 @@ def suivant1():
 
 def manager():
     suiv = "feur"
+    
     while suiv != "quitter":
+
         suiv = starting()
-            
+        
+        print(suiv)
         if suiv == "choix_perso":
             suivant1()
         

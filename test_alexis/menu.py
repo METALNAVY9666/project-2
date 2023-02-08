@@ -44,6 +44,8 @@ class Bouton:
                 self.presse = True
             else:
                 if self.presse is True:
+                    self.presse = False
+                    print('g')
                     # Bouton jouer
                     if pos_souri[1] < 335:
                         return "choix_perso"
@@ -93,7 +95,9 @@ class Bouton_quit:
                 self.presse = True
             else:
                 if self.presse is True:
+                    self.presse = False
                     return True
+                self.presse = False
         else:
             self.top_color = (255, 0, 0)
 
@@ -171,6 +175,7 @@ def main():
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
     test = True
+
     while test:
 
         # On applique la surface de la console ainsi que sa couleur
@@ -184,15 +189,18 @@ def main():
 
         Bouton2.dessin()
 
+        
         jouer = Bouton3.dessin()
 
         if jouer == "choix_perso":
             return "choix_perso"
         
+        
         quitter = Bouton4.dessin()
 
-        if quitter:
+        if quitter: 
             return "quitter"
+        
         
         Bouton5.dessin()
 
