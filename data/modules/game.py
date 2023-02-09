@@ -67,7 +67,7 @@ class Jeu:
                 # Gère le bloquage
                 self.player_0.block()
             elif choice[self.get_code("r")]:
-                self.ulti.spe()
+                self.ulti.spe_manager()
             # Système de gravité
             self.player_0.gravity()
             # Actions qui nécessitent une boucle 'for'

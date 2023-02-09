@@ -3,21 +3,47 @@ import pygame as pg
 
 
 class Special(pg.sprite.Sprite):
-    """Docstring à faire"""
+    """Classe qui gère les attaque spéciales."""
+
     def __init__(self, game):
         super().__init__()
         self.game = game
         print('la spé de', self.game.name, 'est chargée.')
         self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
+
+    def spe_manager(self):
+        "Gestion des attaque spéciales"
+        self.spe_itachi()
+        self.spe_luffy()
         
 
-    def spe(self):
-        "Docstring à faire"
+    def spe_luffy(self):
+        """
+        Attaque spéciale de luffy
+        """
         if self.game.name == 'luffy':
             if self.game.player_0.vals["percent_ult"] >= 130:
                 self.game.name = 'gear4'
                 self.game.player_0.vals['strike'] = 30
         elif self.game.name == 'gear4':
             self.game.name = 'luffy'
-        elif self.game.name == 'itachi':
+
+    def spe_itachi(self):
+        """
+        Attaque spéciale d'itachi
+        """
+        if self.game.name == 'itachi':
             self.game.player_1.physics["speed"] = self.pl1_speed
+            self.game.player_1.player["hp"] -= 0.01
+            print(self.game.player_1.player["hp"])
+        
+    def spe_vegeta(self):
+        """
+        Attaque spéciale de vegeta
+        """
+        if self.game.name == 'vegeta':
+            """On passe un boulééen sur True."""
+            """On charge une variable random."""
+            """A chaque attaque, si le bouléen est sur True"""
+            """ Si les attaque touches et que le random est sur 2."""
+            """lE joueur Adverse ne peut pas bouger."""
