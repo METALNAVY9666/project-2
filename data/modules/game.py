@@ -18,7 +18,7 @@ class Jeu:
         self.name = name
         self.elms = {'right': False, 'fps': 60,
                      'side': 'left', 'is_playing': True,
-                     'pkg': pkg}
+                     'pkg': pkg, 'prop': prop}
         # Génération de personnages
         self.player_0 = Fighter(self, pkg, prop)
         self.player_1 = Gunner(pkg, prop, 1)
@@ -91,7 +91,7 @@ class Jeu:
             else:
                 self.elms['right'] = True
             self.player_0.move_controller(contro.get_axis(0))
-        
+
         # Gère les sauts
         if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
             self.player_0.jump_controller(8)
@@ -100,9 +100,7 @@ class Jeu:
         elif contro.get_button(3):
             self.player_0.block()
 
-
         self.loop_input(actions)
-
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -128,7 +126,6 @@ class Jeu:
             contro.get_axis(0) / 1500 <= -0.08 and
             self.elms['side'] == 'run'):
                 self.player_0.vals['nbr_sprite'] = 5 """
-
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -181,26 +178,28 @@ class Jeu:
         variable respective. On dessine d'abord une barre grise, afin de faire 
         le fond, puis on dessine celleavec de la couleur. Les deux, sur la 
         surface donnée en paramètre.'''
+        width = self.elms["pkg"]["surface"].get_width()
+        height = self.elms["pkg"]["surface"].get_height()
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
-                950, 50, self.player_0.vals['max_health'], 15])
+                width-300, height//15, self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                950, 50, self.player_0.vals['health'], 15])
+                width-300, height//15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
-                10, 50, self.object.stats['max_health'], 15])
+                width//20, height//15, self.object.stats['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                10, 50, self.object.stats['health'], 15])
+                width//20, height//15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
-            pg.draw.rect(surface, (140, 138, 137), [950, 100, 4*30, 15])
+            pg.draw.rect(surface, (140, 138, 137), [
+                         width-300, height//10, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
-                950, 100, self.player_0.vals['nbr_vanish']*30, 15])
+                width-300, height//10, self.player_0.vals['nbr_vanish']*30, 15])
             if self.name in ['luffy', 'gear4']:
                 pg.draw.rect(surface, (107, 43, 6), [950, 150, 130, 15])
                 pg.draw.rect(surface, (255, 87, 51), [
                              950, 150, self.player_0.vals['percent_ult'], 15])
-
 
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
@@ -211,9 +210,9 @@ class Jeu:
         rects.append(self.player_1.update(dlt, pause, busy))
         # Gère les inputs
         self.handle_input(actions, pause, busy)
-        #Gère les inputs à la manette
+        # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
-        if manage_controller() != None: 
+        if manage_controller() != None:
             self.handle_input_controller(actions)
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
