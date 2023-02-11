@@ -25,8 +25,9 @@ class Special(pg.sprite.Sprite):
             if self.game.player_0.vals["percent_ult"] >= 130:
                 self.game.name = 'gear4'
                 self.game.player_0.vals['strike'] = 30
-        elif self.game.name == 'gear4':
-            self.game.name = 'luffy'
+        elif self.game.player_0.vals["percent_ult"] <= 0:
+            if self.game.name == 'gear4':
+                self.game.name = 'luffy'
 
     def spe_itachi(self):
         """

@@ -35,6 +35,8 @@ class Fighter(pg.sprite.Sprite):
         }
         self.vals["ground"] = (self.settings['level'] *
                                self.settings['dims'][1]) // 100
+        self.settings['size_max'] = self.settings['dims'][1] - \
+            self.settings['dims'][1] // 12 - self.vals['ground']
         # Récupération du tableau des images du persos
         self.tab = sprite_tab(self.game.name, self.game.elms['side'])
         # Affectation de l'image
@@ -176,10 +178,9 @@ class Fighter(pg.sprite.Sprite):
         if self.vals['fall']:
             if self.rect.y <= size_max and test:
                 self.rect.y += 10
-                if not self.game.collision(self, self.game.all_objects):
-                    self.change_animation('jump')
+                self.change_animation('jump')
                 # Change l'animation si on est à droite ou à gauche
-                elif self.game.elms['right']:
+                if self.game.elms['right']:
                     self.change_animation('jump_right')
             # Sinon, on réinitialise son nombre de sauts à zéro
             elif self.rect.y >= size_max or not test:
@@ -307,9 +308,10 @@ class Fighter(pg.sprite.Sprite):
 
     def attack_up(self, choice):
         '''Attaque en l'air'''
-        if choice[pg.K_UP] and self.game.collision(self, self.game.all_objects):
-            self.game.elms['side'] = 'up'
-            self.game.object.rect.y = 250
+        if choice[pg.K_UP]:
+            if self.game.collision(self, self.game.all_objects):
+                self.game.elms['side'] = 'up'
+                self.game.object.rect.y = 250
         if self.game.collision(self, self.game.all_objects):
             self.vals['fall'] = False
             if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
@@ -324,7 +326,7 @@ class Fighter(pg.sprite.Sprite):
         if choice[pg.K_DOWN] and (
             self.game.collision(self, self.game.all_objects)):
             self.game.elms['side'] = 'down'
-            while self.game.object.rect.y <= 500:
+            while self.game.object.rect.y <= self.settings['size_max']:
                 self.game.object.rect.y += 1
 
     def damages(self):
