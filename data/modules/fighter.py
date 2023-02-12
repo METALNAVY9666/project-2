@@ -2,8 +2,8 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
-from data.modules.controllers import (manage_controller, 
-                                            removed_and_added_controller)
+from data.modules.controllers import (manage_controller,
+                                      removed_and_added_controller)
 
 
 class Fighter(pg.sprite.Sprite):
@@ -26,7 +26,8 @@ class Fighter(pg.sprite.Sprite):
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg, "prop": prop,
-            'tab': [], 'percent_ult': 0
+            'tab': [], 'percent_ult': 0,
+            'sp_tab': []
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],
@@ -64,7 +65,7 @@ class Fighter(pg.sprite.Sprite):
         if test or (not test and self.rect.y < self.game.object.rect.y):
             # Déplacement vers la gauche
             if self.game.elms['right'] and (
-                self.rect.x < self.vals['surface_width'] - 100):
+                    self.rect.x < self.vals['surface_width'] - 100):
                 self.rect.x += 10
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
@@ -79,7 +80,7 @@ class Fighter(pg.sprite.Sprite):
                 if self.game.name in ['goku', 'vegeta']:
                     # Si oui, il n'y a pas d'animation quand il se déplace
                     self.change_animation('left')
-                    # Le joueur fait une action, donc on passe le bouléen 
+                    # Le joueur fait une action, donc on passe le bouléen
                     # sur False
                     self.vals['pause'] = False
                 else:
@@ -101,7 +102,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.game.elms['side'] = 'run'
         elif not self.game.elms['right'] and (
-            self.game.object.rect.x > self.rect.x):
+                self.game.object.rect.x > self.rect.x):
             print("Par la gauche")
             self.rect.x -= 10
             if self.game.name in ['goku', 'vegeta']:
@@ -116,28 +117,28 @@ class Fighter(pg.sprite.Sprite):
         test = not self.game.collision(self, self.game.all_objects)
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if test or (not test and self.rect.y < self.game.object.rect.y):
-                if not self.game.elms['right'] and self.rect.x > 5:
-                    #self.game.elms['right'] = False
-                    self.motion[0] = valeur / 3000
-                    self.rect.x += self.motion[0]
-                    # On change l'image du joueur
-                    if self.game.name in ['goku', 'vegeta']:
-                        self.change_animation('left')
-                        self.vals['pause'] = False
-                    else:
-                        self.game.elms['side'] = 'run'
+            if not self.game.elms['right'] and self.rect.x > 5:
+                #self.game.elms['right'] = False
+                self.motion[0] = valeur / 3000
+                self.rect.x += self.motion[0]
+                # On change l'image du joueur
+                if self.game.name in ['goku', 'vegeta']:
+                    self.change_animation('left')
+                    self.vals['pause'] = False
+                else:
+                    self.game.elms['side'] = 'run'
 
-                elif self.game.elms['right'] and (
-                self.rect.x < self.vals['surface_width'] - 100):
-                    #self.game.elms['right'] = True
-                    self.motion[0] = valeur / 3000
-                    self.rect.x += self.motion[0]
-                    #On change l'image du joueur
-                    if self.game.name in ['goku', 'vegeta']:
-                        self.change_animation('right')
-                        self.vals['pause'] = False
-                    else:
-                        self.game.elms['side'] = 'run'
+            elif self.game.elms['right'] and (
+                    self.rect.x < self.vals['surface_width'] - 100):
+                #self.game.elms['right'] = True
+                self.motion[0] = valeur / 3000
+                self.rect.x += self.motion[0]
+                # On change l'image du joueur
+                if self.game.name in ['goku', 'vegeta']:
+                    self.change_animation('right')
+                    self.vals['pause'] = False
+                else:
+                    self.game.elms['side'] = 'run'
 
         if not test:
             self.move_collide()
@@ -156,16 +157,14 @@ class Fighter(pg.sprite.Sprite):
             if self.vals['current_height'] >= self.vals['max_height']:
                 self.vals['jumps'] = 3
 
-
     def jump_controller(self, jumpCount):
         # Fonction saut a la manette
         if jumpCount >= -8:
             self.rect.y -= (jumpCount * abs(jumpCount)) * 0.39
-            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.39
+            self.vals['current_height'] += (jumpCount * abs(jumpCount)) * 0.39
             jumpCount -= 1
-        else: 
+        else:
             jumpCount = 8
-
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -246,13 +245,12 @@ class Fighter(pg.sprite.Sprite):
         self.single_tap(event, choice)
         self.combo()
 
-
     def attack_controller(self, choice):
-            '''
-            Cette fonction permet de gérer l'attaque d'un perso à la manette.
-            '''
-            self.single_tap_controller(choice)
-            self.combo()
+        '''
+        Cette fonction permet de gérer l'attaque d'un perso à la manette.
+        '''
+        self.single_tap_controller(choice)
+        self.combo()
 
     def combo_tab(self, event):
         """
@@ -282,20 +280,37 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_up(choice)
                 self.attack_down(choice)
 
-    #A modifier
+    # A modifier
     def single_tap_controller(self, choice):
         controller = manage_controller()
         if controller.get_button(2):
             self.game.strike_collision()
-            #self.combo_tab(choice)
+            # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'attack'
 
         elif controller.get_button(2):
             self.game.strike_collision()
-            #self.combo_tab(choice)
+            # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'impact'
+
+    def dash_attack_up(self, event):
+        """
+        Attaque en l'air et avancée
+        """
+        if len(self.vals['sp_move']) < 9:
+            self.vals['sp_move'].append(event.key)
+        else:
+            temp = self.vals['sp_move'][len(self.vals['tab'])-1]
+            self.vals['sp_move'] = []
+            self.vals['sp_move'].append(temp)
+        for i in range(len(self.vals['sp_move'])):
+            if self.vals['sp_move'][i] == 1073741906:
+                if i < len(self.vals['sp_move'])-1:
+                    if self.vals['sp_move'][i+1] == 121:
+                        print('jump attack')
+        print(self.vals['sp_move'])
 
     def combo(self):
         """
@@ -324,7 +339,7 @@ class Fighter(pg.sprite.Sprite):
         Attaque vers le bas
         """
         if choice[pg.K_DOWN] and (
-            self.game.collision(self, self.game.all_objects)):
+                self.game.collision(self, self.game.all_objects)):
             self.game.elms['side'] = 'down'
             while self.game.object.rect.y <= self.settings['size_max']:
                 self.game.object.rect.y += 1

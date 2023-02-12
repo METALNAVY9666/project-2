@@ -116,6 +116,7 @@ class Jeu:
                 self.player_0.vals['fall'] = True
                 # Attaque du joueur
                 self.player_0.attack(event, choice)
+                self.player_0.dash_attack_up(event)
                 # Esquive du joueur
                 self.player_0.vanish(event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
@@ -196,6 +197,7 @@ class Jeu:
                          width-300, height//10, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
                 width-300, height//10, self.player_0.vals['nbr_vanish']*30, 15])
+            # Jauge de spé
             if self.name in ['luffy', 'gear4']:
                 pg.draw.rect(surface, (107, 43, 6), [950, 150, 130, 15])
                 pg.draw.rect(surface, (255, 87, 51), [
