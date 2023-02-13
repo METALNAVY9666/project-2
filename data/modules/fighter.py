@@ -27,7 +27,7 @@ class Fighter(pg.sprite.Sprite):
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg, "prop": prop,
             'tab': [], 'percent_ult': 0,
-            'sp_tab': []
+            'sp_tab': [], 'jumping': True
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],
@@ -66,7 +66,7 @@ class Fighter(pg.sprite.Sprite):
             # Déplacement vers la gauche
             if self.game.elms['right'] and (
                     self.rect.x < self.vals['surface_width'] - 100):
-                self.rect.x += 10
+                self.rect.x += 6
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
                     self.change_animation('right')
@@ -75,7 +75,7 @@ class Fighter(pg.sprite.Sprite):
                     self.game.elms['side'] = 'run'
             # Déplacement vers la droite
             elif not self.game.elms['right'] and self.rect.x > 5:
-                self.rect.x -= 10
+                self.rect.x -= 6
                 # Vérifie si le perso vole ou pas (si c'est vegeta ou goku)
                 if self.game.name in ['goku', 'vegeta']:
                     # Si oui, il n'y a pas d'animation quand il se déplace
@@ -94,7 +94,7 @@ class Fighter(pg.sprite.Sprite):
         """
         if self.game.elms['right'] and self.game.object.rect.x < self.rect.x:
             print("Par la droite")
-            self.rect.x += 10
+            self.rect.x += 6
             # On change l'image du joueur
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('right')
@@ -104,7 +104,7 @@ class Fighter(pg.sprite.Sprite):
         elif not self.game.elms['right'] and (
                 self.game.object.rect.x > self.rect.x):
             print("Par la gauche")
-            self.rect.x -= 10
+            self.rect.x -= 6
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('left')
                 self.vals['pause'] = False
@@ -177,10 +177,11 @@ class Fighter(pg.sprite.Sprite):
         if self.vals['fall']:
             if self.rect.y <= size_max and test:
                 self.rect.y += 10
-                self.change_animation('jump')
+                if self.vals['jumping']:
+                    self.change_animation('jump')
                 # Change l'animation si on est à droite ou à gauche
-                if self.game.elms['right']:
-                    self.change_animation('jump_right')
+                    if self.game.elms['right']:
+                        self.change_animation('jump_right')
             # Sinon, on réinitialise son nombre de sauts à zéro
             elif self.rect.y >= size_max or not test:
                 self.vals['jumps'] = 0
@@ -295,22 +296,34 @@ class Fighter(pg.sprite.Sprite):
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'impact'
 
-    def dash_attack_up(self, event):
+    def move_manager(self, event):
         """
-        Attaque en l'air et avancée
+        Gère les actions avec des inputs spécifiques
         """
-        if len(self.vals['sp_move']) < 9:
-            self.vals['sp_move'].append(event.key)
+        if len(self.vals['sp_tab']) < 9:
+            self.vals['sp_tab'].append(event.key)
         else:
-            temp = self.vals['sp_move'][len(self.vals['tab'])-1]
-            self.vals['sp_move'] = []
-            self.vals['sp_move'].append(temp)
-        for i in range(len(self.vals['sp_move'])):
-            if self.vals['sp_move'][i] == 1073741906:
-                if i < len(self.vals['sp_move'])-1:
-                    if self.vals['sp_move'][i+1] == 121:
-                        print('jump attack')
-        print(self.vals['sp_move'])
+            temp = self.vals['sp_tab'][len(self.vals['tab'])-1]
+            self.vals['sp_tab'] = []
+            self.vals['sp_tab'].append(temp)
+        for i in range(len(self.vals['sp_tab'])):
+            if self.vals['sp_tab'][i] == 1073741906:
+                if i < len(self.vals['sp_tab'])-1:
+                    if self.vals['sp_tab'][i+1] == 121:
+                        self.dash_attack_up()
+        print(self.vals['sp_tab'])
+
+    def dash_attack_up(self, choice, event):
+        """
+        Gère l'attaque rapide en l'air
+        """
+        if choice[self.game.get_code('z')] and event.key == pg.K_y:
+            self.vals['jumping'] = False
+            self.game.elms['side'] = 'attack'
+            if self.game.elms['right']:
+                self.rect.x += 50
+            else:
+                self.rect.x -= 50
 
     def combo(self):
         """

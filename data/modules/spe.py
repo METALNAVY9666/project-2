@@ -34,6 +34,7 @@ class Special(pg.sprite.Sprite):
         Attaque spéciale d'itachi
         """
         if self.game.name == 'itachi':
+            self.game.elms['side'] = 'ult'
             self.game.player_1.physics["speed"] = self.pl1_speed
             self.game.player_1.player["hp"] -= 0.01
             print(self.game.player_1.player["hp"])

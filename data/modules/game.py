@@ -63,9 +63,8 @@ class Jeu:
             elif choice[self.get_code("z")]:
                 # Gère les sauts
                 self.player_0.jump()
-            elif choice[self.get_code("s")]:
                 # Gère le bloquage
-                self.player_0.block()
+                #self.player_0.block()
             elif choice[self.get_code("r")]:
                 self.ulti.spe_manager()
             # Système de gravité
@@ -105,7 +104,7 @@ class Jeu:
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
         Celle-ci gère les actions unique, par exemple, une attaque qui ne doit 
-        pas être lancée en continu. Ces actions se déclenchent uniquement quand
+        pas être lancée en continu. Elles se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
         contro = manage_controller()
@@ -116,9 +115,11 @@ class Jeu:
                 self.player_0.vals['fall'] = True
                 # Attaque du joueur
                 self.player_0.attack(event, choice)
-                self.player_0.dash_attack_up(event)
+                self.player_0.move_manager(event)
                 # Esquive du joueur
                 self.player_0.vanish(event)
+                # dash attack
+                self.player_0.dash_attack_up(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
             """if event.type == pg.JOYBUTTONDOWN:
