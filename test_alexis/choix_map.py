@@ -1,4 +1,4 @@
-# Créé par Alexis, le 29/11/2022 en Python 3.7
+# Créé par Alexis, le 15/02/2023 en Python 3.7
 
 import pygame
 import sys
@@ -79,20 +79,15 @@ def main():
     y = 7687
     z = 6787
 
-    xa = (67, 143)
+    xa = (37, 104)
     xb = (698, 143)
     
-    list_pos1 = ([(67, 143), (205, 143), (343, 143), (481, 143)],
+    list_pos1 = ([(37, 104), (275, 104), (513, 104), (751, 104)],
                  [(67, 312), (67, 312), (67, 312), (67, 312)])
     
     perso1 = (["goku", "vegeta", "kim", "luffy"],
                  ["itachi", "itachi", "itachi", "itachi"])
     
-    list_pos2 = ([(698, 143), (838, 143), (979, 143), (1120, 143)],
-                 [(698, 312), (698, 312), (698, 312), (698, 312)])
-    
-    perso2 = (["goku", "vegeta", "kim", "luffy"],
-                 ["itachi", "itachi", "itachi", "itachi"])
     
     i = 0
     j = 0  
@@ -108,25 +103,21 @@ def main():
     test = True
     while test:
         
-        aff_surface.blit(fond2, (0, 0))
+        aff_surface.blit(fond3, (0, 0))
         
-        aff_surface.blit(cadre2, xa)
-        aff_surface.blit(cadre2, xb) 
+        aff_surface.blit(cadre3, xa)
         
-        aff_surface.blit(gokured, (77, 154))
-        aff_surface.blit(gokubleu, (708, 154))
+        aff_surface.blit(map1, (47, 114))
         
-        aff_surface.blit(vegetared, (215, 154))
-        aff_surface.blit(vegetableu, (848, 154))
+        aff_surface.blit(map2, (285, 114))
         
-        aff_surface.blit(kimred, (353, 154))
-        aff_surface.blit(kimbleu, (989, 154))
+        aff_surface.blit(map3, (523, 114))
         
-        aff_surface.blit(luffyred, (491, 154))
-        aff_surface.blit(luffybleu, (1130, 154))
+        aff_surface.blit(map4, (761, 114))
         
-        aff_surface.blit(itachired, (77, 323))
-        aff_surface.blit(itachibleu, (708, 323))
+        aff_surface.blit(titre, (0, 0))
+        
+
 
         retour = Bouton.dessin()
         
@@ -136,20 +127,6 @@ def main():
         for event in pygame.event.get():
             
             if event.type == pygame.KEYDOWN:
-                
-                if event.key == pygame.K_RIGHT:
-                    print("droit")
-                    j += 1
-                    if j == 4:
-                        j = 4 - 1
-                    xb = list_pos2[z][j]
-                    
-                if event.key == pygame.K_LEFT:
-                    print("gauche")
-                    j -= 1
-                    if j == -1:
-                        j = 0
-                    xb = list_pos2[z][j]
                     
                 if event.key == pygame.K_d:
                     print("d")
@@ -167,16 +144,8 @@ def main():
                     
                 if event.key == pygame.K_SPACE:
                     print("espace")
-
-                    print(perso1[x][i], perso2[z][j])
-                    return(perso1[x][i], perso2[z][j], "suivant")
+                    pass
                     
-                if event.key == pygame.K_DOWN:
-                    print("bas")
-                    z = z + 1
-                    if z == len(list_pos2):
-                        z = z - 1
-                    xb = list_pos2[z][j]
 
                 if event.key == pygame.K_s:
                     print("s")
@@ -185,12 +154,6 @@ def main():
                         x = x - 1
                     xa = list_pos1[x][i]
                     
-                if event.key == pygame.K_UP:
-                    print("haut")
-                    z = z - 1
-                    if z == -1:
-                        z = 0
-                    xb = list_pos2[z][j]
                     
                 if event.key == pygame.K_z:
                     print("haut")

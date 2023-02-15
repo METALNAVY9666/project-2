@@ -12,9 +12,13 @@ fond1 = pygame.image.load("img/fond3.jpg").convert()
 # Import de l'image de fond du module Choix_Perso
 fond2 = pygame.image.load("img/fond_choix.jpg").convert()
 
+fond_map = pygame.image.load("img/fond2.jpg").convert()
+fond_map = pygame.transform.scale(fond_map, (1280, 720))
+
 # Import des cadres pour le choix des personnages à jouer
 cadre1 = pygame.image.load("img/cadre3.png").convert_alpha()
 cadre2 = pygame.image.load("img/cadre3.png").convert_alpha()
+cadre3 = pygame.transform.scale(cadre1, (220,170))
 
 # Import des image des perso sélectionnés
 goku = pygame.image.load("img/goku.png").convert_alpha()
@@ -40,3 +44,24 @@ luffyred = pygame.transform.scale(luffyred, (100, 100))
 
 itachired = pygame.image.load("img/itachirouge.png").convert_alpha()
 itachibleu = pygame.image.load("img/itachibleu.png").convert_alpha()
+
+# Import des images des maps:
+
+map1 = pygame.image.load("img/highway.png").convert_alpha()
+map1 = pygame.transform.scale(map1, (200, 150))
+
+map2 = pygame.image.load("img/laboratory.png").convert_alpha()
+map2 = pygame.transform.scale(map2, (200, 150))
+
+map3 = pygame.image.load("img/neo_tokyo.png").convert_alpha()
+map3 = pygame.transform.scale(map3, (200, 150))
+
+map4 = pygame.image.load("img/tenkaichi_budokai.png").convert_alpha()
+map4 = pygame.transform.scale(map4, (200, 150))
+
+# Import du fond du choix des maps:
+
+fond3 = pygame.image.load("img/fond_map.jpg").convert_alpha()
+fond3 = pygame.transform.scale(fond3, (1280, 720))
+
+titre = pygame.image.load("img/titre.png").convert_alpha()
