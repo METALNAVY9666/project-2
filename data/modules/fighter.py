@@ -281,10 +281,10 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_up(choice)
                 self.attack_down(choice)
 
-    # A modifier
+    
     def single_tap_controller(self, choice):
         controller = manage_controller()
-        if controller.get_button(2):
+        if controller.get_button(1):
             self.game.strike_collision()
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0

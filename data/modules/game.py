@@ -83,8 +83,12 @@ class Jeu:
         # Réaffecte l'image de l'objet
         self.object.image = GFX['punchingball']
         # Modifie les animations en fonction de l'input
+        # Gère le blocage
+        if contro.get_button(3) and self.player_0.vals['current_height'] == 0:
+            self.player_0.block()
+
         # Gère les mouvements à la manette
-        if contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
+        elif contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
             if contro.get_axis(0) < 0:
                 self.elms['right'] = False
             else:
@@ -92,14 +96,14 @@ class Jeu:
             self.player_0.move_controller(contro.get_axis(0))
 
         # Gère les sauts
-        if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
+        elif contro.get_button(0) and self.player_0.vals['current_height'] < 400:
             self.player_0.jump_controller(8)
 
-        # Gère le blocage
-        elif contro.get_button(3):
-            self.player_0.block()
+        elif contro.get_button(1):
+            self.player_0.attack_controller(contro.get_button(1))
 
-        self.loop_input(actions)
+        elif contro.get_button(2):
+            self.player_0.attack_controller(contro.get_button(2))
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -107,7 +111,6 @@ class Jeu:
         pas être lancée en continu. Elles se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
-        contro = manage_controller()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
@@ -122,12 +125,7 @@ class Jeu:
                 self.player_0.dash_attack_up(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
-            """if event.type == pg.JOYBUTTONDOWN:
-                self.player_0.attack_controller(choice)
-            if contro.get_axis(0) / 1500 >= -0.08 and (
-            contro.get_axis(0) / 1500 <= -0.08 and
-            self.elms['side'] == 'run'):
-                self.player_0.vals['nbr_sprite'] = 5 """
+            
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
