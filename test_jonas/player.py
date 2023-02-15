@@ -1,7 +1,7 @@
 import pygame
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
-
+"""
 pygame.init()
 
 class player():
@@ -32,7 +32,7 @@ class player2:
 
     def change_color(self):
         self.sqare_color = (self.square_color + 1) % (len(self.color))
-
+"""
 
 
 import sys
@@ -88,7 +88,6 @@ while True:
             
             hat_message = 'Hat ' + str(hat) + ': ' + str(joystick.get_hat(hat))
             js.append(hat_message)
-        print(type(controller.get_axis(0)))
         debug_messages.append(js)
     
     for js, dbg_messages in enumerate(debug_messages):
@@ -101,7 +100,7 @@ while True:
     debug_messages.clear()
 
 
-
+"""
 import pygame
 import os
 from time import sleep
@@ -208,4 +207,4 @@ while run:
     pygame.draw.rect(win, (255,0,0), (x, y, width, height))   
     pygame.display.update() 
     
-pygame.quit()
+pygame.quit()"""

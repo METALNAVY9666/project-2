@@ -284,7 +284,7 @@ class Fighter(pg.sprite.Sprite):
     # A modifier
     def single_tap_controller(self, choice):
         controller = manage_controller()
-        if controller.get_button(2):
+        if controller.get_button(1):
             self.game.strike_collision()
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
@@ -306,11 +306,6 @@ class Fighter(pg.sprite.Sprite):
             temp = self.vals['sp_tab'][len(self.vals['tab'])-1]
             self.vals['sp_tab'] = []
             self.vals['sp_tab'].append(temp)
-        for i in range(len(self.vals['sp_tab'])):
-            if self.vals['sp_tab'][i] == 1073741906:
-                if i < len(self.vals['sp_tab'])-1:
-                    if self.vals['sp_tab'][i+1] == 121:
-                        self.dash_attack_up()
         print(self.vals['sp_tab'])
 
     def dash_attack_up(self, choice, event):
@@ -325,6 +320,20 @@ class Fighter(pg.sprite.Sprite):
                 self.rect.x += 100
             else:
                 self.rect.x -= 100
+
+
+    def dash_attack_up_controller(self, dash = 8):
+        """
+        Gère l'attaque rapide en l'air à la manette
+        """
+        self.vals['jumping'] = False
+        self.vals['nb_sprite'] = 0
+        self.game.elms['side'] = 'attack'
+        if self.game.elms['right']:
+                self.rect.x += 100
+        else:
+            self.rect.x -= 100
+
 
     def combo(self):
         """

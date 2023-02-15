@@ -6,7 +6,11 @@ from data.modules.gunner import Gunner
 from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
 from data.modules.spe import Special
-from data.modules.controllers import manage_controller
+from data.modules.controllers import manage_controller, manage_joysticks
+from pygame._sdl2.controller import Controller
+from pygame.locals import *
+pg._sdl2.controller.init()
+pg.init()
 
 
 class Jeu:
@@ -80,6 +84,7 @@ class Jeu:
         correspondante au nombre n est pressé
         """
         contro = manage_controller()
+        joy = manage_joysticks()
         # Réaffecte l'image de l'objet
         self.object.image = GFX['punchingball']
         # Modifie les animations en fonction de l'input
@@ -96,15 +101,22 @@ class Jeu:
             self.player_0.move_controller(contro.get_axis(0))
 
         # Gère les sauts
-        elif contro.get_button(0) and self.player_0.vals['current_height'] < 400:
+        if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
             self.player_0.jump_controller(8)
 
-        elif contro.get_button(1):
+        for event in actions:
+            if self.player_0.vals['current_height'] > 40 and (
+            event.type == JOYBUTTONDOWN and event.button == 1):
+                self.player_0.dash_attack_up_controller()
+
+        #Gère les attaques
+        if contro.get_button(1):
             self.player_0.attack_controller(contro.get_button(1))
 
         elif contro.get_button(2):
             self.player_0.attack_controller(contro.get_button(2))
 
+            
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
         Celle-ci gère les actions unique, par exemple, une attaque qui ne doit 
