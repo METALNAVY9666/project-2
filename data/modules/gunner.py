@@ -23,10 +23,10 @@ class Gunner():
         self.physics = {}
         self.physics["gravity"] = 9.81 * 2
         self.physics["grounded"] = True
-        self.physics["falling"] = False
-        self.physics["jump_height"] = 0
-        self.physics["jump_frame"] = round(-100 * self.pkg["FPS"]) // 100
+        self.physics["jump_height"] = self.pkg["dimensions"][1] // 3
         self.physics["pos"] = [0, 0]
+        self.physics["jump_state"] = False
+        self.physics["falling"] = False
         self.physics["speed"] = self.pkg["dimensions"][0] / 1920 * 16
         self.physics["side"] = 1
         level = self.prop["ground_level"]
@@ -143,8 +143,52 @@ class Gunner():
         dims = self.pkg["dimensions"]
         pos[1] += self.physics["gravity"]
         ground = self.physics["ground"]
-        if pos[1] > dims[1] - dims[1] // 12 - ground:
+        if pos[1] > (dims[1] - dims[1] // 12 - ground):
             pos[1] = dims[1] - dims[1] // 12 - ground
+
+    def check_ground(self):
+        """vérifie si le joueur est au sol"""
+        pos = self.physics["pos"]
+        dims = self.pkg["dimensions"]
+        ground = self.physics["ground"]
+        self.physics["grounded"] = pos[1] >= dims[1] - dims[1] // 12 - ground
+
+    def jump(self):
+        """fait sauter le joueur"""
+        grounded = self.physics["grounded"]
+        pos = self.physics["pos"]
+        ground = self.physics["ground"]
+        dims = self.pkg["dimensions"]
+        gravity = self.physics["gravity"]
+        if grounded:
+            print("jump start")
+            self.physics["jump_state"] = True
+            pos[1] = dims[1] - dims[1] // 12 - ground - (10 + gravity)
+
+    def update_jump(self):
+        """met à jour le saut du joueur"""
+        grounded = self.physics["grounded"]
+        pos = self.physics["pos"]
+        gravity = self.physics["gravity"]
+        jump_height = self.physics["jump_height"]
+        jump_state = self.physics["jump_state"]
+        if not grounded:
+            print("in air")
+            delta = pos[1] - jump_height
+            print("delta "+str(delta))
+            if jump_state:
+                pos[1] -= (gravity + delta**(1/2))
+                if pos[1] <= jump_height:
+                    print("apex")
+                    self.physics["jump_state"] = False
+            else:
+                print("falling")
+                if self.physics["falling"]:
+                    pos[1] -= gravity
+                    pos[1] += delta ** (1/2)
+        else:
+            self.physics["falling"] = False
+            
 
     def update_keys(self, dlt, pause, busy):
         """met à jour les mouvements du joueur"""
@@ -169,7 +213,7 @@ class Gunner():
             for couple in pressed:
                 if couple[1]:
                     if couple[0] == "jump":
-                        print("jump")
+                        self.jump()
                     elif couple[0] == "block":
                         print("block")
                     elif couple[0] == "right":
@@ -188,7 +232,9 @@ class Gunner():
 
     def update(self, dlt, pause, busy):
         """met à jour le sprite du joueur"""
+        self.check_ground()
         self.gravity()
+        self.update_jump()
         self.update_cooldowns(dlt)
         return self.update_keys(dlt, pause, busy)
 
