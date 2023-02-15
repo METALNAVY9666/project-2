@@ -24,6 +24,8 @@ class Special(pg.sprite.Sprite):
         if self.game.name == 'luffy':
             if self.game.player_0.vals["percent_ult"] >= 130:
                 self.game.name = 'gear4'
+                self.game.player_0.vals['nbr_sprite'] = 0
+                self.game.elms['side'] = 'ult'
                 self.game.player_0.vals['strike'] = 30
         elif self.game.player_0.vals["percent_ult"] <= 0:
             if self.game.name == 'gear4':
