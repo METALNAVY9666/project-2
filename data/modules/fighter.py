@@ -10,10 +10,11 @@ class Fighter(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur,
     ainsi que son apparence.'''
 
-    def __init__(self, game, pkg, prop):
+    def __init__(self, game, pkg, prop, number):
         super().__init__()
         self.game = game
         # Dictionnaire des attributs du personnage
+        print('Voici le perso:', number)
         self.vals = {
             'nbr_sprite': 0, 'strike': 10,
             'max_height': 400, 'jumps': 1,

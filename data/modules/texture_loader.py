@@ -98,7 +98,8 @@ GFX["exit"] = load_image(UI_PATH + "exit_btn", (X // 8, Y // 10)).convert()
 
 # chargement des évènements
 for number in ["one", "two", "three", "go"]:
-    GFX[number] = (load_image(UI_PATH + number, (X // 6, Y // 6)).convert_alpha())
+    GFX[number] = (load_image(UI_PATH + number,
+                   (X // 6, Y // 6)).convert_alpha())
 GFX["ae86"] = load_image(EVENTS_PATH + "trueno_drift/ae86", (X // 6, Y // 6))
 GFX["ae86"].convert_alpha()
 
@@ -115,6 +116,8 @@ GFX["platform"] = load_image(path, (X // 1.5, Y // 1.5)).convert_alpha()
 # Images pour le menu
 GFX['punchingball'] = load_image(BG_PATH + 'image', (120, 120)).convert_alpha()
 GFX['hit'] = load_image(BG_PATH + 'punched', (120, 120)).convert_alpha()
+GFX['stats_box'] = load_image(
+    "test_olivier/gfx/box/"+"stats_box", (X // 3, X // 8)).convert_alpha()
 
 bro_tab = ["C'est quoi la blague ?",
            "C'est un peu bêbête",
@@ -127,3 +130,13 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter l'exponentielle", ]
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 12, Y // 12))
+GFX["luffy"] = load_image("test_olivier/gfx/box/" +
+                          "luffy", (X // 15, X // 15)).convert_alpha()
+GFX["itachi"] = load_image("test_olivier/gfx/box/" +
+                           "itachi", (X // 15, X // 15)).convert_alpha()
+GFX["goku"] = load_image("test_olivier/gfx/box/" +
+                         "goku", (X // 15, X // 15)).convert_alpha()
+GFX["vegeta"] = load_image("test_olivier/gfx/box/" +
+                           "vegeta", (X // 15, X // 15)).convert_alpha()
+GFX["gear4"] = load_image("test_olivier/gfx/box/" +
+                           "gear4", (X // 15, X // 15)).convert_alpha()

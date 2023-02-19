@@ -24,7 +24,7 @@ class Jeu:
                      'side': 'left', 'is_playing': True,
                      'pkg': pkg, 'prop': prop}
         # Génération de personnages
-        self.player_0 = Fighter(self, pkg, prop)
+        self.player_0 = Fighter(self, pkg, prop, 0)
         self.player_1 = Gunner(pkg, prop, 1)
         self.ulti = Special(self)
         # Génération d'un objet
@@ -68,7 +68,7 @@ class Jeu:
                 # Gère les sauts
                 self.player_0.jump()
                 # Gère le bloquage
-                #self.player_0.block()
+                # self.player_0.block()
             elif choice[self.get_code("r")]:
                 self.ulti.spe_manager()
             # Système de gravité
@@ -106,17 +106,16 @@ class Jeu:
 
         for event in actions:
             if self.player_0.vals['current_height'] > 40 and (
-            event.type == JOYBUTTONDOWN and event.button == 1):
+                    event.type == JOYBUTTONDOWN and event.button == 1):
                 self.player_0.dash_attack_up_controller()
 
-        #Gère les attaques
+        # Gère les attaques
         if contro.get_button(1):
             self.player_0.attack_controller(contro.get_button(1))
 
         elif contro.get_button(2):
             self.player_0.attack_controller(contro.get_button(2))
 
-            
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
         Celle-ci gère les actions unique, par exemple, une attaque qui ne doit 
@@ -137,7 +136,6 @@ class Jeu:
                 self.player_0.dash_attack_up(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
-            
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -195,9 +193,9 @@ class Jeu:
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
-                width-300, height//15, self.player_0.vals['max_health'], 15])
+                width-400, height//15, self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                width-300, height//15, self.player_0.vals['health'], 15])
+                width-400, height//15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
                 width//20, height//15, self.object.stats['max_health'], 15])
@@ -205,14 +203,38 @@ class Jeu:
                 width//20, height//15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
             pg.draw.rect(surface, (140, 138, 137), [
-                         width-300, height//10, 4*30, 15])
+                         width-400, height//10, 4*30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
-                width-300, height//10, self.player_0.vals['nbr_vanish']*30, 15])
+                width-400, height//10,
+                self.player_0.vals['nbr_vanish']*30, 15])
             # Jauge de spé
             if self.name in ['luffy', 'gear4']:
-                pg.draw.rect(surface, (107, 43, 6), [950, 150, 130, 15])
+                pg.draw.rect(surface, (107, 43, 6), [
+                             width-400, height//7, 130, 15])
                 pg.draw.rect(surface, (255, 87, 51), [
-                             950, 150, self.player_0.vals['percent_ult'], 15])
+                             width-400, height//7,
+                             self.player_0.vals['percent_ult'], 15])
+
+    def update_header(self, screen, busy):
+        """
+        Fonction qui met à jour les élements du haut de l'écran
+        """
+        if not busy:
+            self.box = {"image": GFX['stats_box']}
+            self.box['rect'] = self.box["image"].get_rect()
+            self.box["rect"].x = screen.get_width() - 450
+            return screen.blit(self.box["image"], (self.box["rect"]))
+
+    def update_header_face1(self, screen, busy):
+        """
+        Fonction qui met à jour les visages des personnages.
+        """
+        if not busy:
+            self.face = {"image": GFX[self.name]}
+            self.face["rect"] = self.face["image"].get_rect()
+            self.face["rect"].x = screen.get_width() - 150
+            self.face["rect"].y = screen.get_height() // 20
+            return screen.blit(self.face["image"], (self.face["rect"]))
 
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
@@ -221,6 +243,8 @@ class Jeu:
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         rects.append(self.player_1.update(dlt, pause, busy))
+        rects.append(self.update_header(screen, busy))
+        rects.append(self.update_header_face1(screen, busy))
         # Gère les inputs
         self.handle_input(actions, pause, busy)
         # Gère les inputs à la manette
