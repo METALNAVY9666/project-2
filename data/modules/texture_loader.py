@@ -48,7 +48,6 @@ def sprites_images(name):
                     'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png'),
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
-
     return convert_alpha_dict(sprites_dict)
 
 
@@ -57,8 +56,13 @@ def sprite_tab(name, position):
     A besoin d'un nom de perso, ainsi que du nom de l'action qu'il réalise'''
     # Name est le nom du perso, position permet de savoir si il est à gauche
     # ou non
+    dict_size = {"itachi": (X // 10, X // 12),
+                 "goku": (X//9, X//10),
+                 "luffy": (X//9, X//10),
+                 "gear4": (X//9, X//10),
+                 "vegeta": (X//9, X//10)}
     tab = [None] * 6
-    scale = (X // 12, Y // 12)
+    scale = dict_size[name]
     for ind in range(6):
         string = f'test_olivier/gfx/{name}/base_{position}{ind}'
         tab[ind] = load_image(string, scale)
@@ -139,4 +143,4 @@ GFX["goku"] = load_image("test_olivier/gfx/box/" +
 GFX["vegeta"] = load_image("test_olivier/gfx/box/" +
                            "vegeta", (X // 15, X // 15)).convert_alpha()
 GFX["gear4"] = load_image("test_olivier/gfx/box/" +
-                           "gear4", (X // 15, X // 15)).convert_alpha()
+                          "gear4", (X // 15, X // 15)).convert_alpha()
