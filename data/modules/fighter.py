@@ -247,7 +247,7 @@ class Fighter(pg.sprite.Sprite):
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         self.single_tap(event, choice)
-        self.combo()
+        #self.combo()
 
     def attack_controller(self, choice):
         '''
@@ -268,6 +268,8 @@ class Fighter(pg.sprite.Sprite):
                 print(self.vals['tab'])
             else:
                 self.vals['tab'] = []
+        else:
+            self.vals["tab"] = []
         return self.vals['tab']
 
     def single_tap(self, event, choice):

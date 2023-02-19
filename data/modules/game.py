@@ -177,9 +177,7 @@ class Jeu:
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
-        # Fait bouger le punching ball
         self.object.forward()
-        # Gravité de l'objet
         self.object.gravity_object()
         # Met le punching ball à jour
         return screen.blit(self.object.image, (self.object.rect))
@@ -238,6 +236,14 @@ class Jeu:
             self.face["rect"].y = screen.get_height() // 20
             return screen.blit(self.face["image"], (self.face["rect"]))
 
+    def update_player_0(self):
+        """Mis à jour du perso 0"""
+        # Dommages
+        self.player_0.damages()
+        self.update_stats()
+        self.player_0.dash()
+        self.player_0.combo()
+
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
@@ -256,8 +262,5 @@ class Jeu:
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
-        # Dommages
-        self.player_0.damages()
-        self.update_stats()
-        self.player_0.dash()
+        self.update_player_0()
         return rects, self.player_0.update_pv()

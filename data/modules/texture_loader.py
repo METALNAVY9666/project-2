@@ -52,7 +52,8 @@ def sprites_images(name):
                  "goku": (X//9,  Y//10),
                  "luffy": (X//9, Y//10),
                  "gear4": (X//9, Y//10),
-                 "vegeta": (X//9, Y//10)}
+                 "vegeta": (X//9, Y//10),
+                 "revive": (X//8, Y//7)}
     size = dict_size[name]
     return convert_alpha_dict(sprites_dict, size)
 
@@ -66,7 +67,8 @@ def sprite_tab(name, position):
                  "goku": (X//9, X//10),
                  "luffy": (X//9, X//10),
                  "gear4": (X//9, X//10),
-                 "vegeta": (X//9, X//10)}
+                 "vegeta": (X//9, X//10),
+                 "revive": (X//9, X//11)}
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):
@@ -150,3 +152,5 @@ GFX["vegeta"] = load_image("test_olivier/gfx/box/" +
                            "vegeta", (X // 15, X // 15)).convert_alpha()
 GFX["gear4"] = load_image("test_olivier/gfx/box/" +
                           "gear4", (X // 15, X // 15)).convert_alpha()
+GFX["revive"] = load_image("test_olivier/gfx/box/" +
+                          "revive", (X // 15, X // 15)).convert_alpha()
