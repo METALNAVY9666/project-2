@@ -67,8 +67,9 @@ class Jeu:
             elif choice[self.get_code("z")]:
                 # Gère les sauts
                 self.player_0.jump()
+            elif choice[self.get_code("a")]:
                 # Gère le bloquage
-                # self.player_0.block()
+                self.player_0.block()
             elif choice[self.get_code("r")]:
                 self.ulti.spe_manager()
             # Système de gravité
@@ -134,6 +135,7 @@ class Jeu:
                 self.player_0.vanish(event)
                 # dash attack
                 self.player_0.dash_attack_up(choice, event)
+                self.player_0.is_dashing(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
 
@@ -209,9 +211,9 @@ class Jeu:
                 self.player_0.vals['nbr_vanish']*30, 15])
             # Jauge de spé
             if self.name in ['luffy', 'gear4']:
-                pg.draw.rect(surface, (107, 43, 6), [
+                pg.draw.rect(surface, (64, 2, 97), [
                              width-400, height//7, 130, 15])
-                pg.draw.rect(surface, (255, 87, 51), [
+                pg.draw.rect(surface, (168, 30, 241), [
                              width-400, height//7,
                              self.player_0.vals['percent_ult'], 15])
 
@@ -257,4 +259,5 @@ class Jeu:
         # Dommages
         self.player_0.damages()
         self.update_stats()
+        self.player_0.dash()
         return rects, self.player_0.update_pv()

@@ -27,8 +27,9 @@ class Fighter(pg.sprite.Sprite):
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg, "prop": prop,
-            'tab': [], 'percent_ult': 0,
-            'sp_tab': [], 'jumping': True
+            'tab': [], 'percent_ult': 50,
+            'sp_tab': [], 'jumping': True,
+            "dashing": False
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],
@@ -67,7 +68,7 @@ class Fighter(pg.sprite.Sprite):
             # Déplacement vers la gauche
             if self.game.elms['right'] and (
                     self.rect.x < self.vals['surface_width'] - 100):
-                self.rect.x += 6
+                self.rect.x += 8
                 # On change l'image du joueur
                 if self.game.name in ['goku', 'vegeta']:
                     self.change_animation('right')
@@ -76,7 +77,7 @@ class Fighter(pg.sprite.Sprite):
                     self.game.elms['side'] = 'run'
             # Déplacement vers la droite
             elif not self.game.elms['right'] and self.rect.x > 5:
-                self.rect.x -= 6
+                self.rect.x -= 8
                 # Vérifie si le perso vole ou pas (si c'est vegeta ou goku)
                 if self.game.name in ['goku', 'vegeta']:
                     # Si oui, il n'y a pas d'animation quand il se déplace
@@ -117,31 +118,32 @@ class Fighter(pg.sprite.Sprite):
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
-        if test or (not test and self.rect.y < self.game.object.rect.y):
-            if not self.game.elms['right'] and self.rect.x > 5:
-                #self.game.elms['right'] = False
-                self.motion[0] = valeur / 3000
-                self.rect.x += self.motion[0]
-                # On change l'image du joueur
-                if self.game.name in ['goku', 'vegeta']:
-                    self.change_animation('left')
-                    self.vals['pause'] = False
-                else:
-                    self.game.elms['side'] = 'run'
+        if not self.vals["dashing"]:
+            if test or (not test and self.rect.y < self.game.object.rect.y):
+                if not self.game.elms['right'] and self.rect.x > 5:
+                    #self.game.elms['right'] = False
+                    self.motion[0] = valeur / 3000
+                    self.rect.x += self.motion[0]
+                    # On change l'image du joueur
+                    if self.game.name in ['goku', 'vegeta']:
+                        self.change_animation('left')
+                        self.vals['pause'] = False
+                    else:
+                        self.game.elms['side'] = 'run'
 
-            elif self.game.elms['right'] and (
-                    self.rect.x < self.vals['surface_width'] - 100):
-                #self.game.elms['right'] = True
-                self.motion[0] = valeur / 3000
-                self.rect.x += self.motion[0]
-                # On change l'image du joueur
-                if self.game.name in ['goku', 'vegeta']:
-                    self.change_animation('right')
-                    self.vals['pause'] = False
-                else:
-                    self.game.elms['side'] = 'run'
+                elif self.game.elms['right'] and (
+                        self.rect.x < self.vals['surface_width'] - 100):
+                    #self.game.elms['right'] = True
+                    self.motion[0] = valeur / 3000
+                    self.rect.x += self.motion[0]
+                    # On change l'image du joueur
+                    if self.game.name in ['goku', 'vegeta']:
+                        self.change_animation('right')
+                        self.vals['pause'] = False
+                    else:
+                        self.game.elms['side'] = 'run'
 
-        if not test:
+        if not test and not self.vals["dashing"]:
             self.move_collide()
 
     # Saut du joueur
@@ -263,6 +265,7 @@ class Fighter(pg.sprite.Sprite):
         if self.game.collision(self, self.game.all_objects):
             if len(self.vals['tab']) < 4:
                 self.vals['tab'].append(event.key)
+                print(self.vals['tab'])
             else:
                 self.vals['tab'] = []
         return self.vals['tab']
@@ -307,7 +310,7 @@ class Fighter(pg.sprite.Sprite):
             temp = self.vals['sp_tab'][len(self.vals['tab'])-1]
             self.vals['sp_tab'] = []
             self.vals['sp_tab'].append(temp)
-        print(self.vals['sp_tab'])
+        # print(self.vals['sp_tab'])
 
     def dash_attack_up(self, choice, event):
         """
@@ -322,8 +325,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.rect.x -= 100
 
-
-    def dash_attack_up_controller(self, dash = 8):
+    def dash_attack_up_controller(self, dash=8):
         """
         Gère l'attaque rapide en l'air à la manette
         """
@@ -331,10 +333,9 @@ class Fighter(pg.sprite.Sprite):
         self.vals['nb_sprite'] = 0
         self.game.elms['side'] = 'attack'
         if self.game.elms['right']:
-                self.rect.x += 100
+            self.rect.x += 100
         else:
             self.rect.x -= 100
-
 
     def combo(self):
         """
@@ -390,7 +391,7 @@ class Fighter(pg.sprite.Sprite):
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision(self, self.game.all_objects):
             # On vérifie le ombre de tentatives autorisées
-            if self.vals['nbr_vanish'] > 0 and event.key == pg.K_a:
+            if self.vals['nbr_vanish'] > 0 and event.key == pg.K_e:
                 # Relance l'animation à zéro
                 self.vals['nbr_sprite'] = 0
                 # Change l'animation
@@ -403,6 +404,34 @@ class Fighter(pg.sprite.Sprite):
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
+    def is_dashing(self, choice, event):
+        """
+        Autorise le dash avant
+        """
+        if choice[pg.K_q] or choice[pg.K_d]:
+            if event.key == pg.K_a:
+                self.vals["dashing"] = True
+
+    def dash(self):
+        """
+        EFfectue le dash
+        """
+        if self.vals["dashing"]:
+            self.game.elms["side"] = "dash"
+            if not self.game.collision(self, self.game.all_objects):
+                if self.game.elms["right"]:
+                    if self.rect.x < self.vals["surface_width"] - 200:
+                        self.rect.x += 30
+                    else:
+                        self.vals["dashing"] = False
+                        #self.rect.x = self.vals["surface_width"] - 100
+                else:
+                    if self.rect.x > self.vals["surface_width"]//100:
+                        self.rect.x -= 30
+                    else:
+                        self.vals["dashing"] = False
+            else:
+                self.vals["dashing"] = False
     # Autres
 
     def update_pv(self):

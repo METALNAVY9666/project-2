@@ -30,12 +30,12 @@ def load_dir(path=str, dimensions=tuple):
     return sprites
 
 
-def convert_alpha_dict(dicti):
+def convert_alpha_dict(dicti, size):
     """renvoie le dictionnaire de sprites convertis"""
     keys = list(dicti.keys())
     new = {}
     for key in keys:
-        new[key] = resize(dicti[key], (X // 12, Y // 12))
+        new[key] = resize(dicti[key], size)
         new[key].convert_alpha()
     return new
 
@@ -48,7 +48,13 @@ def sprites_images(name):
                     'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png'),
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
-    return convert_alpha_dict(sprites_dict)
+    dict_size = {"itachi": (X // 9, Y // 8),
+                 "goku": (X//9,  Y//10),
+                 "luffy": (X//9, Y//10),
+                 "gear4": (X//9, Y//10),
+                 "vegeta": (X//9, Y//10)}
+    size = dict_size[name]
+    return convert_alpha_dict(sprites_dict, size)
 
 
 def sprite_tab(name, position):
