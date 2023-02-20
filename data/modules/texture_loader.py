@@ -53,7 +53,7 @@ def sprites_images(name):
                  "luffy": (X//9, Y//10),
                  "gear4": (X//9, Y//10),
                  "vegeta": (X//9, Y//10),
-                 "revive": (X//8, Y//7)}
+                 "revive": (X//14, Y//8)}
     size = dict_size[name]
     return convert_alpha_dict(sprites_dict, size)
 
@@ -68,7 +68,7 @@ def sprite_tab(name, position):
                  "luffy": (X//9, X//10),
                  "gear4": (X//9, X//10),
                  "vegeta": (X//9, X//10),
-                 "revive": (X//9, X//11)}
+                 "revive": (X//14, X//12)}
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):

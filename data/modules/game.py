@@ -39,7 +39,7 @@ class Jeu:
         "renvoie la valeur de la touche"
         return pg.key.key_code(key)
 
-    def handle_input(self, actions, pause, busy):
+    def handle_input(self, actions, pause, busy, screen):
         '''Cette fonction a pour but de récupérer les touches préssées.
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
@@ -71,7 +71,7 @@ class Jeu:
                 # Gère le bloquage
                 self.player_0.block()
             elif choice[self.get_code("r")]:
-                self.ulti.spe_manager()
+                self.ulti.spe_manager(screen)
             # Système de gravité
             self.player_0.gravity()
             # Actions qui nécessitent une boucle 'for'
@@ -254,7 +254,7 @@ class Jeu:
         rects.append(self.update_header(screen, busy))
         rects.append(self.update_header_face1(screen, busy))
         # Gère les inputs
-        self.handle_input(actions, pause, busy)
+        self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
         if manage_controller() != None:

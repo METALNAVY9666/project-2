@@ -1,5 +1,6 @@
 """Module qui gère les attaques spéciales"""
 import pygame as pg
+from data.modules.animations import Animate
 
 
 class Special(pg.sprite.Sprite):
@@ -8,14 +9,15 @@ class Special(pg.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
+        self.animate = Animate(self)
         print('la spé de', self.game.name, 'est chargée.')
         self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
 
-    def spe_manager(self):
+    def spe_manager(self, screen):
         "Gestion des attaque spéciales"
         self.spe_itachi()
         self.spe_luffy()
-        
+        self.spe_goku(screen)
 
     def spe_luffy(self):
         """
@@ -40,7 +42,7 @@ class Special(pg.sprite.Sprite):
             self.game.player_1.physics["speed"] = self.pl1_speed
             self.game.player_1.player["hp"] -= 0.01
             print(self.game.player_1.player["hp"])
-        
+
     def spe_vegeta(self):
         """
         Attaque spéciale de vegeta
@@ -51,3 +53,11 @@ class Special(pg.sprite.Sprite):
             """A chaque attaque, si le bouléen est sur True"""
             """ Si les attaque touches et que le random est sur 2."""
             """lE joueur Adverse ne peut pas bouger."""
+
+    def spe_goku(self, screen):
+        """
+        Animations + Transfo de goku
+        """
+        if self.game.name == "goku":
+            self.game.name = "revive"
+            self.animate.fade(screen.get_width(), screen.get_height(), screen)
