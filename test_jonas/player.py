@@ -78,16 +78,19 @@ while True:
     for joystick in joysticks:
         controller = Controller.from_joystick(joystick)
         js = [joystick.get_guid(), joystick.get_name()]
+        
         for button in range(joystick.get_numbuttons()):
             btn_message = 'Button ' + str(button) + ': ' + str(controller.get_button(button))
             js.append(btn_message)
         for axis in range(joystick.get_numaxes()):
             axis_message = 'Axis ' + str(axis) + ': ' + str(controller.get_axis(axis))
             js.append(axis_message)
+            print(js)
         for hat in range(joystick.get_numhats()):
             
             hat_message = 'Hat ' + str(hat) + ': ' + str(joystick.get_hat(hat))
             js.append(hat_message)
+            
         debug_messages.append(js)
     
     for js, dbg_messages in enumerate(debug_messages):

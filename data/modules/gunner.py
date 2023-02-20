@@ -207,7 +207,7 @@ class Gunner():
                 # alors renvoyer le code depuis un dictionnnaire
                 # car pygame ne prend pas en compte le numpad
                 pressed.append([key, choice[NUMPAD[keys[key]]]])
-
+        
         if not pause:
             sprite = GFX["kim"]["wait"]
             for couple in pressed:

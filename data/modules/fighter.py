@@ -247,7 +247,7 @@ class Fighter(pg.sprite.Sprite):
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         self.single_tap(event, choice)
-        #self.combo()
+        self.combo()
 
     def attack_controller(self, choice):
         '''
@@ -287,20 +287,38 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_up(choice)
                 self.attack_down(choice)
 
-    # A modifier
+    # Docstrings a ajouter
     def single_tap_controller(self, choice):
         controller = manage_controller()
         if controller.get_button(1):
             self.game.strike_collision()
-            # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'attack'
+            if self.game.collision(self, self.game.all_objects):
+                if len(self.vals['tab']) < 4:
+                    self.vals['tab'].append(117)
+                    print(self.vals['tab'])
+                else:
+                    self.vals['tab'] = []
+            else:
+                self.vals["tab"] = []
+            return self.vals['tab']
 
         elif controller.get_button(2):
             self.game.strike_collision()
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms['side'] = 'impact'
+            if self.game.collision(self, self.game.all_objects):
+                if len(self.vals['tab']) < 4:
+                    self.vals['tab'].append(121)
+                    print(self.vals['tab'])
+                else:
+                    self.vals['tab'] = []
+            else:
+                self.vals["tab"] = []
+            return self.vals['tab']
+        
 
     def move_manager(self, event):
         """
@@ -327,7 +345,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.rect.x -= 100
 
-    def dash_attack_up_controller(self, dash=8):
+    def dash_attack_up_controller(self):
         """
         Gère l'attaque rapide en l'air à la manette
         """
@@ -392,7 +410,7 @@ class Fighter(pg.sprite.Sprite):
         le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision(self, self.game.all_objects):
-            # On vérifie le ombre de tentatives autorisées
+            # On vérifie le nombre de tentatives autorisées
             if self.vals['nbr_vanish'] > 0 and event.key == pg.K_e:
                 # Relance l'animation à zéro
                 self.vals['nbr_sprite'] = 0
@@ -405,6 +423,26 @@ class Fighter(pg.sprite.Sprite):
                     self.rect.x -= 100
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
+
+    def vanish_controller(self):
+        '''Fonction qui actionne une esquive,
+        le personnage peut esquiver une attaque 4 fois'''
+        # L'esquve se fait que si le joueur se prend des dégats
+        if self.game.collision(self, self.game.all_objects):
+            # On vérifie le nombre de tentatives autorisées
+            if self.vals['nbr_vanish'] > 0:
+                # Relance l'animation à zéro
+                self.vals['nbr_sprite'] = 0
+                # Change l'animation
+                self.game.elms['side'] = 'vanish'
+                # on diminue le nombre de tentative
+                self.vals['nbr_vanish'] -= 1
+                # Effectue l'esquive en fonction de la position du perso
+                if self.game.elms['right'] and self.rect.x > 5:
+                    self.rect.x -= 100
+                elif not self.game.elms['right'] and self.rect.x < 950:
+                    self.rect.x += 100
+
 
     def is_dashing(self, choice, event):
         """

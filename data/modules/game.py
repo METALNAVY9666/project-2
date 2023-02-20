@@ -109,13 +109,13 @@ class Jeu:
             if self.player_0.vals['current_height'] > 40 and (
                     event.type == JOYBUTTONDOWN and event.button == 1):
                 self.player_0.dash_attack_up_controller()
+            # Gère les attaques
+            elif event.type == JOYBUTTONDOWN and event.button == 1:
+                self.player_0.attack_controller(contro.get_button(1))
 
-        # Gère les attaques
-        if contro.get_button(1):
-            self.player_0.attack_controller(contro.get_button(1))
+            elif event.type == JOYBUTTONDOWN and event.button == 2:
+                self.player_0.attack_controller(contro.get_button(2))
 
-        elif contro.get_button(2):
-            self.player_0.attack_controller(contro.get_button(2))
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -123,6 +123,7 @@ class Jeu:
         pas être lancée en continu. Elles se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
+        contro = manage_controller()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
@@ -138,6 +139,10 @@ class Jeu:
                 self.player_0.is_dashing(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
+            # Esquive du joueur à la manette
+            if contro.get_button(10):
+                    print("La")
+                    self.player_0.vanish_controller()
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
