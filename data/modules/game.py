@@ -140,10 +140,9 @@ class Jeu:
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
             # Esquive du joueur à la manette
-            if contro.get_button(10):
+            """if contro.get_button(10):
                     print("La")
-                    self.player_0.vanish_controller()
-
+                    self.player_0.vanish_controller()"""
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
         qui est sur True quand il y a une collision entre

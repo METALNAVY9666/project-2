@@ -279,6 +279,10 @@ class Fighter(pg.sprite.Sprite):
         dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
         # Le joueur fait une action
         if event.key in dict_keys:
+            if self.game.elms["right"]:
+                self.rect.x += 5
+            else:
+                self.rect.x -= 5
             self.game.strike_collision()
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0

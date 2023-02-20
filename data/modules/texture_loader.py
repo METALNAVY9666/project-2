@@ -130,6 +130,8 @@ GFX['punchingball'] = load_image(BG_PATH + 'image', (120, 120)).convert_alpha()
 GFX['hit'] = load_image(BG_PATH + 'punched', (120, 120)).convert_alpha()
 GFX['stats_box'] = load_image(
     "test_olivier/gfx/box/"+"stats_box", (X // 3, X // 8)).convert_alpha()
+GFX["skill_box"] = load_image(
+    "test_olivier/gfx/box/"+"stats_box", (X//2, X//9)).convert_alpha()
 
 bro_tab = ["C'est quoi la blague ?",
            "C'est un peu bêbête",

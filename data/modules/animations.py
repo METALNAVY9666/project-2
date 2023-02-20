@@ -10,7 +10,7 @@ class Animate():
 
     def __init__(self, spe):
         self.spe = spe
-        self.vals = {"image": GFX["stats_box"],
+        self.vals = {"image": GFX["skill_box"],
                      "face": GFX[self.spe.game.name]}
         self.vals["rect"] = self.vals["image"].get_rect()
         self.vals["rect"].x = 0
@@ -36,9 +36,24 @@ class Animate():
         width = screen.get_width() - (self.vals["image"].get_width() * 2)
         height = screen.get_height() // 2
         self.rect_update.append(screen.blit(fade, (0, 0)))
-        self.rect_update.append(screen.blit(
+        """self.rect_update.append(screen.blit(
             self.vals["image"], (width, height)))
         self.rect_update.append(screen.blit(
-            self.vals["face"], (width+50, height+40)))
+            self.vals["face"], (width+50, height+40)))"""
+        self.rect_update.append(self.txt_blit(screen, width, height))
         pg.display.update(self.rect_update)
         return []
+
+    def txt_blit(self, screen, width, height):
+        """Fonction qui permet d'afficher le texte"""
+        quotes = {"vegeta": "blabla",
+                  "goku": "Ce n'est pas encore terminé...",
+                  "luffy": "Tu ne peux plus rien contre moi.",
+                  "itachi": "[Itachi-Quotes]",
+                  "revive": "Ce combat n'est pas fini...",
+                  "kim": "Mouais mouais"}
+        self.vals["font"] = pg.font.Font(
+            'test_olivier/gfx/fonts/04B_19__.TTF', 30)
+        txt = self.vals["font"].render(quotes[self.spe.game.name], 0, (244, 49, 14))
+        txt_width = screen.get_width()//2-(txt.get_width())
+        return screen.blit(txt, (txt_width, height))
