@@ -14,7 +14,7 @@ pg.init()
 
 
 class Jeu:
-    '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les 
+    '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les
     collisions, les dessins, les dégats etc...'''
 
     def __init__(self, name, pkg, prop):
@@ -79,9 +79,9 @@ class Jeu:
 
     def handle_input_controller(self, actions):
         """
-        Cette fonction récupère les actions effectuées à la manette et 
-        effectue des opérations spécifiques correspondantes. La fonction 
-        get.button(n) avec n un nombre entier permet de savoir si la touche 
+        Cette fonction récupère les actions effectuées à la manette et
+        effectue des opérations spécifiques correspondantes. La fonction
+        get.button(n) avec n un nombre entier permet de savoir si la touche
         correspondante au nombre n est pressé
         """
         contro = manage_controller()
@@ -94,7 +94,7 @@ class Jeu:
             self.player_0.block()
 
         # Gère les mouvements à la manette
-        elif contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
+        elif contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < - 5:
             if contro.get_axis(0) < 0:
                 self.elms['right'] = False
             else:
@@ -116,10 +116,9 @@ class Jeu:
             elif event.type == JOYBUTTONDOWN and event.button == 2:
                 self.player_0.attack_controller(contro.get_button(2))
 
-
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
-        Celle-ci gère les actions unique, par exemple, une attaque qui ne doit 
+        Celle-ci gère les actions unique, par exemple, une attaque qui ne doit
         pas être lancée en continu. Elles se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
@@ -143,6 +142,7 @@ class Jeu:
             """if contro.get_button(10):
                     print("La")
                     self.player_0.vanish_controller()"""
+
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
         qui est sur True quand il y a une collision entre
@@ -187,36 +187,36 @@ class Jeu:
         return screen.blit(self.object.image, (self.object.rect))
 
     def update_health(self, surface, busy):
-        '''Cette fonction dessine la barre de vie, d'énergie, et de défense du 
-        perso.Chaque barre possède une longueur propre au montant de sa 
-        variable respective. On dessine d'abord une barre grise, afin de faire 
-        le fond, puis on dessine celleavec de la couleur. Les deux, sur la 
+        '''Cette fonction dessine la barre de vie, d'énergie, et de défense du
+        perso.Chaque barre possède une longueur propre au montant de sa
+        variable respective. On dessine d'abord une barre grise, afin de faire
+        le fond, puis on dessine celleavec de la couleur. Les deux, sur la
         surface donnée en paramètre.'''
         width = self.elms["pkg"]["surface"].get_width()
         height = self.elms["pkg"]["surface"].get_height()
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (140, 138, 137), [
-                width-400, height//15, self.player_0.vals['max_health'], 15])
+                width - 400, height // 15, self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                width-400, height//15, self.player_0.vals['health'], 15])
+                width - 400, height // 15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
-                width//20, height//15, self.object.stats['max_health'], 15])
+                width // 20, height // 15, self.object.stats['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                width//20, height//15, self.object.stats['health'], 15])
+                width // 20, height // 15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
             pg.draw.rect(surface, (140, 138, 137), [
-                         width-400, height//10, 4*30, 15])
+                         width - 400, height//10, 4 * 30, 15])
             pg.draw.rect(surface, (255, 200, 133), [
-                width-400, height//10,
-                self.player_0.vals['nbr_vanish']*30, 15])
+                width - 400, height // 10,
+                self.player_0.vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
             if self.name in ['luffy', 'gear4']:
                 pg.draw.rect(surface, (64, 2, 97), [
-                             width-400, height//7, 130, 15])
+                             width - 400, height//7, 130, 15])
                 pg.draw.rect(surface, (168, 30, 241), [
-                             width-400, height//7,
+                             width - 400, height // 7,
                              self.player_0.vals['percent_ult'], 15])
 
     def update_header(self, screen, busy):

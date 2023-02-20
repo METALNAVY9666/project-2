@@ -49,11 +49,11 @@ def sprites_images(name):
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
     dict_size = {"itachi": (X // 9, Y // 8),
-                 "goku": (X//9,  Y//10),
-                 "luffy": (X//9, Y//10),
-                 "gear4": (X//9, Y//10),
-                 "vegeta": (X//9, Y//10),
-                 "revive": (X//14, Y//8)}
+                 "goku": (X // 9,  Y // 10),
+                 "luffy": (X // 9, Y // 10),
+                 "gear4": (X // 9, Y // 10),
+                 "vegeta": (X // 9, Y // 10),
+                 "revive": (X // 14, Y // 8)}
     size = dict_size[name]
     return convert_alpha_dict(sprites_dict, size)
 
@@ -64,11 +64,11 @@ def sprite_tab(name, position):
     # Name est le nom du perso, position permet de savoir si il est à gauche
     # ou non
     dict_size = {"itachi": (X // 10, X // 12),
-                 "goku": (X//9, X//10),
-                 "luffy": (X//9, X//10),
-                 "gear4": (X//9, X//10),
-                 "vegeta": (X//9, X//10),
-                 "revive": (X//14, X//12)}
+                 "goku": (X // 9, X // 10),
+                 "luffy": (X // 9, X // 10),
+                 "gear4": (X // 9, X // 10),
+                 "vegeta": (X // 9, X // 10),
+                 "revive": (X // 14, X // 12)}
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):
@@ -129,9 +129,9 @@ GFX["platform"] = load_image(path, (X // 1.5, Y // 1.5)).convert_alpha()
 GFX['punchingball'] = load_image(BG_PATH + 'image', (120, 120)).convert_alpha()
 GFX['hit'] = load_image(BG_PATH + 'punched', (120, 120)).convert_alpha()
 GFX['stats_box'] = load_image(
-    "test_olivier/gfx/box/"+"stats_box", (X // 3, X // 8)).convert_alpha()
+    "test_olivier/gfx/box/" + "stats_box", (X // 3, X // 8)).convert_alpha()
 GFX["skill_box"] = load_image(
-    "test_olivier/gfx/box/"+"stats_box", (X//2, X//9)).convert_alpha()
+    "test_olivier/gfx/box/" + "stats_box", (X // 2, X // 9)).convert_alpha()
 
 bro_tab = ["C'est quoi la blague ?",
            "C'est un peu bêbête",
@@ -155,4 +155,4 @@ GFX["vegeta"] = load_image("test_olivier/gfx/box/" +
 GFX["gear4"] = load_image("test_olivier/gfx/box/" +
                           "gear4", (X // 15, X // 15)).convert_alpha()
 GFX["revive"] = load_image("test_olivier/gfx/box/" +
-                          "revive", (X // 15, X // 15)).convert_alpha()
+                           "revive", (X // 15, X // 15)).convert_alpha()

@@ -121,7 +121,7 @@ class Fighter(pg.sprite.Sprite):
         if not self.vals["dashing"]:
             if test or (not test and self.rect.y < self.game.object.rect.y):
                 if not self.game.elms['right'] and self.rect.x > 5:
-                    #self.game.elms['right'] = False
+                    # self.game.elms['right'] = False
                     self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
                     # On change l'image du joueur
@@ -133,7 +133,7 @@ class Fighter(pg.sprite.Sprite):
 
                 elif self.game.elms['right'] and (
                         self.rect.x < self.vals['surface_width'] - 100):
-                    #self.game.elms['right'] = True
+                    # self.game.elms['right'] = True
                     self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
                     # On change l'image du joueur
@@ -322,7 +322,6 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.vals["tab"] = []
             return self.vals['tab']
-        
 
     def move_manager(self, event):
         """
@@ -447,7 +446,6 @@ class Fighter(pg.sprite.Sprite):
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
 
-
     def is_dashing(self, choice, event):
         """
         Autorise le dash avant
@@ -468,9 +466,9 @@ class Fighter(pg.sprite.Sprite):
                         self.rect.x += 30
                     else:
                         self.vals["dashing"] = False
-                        #self.rect.x = self.vals["surface_width"] - 100
+                        # self.rect.x = self.vals["surface_width"] - 100
                 else:
-                    if self.rect.x > self.vals["surface_width"]//100:
+                    if self.rect.x > self.vals["surface_width"] // 100:
                         self.rect.x -= 30
                     else:
                         self.vals["dashing"] = False
