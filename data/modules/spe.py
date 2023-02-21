@@ -13,10 +13,11 @@ class Special(pg.sprite.Sprite):
         print('la spé de', self.game.name, 'est chargée.')
         self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
 
-    def spe_manager(self, screen):
+    def spe_manager(self, screen, choice):
         "Gestion des attaque spéciales"
-        self.spe_itachi()
-        self.spe_luffy()
+        if choice[self.game.get_code("r")]:
+            self.spe_itachi()
+            self.spe_luffy()
 
     def spe_luffy(self):
         """

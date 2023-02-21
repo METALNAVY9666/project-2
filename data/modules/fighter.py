@@ -56,6 +56,10 @@ class Fighter(pg.sprite.Sprite):
                             'final', 'impact', 'spe']
         # Axe droite-gauche
         self.motion = [0]
+        if number == 2:
+            print("on est la")
+            self.rect.x = 200
+            print(self.rect.x)
 
     # Déplacement horizontal du joueur
 
@@ -78,9 +82,7 @@ class Fighter(pg.sprite.Sprite):
             # Déplacement vers la droite
             elif not self.game.elms['right'] and self.rect.x > 5:
                 self.rect.x -= 8
-                # Vérifie si le perso vole ou pas (si c'est vegeta ou goku)
                 if self.game.name in ['goku', 'vegeta']:
-                    # Si oui, il n'y a pas d'animation quand il se déplace
                     self.change_animation('left')
                     # Le joueur fait une action, donc on passe le bouléen
                     # sur False
@@ -95,7 +97,6 @@ class Fighter(pg.sprite.Sprite):
         Mouvement en cas de collision(s)
         """
         if self.game.elms['right'] and self.game.object.rect.x < self.rect.x:
-            print("Par la droite")
             self.rect.x += 6
             # On change l'image du joueur
             if self.game.name in ['goku', 'vegeta']:
@@ -105,7 +106,6 @@ class Fighter(pg.sprite.Sprite):
                 self.game.elms['side'] = 'run'
         elif not self.game.elms['right'] and (
                 self.game.object.rect.x > self.rect.x):
-            print("Par la gauche")
             self.rect.x -= 6
             if self.game.name in ['goku', 'vegeta']:
                 self.change_animation('left')
@@ -147,9 +147,9 @@ class Fighter(pg.sprite.Sprite):
             self.move_collide()
 
     # Saut du joueur
-    def jump(self):
+    def jump(self, choice):
         '''Fonction saut'''
-        if self.vals["jumping"]:
+        if self.vals["jumping"] and choice[self.game.get_code("z")]:
             # Vérfie si ale perso est inférieur à la hauteur de saut mx
             if self.vals['current_height'] <= self.vals['max_height']:
                 # Vérifie si le perso n'a pas déjà sauté deux fois
@@ -412,12 +412,13 @@ class Fighter(pg.sprite.Sprite):
 
     # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
-    def block(self):
+    def block(self, choice):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''
-        self.vals['attacked'] = True
-        self.change_animation('shield')
-        if self.game.elms['right']:
-            self.change_animation('shield_right')
+        if choice[self.game.get_code("a")]:
+            self.vals['attacked'] = True
+            self.change_animation('shield')
+            if self.game.elms['right']:
+                self.change_animation('shield_right')
 
     def vanish(self, event):
         '''Fonction qui actionne une esquive,

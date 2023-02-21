@@ -26,12 +26,14 @@ class Jeu:
         # Génération de personnages
         self.player_0 = Fighter(self, pkg, prop, 0)
         self.player_1 = Gunner(pkg, prop, 1)
+        self.player_2 = Fighter(self, pkg, prop, 2)
         self.ulti = Special(self)
         # Génération d'un objet
         self.object = PunchingBall(self)
         # Crée des groupes de sprites vide
         self.all_players = pg.sprite.Group()
         self.all_objects = pg.sprite.Group()
+        self.all_players_2 = pg.sprite.Group()
         # Ajout dans des groupes de sprites
         self.add_groups()
 
@@ -44,7 +46,6 @@ class Jeu:
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
-
         if not pause and not busy:
             # Récupère les touches préssées actuellement
             choice = pg.key.get_pressed()
@@ -53,25 +54,20 @@ class Jeu:
             self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
             if choice[self.get_code("d")]:
-                if choice[self.get_code("z")]:
-                    self.player_0.jump()
+                self.player_0.jump(choice)
                 self.player_0.move()
                 self.elms['right'] = True
             elif choice[self.get_code("q")]:
-                if choice[self.get_code("z")]:
-                    self.player_0.jump()
+                self.player_0.jump(choice)
                 self.player_0.move()
                 self.elms['right'] = False
                 if self.name in ['goku', 'vegeta']:
                     self.elms['side'] = 'left'
-            elif choice[self.get_code("z")]:
-                # Gère les sauts
-                self.player_0.jump()
-            elif choice[self.get_code("a")]:
-                # Gère le bloquage
-                self.player_0.block()
-            elif choice[self.get_code("r")]:
-                self.ulti.spe_manager(screen)
+            # Gère les sauts
+            self.player_0.jump(choice)
+            # Gère le bloquage
+            self.player_0.block(choice)
+            self.ulti.spe_manager(screen, choice)
             # Système de gravité
             self.player_0.charge(choice)
             # Actions qui nécessitent une boucle 'for'
@@ -91,12 +87,12 @@ class Jeu:
         # Modifie les animations en fonction de l'input
         if joy[0].get_id() == 0:
             # Gère le blocage
-            if (contro.get_button(3) and 
-                self.player_0.vals['current_height'] == 0):
+            if (contro.get_button(3) and
+                    self.player_0.vals['current_height'] == 0):
                 self.player_0.block()
 
             # Gère les mouvements à la manette
-            elif (contro.get_axis(0) / 3500 > 5 
+            elif (contro.get_axis(0) / 3500 > 5
                   or contro.get_axis(0) / 3500 < - 5):
                 if contro.get_axis(0) < 0:
                     self.elms['right'] = False
@@ -105,8 +101,8 @@ class Jeu:
                 self.player_0.move_controller(contro.get_axis(0))
 
             # Gère les sauts
-            if (contro.get_button(0) and 
-                self.player_0.vals['current_height'] < 400):
+            if (contro.get_button(0) and
+                    self.player_0.vals['current_height'] < 400):
                 self.player_0.jump_controller(8)
 
             # Gère les attaques
@@ -127,7 +123,7 @@ class Jeu:
                     self.player_0.attack_controller(contro.get_button(2))
 
             if contro.get_button(10):
-                        self.player_0.vanish_controller()
+                self.player_0.vanish_controller()
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -166,6 +162,7 @@ class Jeu:
         self.all_objects.add(self.object)
         # Ajoute un joueur au groupe de sprite de tout les joueurs
         self.all_players.add(self.player_0)
+        self.all_players_2.add(self.player_2)
 
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
@@ -261,6 +258,15 @@ class Jeu:
         self.player_0.combo()
         self.ulti.spe_goku(screen)
 
+    def update_player_2(self, screen):
+        """Mise à jour du perso 1"""
+        self.player_2.gravity()
+        self.player_2.damages()
+        self.update_stats()
+        self.player_2.dash()
+        self.player_2.combo()
+        self.ulti.spe_goku(screen)
+
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
@@ -280,4 +286,5 @@ class Jeu:
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
         self.update_player_0(screen)
+        self.update_player_2(screen)
         return rects, self.player_0.update_pv()
