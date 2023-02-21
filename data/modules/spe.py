@@ -17,7 +17,6 @@ class Special(pg.sprite.Sprite):
         "Gestion des attaque spéciales"
         self.spe_itachi()
         self.spe_luffy()
-        self.spe_goku(screen)
 
     def spe_luffy(self):
         """
@@ -58,6 +57,14 @@ class Special(pg.sprite.Sprite):
         """
         Animations + Transfo de goku
         """
-        if self.game.name == "goku":
-            self.game.name = "revive"
-            self.animate.fade(screen.get_width(), screen.get_height(), screen)
+        if self.game.player_0.vals["percent_ult"] >= 130:
+            if self.game.name == "goku":
+                if self.game.player_0.vals["health"] <= 0:
+                    self.game.name = "revive"
+                    self.animate.fade(screen.get_width(),
+                                      screen.get_height(), screen)
+                    #self.game.player_0.rect.y = 200
+                    pg.time.wait(1000)
+                    self.game.elms["side"] = "transfo"
+                    self.game.player_0.vals["health"] = 100
+                    self.game.player_0.vals["percent_ult"] = 0

@@ -50,11 +50,11 @@ class Animate():
                   "goku": "Ce n'est pas encore terminé...",
                   "luffy": "Tu ne peux plus rien contre moi.",
                   "itachi": "[Itachi-Quotes]",
-                  "revive": "Ce combat n'est pas fini...",
+                  "revive": "Ce n'est toujours pas fini...",
                   "kim": "Mouais mouais"}
         self.vals["font"] = pg.font.Font(
             'test_olivier/gfx/fonts/04B_19__.TTF', 30)
         txt = self.vals["font"].render(
             quotes[self.spe.game.name], 0, (244, 49, 14))
-        txt_width = screen.get_width() // 2 - (txt.get_width())
+        txt_width = screen.get_width() - (txt.get_width()) * 2
         return screen.blit(txt, (txt_width, height))

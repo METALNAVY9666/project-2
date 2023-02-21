@@ -149,16 +149,17 @@ class Fighter(pg.sprite.Sprite):
     # Saut du joueur
     def jump(self):
         '''Fonction saut'''
-        # Vérfie si ale perso est inférieur à la hauteur de saut mx
-        if self.vals['current_height'] <= self.vals['max_height']:
-            # Vérifie si le perso n'a pas déjà sauté deux fois
-            if self.vals['jumps'] < 2:
-                # Saute
-                self.rect.y -= 25
-                self.vals['current_height'] += 25
-            # Si le joueur a atteint la hauteur maximale, il redescend
-            if self.vals['current_height'] >= self.vals['max_height']:
-                self.vals['jumps'] = 3
+        if self.vals["jumping"]:
+            # Vérfie si ale perso est inférieur à la hauteur de saut mx
+            if self.vals['current_height'] <= self.vals['max_height']:
+                # Vérifie si le perso n'a pas déjà sauté deux fois
+                if self.vals['jumps'] < 2:
+                    # Saute
+                    self.rect.y -= 25
+                    self.vals['current_height'] += 25
+                # Si le joueur a atteint la hauteur maximale, il redescend
+                if self.vals['current_height'] >= self.vals['max_height']:
+                    self.vals['jumps'] = 3
 
     def jump_controller(self, jumpCount):
         # Fonction saut a la manette
@@ -395,9 +396,9 @@ class Fighter(pg.sprite.Sprite):
     def damages(self):
         '''Fonction qui gère les dommages'''
         if self.game.collision(self, self.game.all_objects):
-            """if not self.vals['attacked']:
-                self.vals['health'] -= 1"""
-            pass
+            if not self.vals['attacked']:
+                self.vals['health'] -= 1
+            # pass
 
     # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
@@ -426,6 +427,17 @@ class Fighter(pg.sprite.Sprite):
                     self.rect.x -= 100
                 elif not self.game.elms['right'] and self.rect.x < 950:
                     self.rect.x += 100
+
+    def charge(self, choice):
+        """Charge l'énergie"""
+        if self.game.name in ["goku", "revive"]:
+            if choice[self.game.get_code("e")] and choice[self.game.get_code("z")]:
+                if self.vals["percent_ult"] < 130:
+                    self.vals["jumping"] = False
+                    self.vals["percent_ult"] += 0.1
+                    self.game.elms["side"] = "ki"
+                else:
+                    self.vals["jumping"] = True
 
     def vanish_controller(self):
         '''Fonction qui actionne une esquive,

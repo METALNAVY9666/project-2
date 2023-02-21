@@ -73,7 +73,7 @@ class Jeu:
             elif choice[self.get_code("r")]:
                 self.ulti.spe_manager(screen)
             # Système de gravité
-            self.player_0.gravity()
+            self.player_0.charge(choice)
             # Actions qui nécessitent une boucle 'for'
             self.loop_input(actions)
 
@@ -196,9 +196,9 @@ class Jeu:
         height = self.elms["pkg"]["surface"].get_height()
         if not busy:
             # Dessin de la barre de vie
-            pg.draw.rect(surface, (140, 138, 137), [
+            pg.draw.rect(surface, (25, 70, 17), [
                 width - 400, height // 15, self.player_0.vals['max_health'], 15])
-            pg.draw.rect(surface, (1, 88, 33), [
+            pg.draw.rect(surface, (75, 198, 9), [
                 width - 400, height // 15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
@@ -206,13 +206,13 @@ class Jeu:
             pg.draw.rect(surface, (1, 88, 33), [
                 width // 20, height // 15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
-            pg.draw.rect(surface, (140, 138, 137), [
+            pg.draw.rect(surface, (0, 91, 136), [
                          width - 400, height//10, 4 * 30, 15])
-            pg.draw.rect(surface, (255, 200, 133), [
+            pg.draw.rect(surface, (159, 212, 239), [
                 width - 400, height // 10,
                 self.player_0.vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
-            if self.name in ['luffy', 'gear4']:
+            if self.name in ['luffy', 'gear4', 'goku', 'revive']:
                 pg.draw.rect(surface, (64, 2, 97), [
                              width - 400, height//7, 130, 15])
                 pg.draw.rect(surface, (168, 30, 241), [
@@ -223,30 +223,29 @@ class Jeu:
         """
         Fonction qui met à jour les élements du haut de l'écran
         """
+        self.rect_update = []
         if not busy:
             self.box = {"image": GFX['stats_box']}
             self.box['rect'] = self.box["image"].get_rect()
             self.box["rect"].x = screen.get_width() - 450
-            return screen.blit(self.box["image"], (self.box["rect"]))
-
-    def update_header_face1(self, screen, busy):
-        """
-        Fonction qui met à jour les visages des personnages.
-        """
-        if not busy:
+            self.rect_update.append(screen.blit(
+                self.box["image"], (self.box["rect"])))
             self.face = {"image": GFX[self.name]}
             self.face["rect"] = self.face["image"].get_rect()
             self.face["rect"].x = screen.get_width() - 150
             self.face["rect"].y = screen.get_height() // 20
-            return screen.blit(self.face["image"], (self.face["rect"]))
+            self.rect_update.append(screen.blit(
+                self.face["image"], (self.face["rect"])))
+        return self.rect_update
 
-    def update_player_0(self):
+    def update_player_0(self, screen):
         """Mis à jour du perso 0"""
-        # Dommages
+        self.player_0.gravity()
         self.player_0.damages()
         self.update_stats()
         self.player_0.dash()
         self.player_0.combo()
+        self.ulti.spe_goku(screen)
 
     def update(self, screen, dlt, actions, pause, busy):
         '''Cette fonction permet de mettre à jour les événements
@@ -255,8 +254,8 @@ class Jeu:
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         rects.append(self.player_1.update(dlt, pause, busy))
-        rects.append(self.update_header(screen, busy))
-        rects.append(self.update_header_face1(screen, busy))
+        for element in self.update_header(screen, busy):
+            rects.append(element)
         # Gère les inputs
         self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
@@ -266,5 +265,5 @@ class Jeu:
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
-        self.update_player_0()
+        self.update_player_0(screen)
         return rects, self.player_0.update_pv()
