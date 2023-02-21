@@ -3,25 +3,25 @@ import pygame as pg
 from pygame._sdl2.controller import Controller
 from pygame.locals import *
 pg._sdl2.controller.init()
+pg.joystick.init()
 pg.init()
 
 
 def manage_joysticks():
-    pg.joystick.init() #initialise le module joystick
-    joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
-    #Permet de savoir le nombre de manettes utilisés
-    dict_controller = {}
+    return [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
 
 def manage_controller():
     """
     Permet de savoir combien et quelles manettes sont utilisées.
     """
-    joysticks = [pg.joystick.Joystick(i) 
-    for i in range(pg.joystick.get_count())]
-    #Permet de savoir le nombre de manettes utilisés
-    for joystick in joysticks:
-        controller = Controller.from_joystick(joystick)
+    joysticks = [pg.joystick.Joystick(i)
+                 for i in range(pg.joystick.get_count())]
+    # Permet de savoir le nombre de manettes utilisés
+    if joysticks != []:
+        for joystick in joysticks:
+            controller = Controller.from_joystick(joystick)
         return controller
+    return None
 
 
 def removed_and_added_controller():

@@ -89,32 +89,45 @@ class Jeu:
         # Réaffecte l'image de l'objet
         self.object.image = GFX['punchingball']
         # Modifie les animations en fonction de l'input
-        # Gère le blocage
-        if contro.get_button(3) and self.player_0.vals['current_height'] == 0:
-            self.player_0.block()
+        if joy[0].get_id() == 0:
+            # Gère le blocage
+            if (contro.get_button(3) and 
+                self.player_0.vals['current_height'] == 0):
+                self.player_0.block()
 
-        # Gère les mouvements à la manette
-        elif contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < - 5:
-            if contro.get_axis(0) < 0:
-                self.elms['right'] = False
-            else:
-                self.elms['right'] = True
-            self.player_0.move_controller(contro.get_axis(0))
+            # Gère les mouvements à la manette
+            elif (contro.get_axis(0) / 3500 > 5 
+                  or contro.get_axis(0) / 3500 < - 5):
+                if contro.get_axis(0) < 0:
+                    self.elms['right'] = False
+                else:
+                    self.elms['right'] = True
+                self.player_0.move_controller(contro.get_axis(0))
 
-        # Gère les sauts
-        if contro.get_button(0) and self.player_0.vals['current_height'] < 400:
-            self.player_0.jump_controller(8)
+            # Gère les sauts
+            if (contro.get_button(0) and 
+                self.player_0.vals['current_height'] < 400):
+                self.player_0.jump_controller(8)
 
-        for event in actions:
-            if self.player_0.vals['current_height'] > 40 and (
-                    event.type == JOYBUTTONDOWN and event.button == 1):
-                self.player_0.dash_attack_up_controller()
             # Gère les attaques
-            elif event.type == JOYBUTTONDOWN and event.button == 1:
-                self.player_0.attack_controller(contro.get_button(1))
+            for event in actions:
+                if self.player_0.vals['current_height'] > 40 and (
+                        event.type == JOYBUTTONDOWN and event.button == 1):
+                    self.player_0.dash_attack_up_controller()
 
-            elif event.type == JOYBUTTONDOWN and event.button == 2:
-                self.player_0.attack_controller(contro.get_button(2))
+                elif (contro.get_axis(1) / 3500 > 5 and
+                      event.type == JOYBUTTONDOWN and event.button == 1):
+                    print('sol')
+                    self.player_0.attack_down_controller()
+
+                elif event.type == JOYBUTTONDOWN and event.button == 1:
+                    self.player_0.attack_controller(contro.get_button(1))
+
+                elif event.type == JOYBUTTONDOWN and event.button == 2:
+                    self.player_0.attack_controller(contro.get_button(2))
+
+            if contro.get_button(10):
+                        self.player_0.vanish_controller()
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -122,7 +135,6 @@ class Jeu:
         pas être lancée en continu. Elles se déclenchent uniquement quand
         le joueur appuie sur une touche, et non quand il la maintient.'''
         choice = pg.key.get_pressed()
-        contro = manage_controller()
         for event in actions:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
@@ -138,10 +150,6 @@ class Jeu:
                 self.player_0.is_dashing(choice, event)
             if event.type == pg.KEYUP and self.elms['side'] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
-            # Esquive du joueur à la manette
-            """if contro.get_button(10):
-                    print("La")
-                    self.player_0.vanish_controller()"""
 
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
@@ -197,7 +205,8 @@ class Jeu:
         if not busy:
             # Dessin de la barre de vie
             pg.draw.rect(surface, (25, 70, 17), [
-                width - 400, height // 15, self.player_0.vals['max_health'], 15])
+                width - 400, height // 15,
+                self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (75, 198, 9), [
                 width - 400, height // 15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
@@ -207,14 +216,14 @@ class Jeu:
                 width // 8, height // 15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
             pg.draw.rect(surface, (0, 91, 136), [
-                         width - 400, height//10, 4 * 30, 15])
+                         width - 400, height // 10, 4 * 30, 15])
             pg.draw.rect(surface, (159, 212, 239), [
                 width - 400, height // 10,
                 self.player_0.vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
             if self.name in ['luffy', 'gear4', 'goku', 'revive']:
                 pg.draw.rect(surface, (64, 2, 97), [
-                             width - 400, height//7, 130, 15])
+                             width - 400, height // 7, 130, 15])
                 pg.draw.rect(surface, (168, 30, 241), [
                              width - 400, height // 7,
                              self.player_0.vals['percent_ult'], 15])

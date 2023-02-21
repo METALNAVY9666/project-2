@@ -393,6 +393,12 @@ class Fighter(pg.sprite.Sprite):
             while self.game.object.rect.y <= self.settings['size_max']:
                 self.game.object.rect.y += 1
 
+    def attack_down_controller(self):
+        if self.game.collision(self, self.game.all_objects):
+            self.game.elms['side'] = 'down'
+            while self.game.object.rect.y <= self.settings['size_max']:
+                self.game.object.rect.y += 1
+
     def damages(self):
         '''Fonction qui gère les dommages'''
         if self.game.collision(self, self.game.all_objects):

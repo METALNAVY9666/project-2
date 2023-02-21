@@ -45,6 +45,8 @@ pygame.init()
 window = pygame.display.set_mode((1200, 800))
 pygame.display.set_caption("Testing controllers")
 
+
+
 font = pygame.font.Font(None, 30)
 
 clock = pygame.time.Clock()
@@ -62,6 +64,8 @@ def reset_joysticks():
 
 
 joysticks = reset_joysticks()
+print(joysticks)
+print(joysticks[0].get_id())
 
 debug_messages = []
 
@@ -74,9 +78,10 @@ while True:
             joysticks = reset_joysticks()
     
     window.fill('white')
-    
+    #print(joysticks[0].get_id())
     for joystick in joysticks:
         controller = Controller.from_joystick(joystick)
+        print(controller)
         js = [joystick.get_guid(), joystick.get_name()]
         
         for button in range(joystick.get_numbuttons()):
@@ -85,7 +90,6 @@ while True:
         for axis in range(joystick.get_numaxes()):
             axis_message = 'Axis ' + str(axis) + ': ' + str(controller.get_axis(axis))
             js.append(axis_message)
-            print(js)
         for hat in range(joystick.get_numhats()):
             
             hat_message = 'Hat ' + str(hat) + ': ' + str(joystick.get_hat(hat))
