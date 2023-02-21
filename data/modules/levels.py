@@ -109,6 +109,17 @@ class BaseLevel:
             pos = [(width // 2) - (width // 3), height // 1.5]
             return surface.blit(GFX["platform"], pos)
 
+    def clear_rect_list(self):
+        """nettoie la liste des rects"""
+        rects = []
+        for rect in self.update_list:
+            if "list" in str(type(rect)):
+                for subrect in rect:
+                    rects.append(subrect)
+            else:
+                rects.append(rect)
+        self.update_list = rects
+
     def update(self, delta, actions):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
@@ -148,6 +159,9 @@ class BaseLevel:
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)
+        
+        self.clear_rect_list()
+
         self.pkg["display"].update(self.update_list)
         self.update_list = []
         return next_op

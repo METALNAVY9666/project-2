@@ -40,11 +40,13 @@ class Gunner():
         self.player["hp"] = 20
         self.player["size"] = [width // 8, height // 6]
         self.player["weapon"] = "fist"
+        self.player["id"] = id
         self.player["keys"] = read_settings()["keys"][id]
         self.player["cooldown"] = {
             "barrett": 0,
             "kick": 0,
                     }
+        self.player["bullets"] = []
 
     def init_graphics(self):
         """le nom est équivoque je pense"""
@@ -93,9 +95,15 @@ class Gunner():
             if cooldown["barrett"] < 1:
                 cooldown["barrett"] = 3000
                 SFX[animation].play()
+                side = self.physics["side"]
+                pos = self.physics["pos"]
+                bullet = Bullet(self.pkg, "barrett", side, pos)
+                self.player["bullets"].append(bullet)
                 sprite = GFX["kim"]["sneak"]
             elif cooldown["barrett"] >= 2500:
                 sprite = GFX["kim"]["sneak"]
+            else:
+                sprite = self.gfx["sprite"]
         # ------ cours ------
         if animation == "run":
             if self.gfx["delta_sum"] >= 100:
@@ -112,15 +120,42 @@ class Gunner():
         # ------ renvoie le sprite ------
         return sprite
 
+    def blit_sprite(self, sprite, pos):
+        """affiche le sprite sur la surface de jeu"""
+        side = self.physics["side"]
+        if side == -1:
+            sprite = self.flip(sprite)
+        return self.pkg["surface"].blit(sprite, pos)
+
+    # ------ Attaques ------
+
     def barrett_shoot(self, dlt):
         """tire une balle de calibre 50"""
         return self.play_animation("shoot", dlt)
+
+    def update_bullets(self, pause, other):
+        """met à jour la position de la balle tirée"""
+        bullets = []
+        rects = []
+
+        for bullet in self.player["bullets"]:
+            if not bullet.out:
+                bullets.append(bullet)
+
+        for bullet in bullets:
+            rects.append(bullet.update(pause, other))
+
+        self.player["bullets"] = bullets
+
+        return rects
 
     def update_cooldowns(self, dlt):
         """met à jour les cooldowns"""
         cooldown = self.player["cooldown"]
         if cooldown["barrett"] > 0:
             cooldown["barrett"] -= dlt
+
+    # ------ Physiques ------
 
     def move(self, dlt):
         """déplace le gunner"""
@@ -129,14 +164,7 @@ class Gunner():
         pos = self.physics["pos"]
         pos[0] += int(speed * side)
         return self.play_animation("run", dlt)
-
-    def blit_sprite(self, sprite, pos):
-        """affiche le sprite sur la surface de jeu"""
-        side = self.physics["side"]
-        if side == -1:
-            sprite = self.flip(sprite)
-        return self.pkg["surface"].blit(sprite, pos)
-
+    
     def gravity(self):
         """applique la gravité au joueur"""
         pos = self.physics["pos"]
@@ -161,7 +189,6 @@ class Gunner():
         dims = self.pkg["dimensions"]
         gravity = self.physics["gravity"]
         if grounded:
-            print("jump start")
             self.physics["jump_state"] = True
             pos[1] = dims[1] - dims[1] // 12 - ground - (10 + gravity)
 
@@ -185,6 +212,7 @@ class Gunner():
         else:
             self.physics["falling"] = False
             
+    # ------ Touches ------
 
     def update_keys(self, dlt, pause, busy):
         """met à jour les mouvements du joueur"""
@@ -226,30 +254,69 @@ class Gunner():
 
         return self.blit_sprite(self.gfx["sprite"], self.physics["pos"])
 
-    def update(self, dlt, pause, busy):
+    def get_rect(self):
+        """renvoie le rect du joueur"""
+        rect = self.gfx["sprite"].get_rect()
+        rect.x, rect.y = self.physics["pos"]
+        return rect
+
+    def update(self, dlt, pause, busy, other):
         """met à jour le sprite du joueur"""
         self.check_ground()
         self.gravity()
         self.update_jump()
         self.update_cooldowns(dlt)
-        return self.update_keys(dlt, pause, busy)
+        rects = []
+        rects.append(self.update_keys(dlt, pause, busy))
+        rects = rects + self.update_bullets(pause, other)
+        return rects
 
-    """def jump_start(self, force):
-        if self.is_grounded:
-            self.jump_frame = -int(force*10)
-            self.y -= 2
-            self.is_grounded = False
-            self.isFalling = False
-
-    def jump_check(self):
-        if self.y >= ground_level:
-            self.is_grounded = True
+class Bullet:
+    """classe pour la balle du joueur"""
+    def __init__(self, pkg, texture, side, pos):
+        self.pkg = pkg
+        self.pos = pos * 1
+        if side == 1:
+            self.texutre = GFX["bullets"][texture]
         else:
-            self.is_grounded = False
-        if self.is_grounded == False:
-            self.x += int(kim.speed/1.5)
-            self.y += self.gravity
-            if self.jump_frame < 0:
-                self.y -= int(abs(self.jump_frame)*0.75)
-            self.jump_frame += 1
-    """
+            self.texutre = self.flip(GFX["bullets"][texture])
+        self.side = side
+        self.out = False
+        vertical = self.pkg["dimensions"][1]
+        self.pos[1] += vertical//36
+    
+    def flip(self, sprite):
+        """renvoie le sprite retourné"""
+        image = self.pkg["transform"].flip(sprite, True, False)
+        return image.convert_alpha()
+
+    def blit(self):
+        """affiche sur la surface la texture"""
+        blit_texture = self.pkg["surface"].blit
+        texture = self.texutre
+        pos = self.pos
+        rect = blit_texture(texture, pos)
+        return rect
+
+    def check_player(self, bullet_rect, player):
+        """vérifie si le rect entre en collision avec la balle"""
+        colliderect = self.pkg["Rect"].colliderect
+        if colliderect(bullet_rect, player.get_rect()):
+            name = type(player).__name__
+            if name == "Fighter":
+                player.vals["health"] -= 25
+            else:
+                player.player["hp"] -= 25
+            self.out = True
+
+    def update(self, pause, other):
+        """met à jour la balle"""
+        if self.pos[0] > -720 and self.pos[0] < 7680:
+            if not pause:
+                self.pos[0] += 30 * self.side
+                bullet_rect = self.blit()
+                self.check_player(bullet_rect, other)
+                return bullet_rect
+        else:
+            self.out = True
+        

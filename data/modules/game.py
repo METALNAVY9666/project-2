@@ -267,7 +267,7 @@ class Jeu:
         # Affiche le personnage sur l'écran
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update(dlt, pause, busy))
+        rects.append(self.player_1.update(dlt, pause, busy, self.player_0))
         for element in self.update_header(screen, busy):
             rects.append(element)
         # Gère les inputs

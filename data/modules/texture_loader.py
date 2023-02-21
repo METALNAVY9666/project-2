@@ -4,9 +4,9 @@ import pygame as pg
 from data.modules.settings import read_settings, read_levels
 
 
-def load_image(path=str, dimensions=None):
+def load_image(filepath=str, dimensions=None):
     """charge l'image et modifie les dimensions de cette dernière"""
-    image = pg.image.load(path + ".png")
+    image = pg.image.load(filepath + ".png")
     return resize(image, dimensions)
 
 
@@ -17,13 +17,13 @@ def resize(image, dimensions):
     return pg.transform.scale(image, dimensions)
 
 
-def load_dir(path=str, dimensions=tuple):
+def load_dir(filepath=str, dimensions=tuple):
     """renvoie un dictionnaire nom/sprite de tout les sprites
     contenus dans un dossier"""
     sprites = {}
-    for file in listdir(path):
+    for file in listdir(filepath):
         name = file[0:-4]
-        image = load_image(path + name)
+        image = load_image(filepath + name)
         image = resize(image, dimensions)
         image.convert_alpha()
         sprites[name] = image
@@ -93,6 +93,7 @@ UI_PATH = "data/gfx/ui/"
 LEVELS_PATH = "data/gfx/levels/"
 EVENTS_PATH = "data/gfx/events/"
 BG_PATH = "data/gfx/images/"
+EFFECTS_PATH = "data/gfx/effects/"
 
 # convert permet de blit les images plus rapidement
 # et convert_alpha fait la même chose pour les images transparentes
@@ -110,10 +111,20 @@ GFX["exit"] = load_image(UI_PATH + "exit_btn", (X // 8, Y // 10)).convert()
 
 # chargement des évènements
 for number in ["one", "two", "three", "go"]:
-    GFX[number] = (load_image(UI_PATH + number,
-                   (X // 6, Y // 6)).convert_alpha())
+    GFX[number] = (load_image(UI_PATH + number, (X // 6, Y // 6)).convert_alpha())
 GFX["ae86"] = load_image(EVENTS_PATH + "trueno_drift/ae86", (X // 6, Y // 6))
 GFX["ae86"].convert_alpha()
+
+# chargement des effets visuels
+GFX["nuzzle"] = load_image(EFFECTS_PATH + "nuzzle", (X // 12, Y // 12))
+GFX["nuzzle"].convert_alpha()
+
+GFX["bullets"] = {}
+GFX["bullets"]["makarov"] = load_image(EFFECTS_PATH + "bullet_makarov", (X // 40, Y // 40))
+GFX["bullets"]["makarov"].convert_alpha()
+
+GFX["bullets"]["barrett"] = load_image(EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 72))
+GFX["bullets"]["barrett"].convert_alpha()
 
 # chargement des niveaux
 for level in list(levels.keys()):
@@ -122,8 +133,8 @@ for level in list(levels.keys()):
     GFX[level]["bg"] = load_image(TEMP, levels[level]["scale"]).convert()
 
 # chargement des textures des obstacles
-path = LEVELS_PATH + "platform"
-GFX["platform"] = load_image(path, (X // 1.5, Y // 1.5)).convert_alpha()
+TEMP = LEVELS_PATH + "platform"
+GFX["platform"] = load_image(TEMP, (X // 1.5, Y // 1.5)).convert_alpha()
 
 # Images pour le menu
 GFX['punchingball'] = load_image(BG_PATH + 'image', (120, 120)).convert_alpha()

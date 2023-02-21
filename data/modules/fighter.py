@@ -225,6 +225,10 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['nbr_sprite'] = 0
                 self.game.elms['side'] = 'left'
 
+    def get_rect(self):
+        """renvoie le rect du fighter"""
+        return self.rect
+
     def position(self):
         '''Fonction qui change le tableau d'image
         en fonction de la position du persos'''
