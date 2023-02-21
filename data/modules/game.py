@@ -162,7 +162,7 @@ class Jeu:
         self.all_objects.add(self.object)
         # Ajoute un joueur au groupe de sprite de tout les joueurs
         self.all_players.add(self.player_0)
-        self.all_players_1.add(self.player_2)
+        self.all_players_2.add(self.player_2)
 
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
