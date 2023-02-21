@@ -173,19 +173,15 @@ class Gunner():
         jump_height = self.physics["jump_height"]
         jump_state = self.physics["jump_state"]
         if not grounded:
-            print("in air")
             delta = pos[1] - jump_height
-            print("delta "+str(delta))
             if jump_state:
                 pos[1] -= (gravity + delta**(1/2))
                 if pos[1] <= jump_height:
-                    print("apex")
                     self.physics["jump_state"] = False
+                    self.physics["falling"] = True
             else:
-                print("falling")
                 if self.physics["falling"]:
-                    pos[1] -= gravity
-                    pos[1] += delta ** (1/2)
+                    pos[1] -= ((jump_height-delta)**(1/2))*0.9
         else:
             self.physics["falling"] = False
             
