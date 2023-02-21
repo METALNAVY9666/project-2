@@ -202,9 +202,9 @@ class Jeu:
                 width - 400, height // 15, self.player_0.vals['health'], 15])
             # Barre de vie de l'objet
             pg.draw.rect(surface, (140, 138, 137), [
-                width // 20, height // 15, self.object.stats['max_health'], 15])
+                width // 8, height // 15, self.object.stats['max_health'], 15])
             pg.draw.rect(surface, (1, 88, 33), [
-                width // 20, height // 15, self.object.stats['health'], 15])
+                width // 8, height // 15, self.object.stats['health'], 15])
             # Nombre d'esquive possible
             pg.draw.rect(surface, (0, 91, 136), [
                          width - 400, height//10, 4 * 30, 15])
@@ -225,17 +225,22 @@ class Jeu:
         """
         self.rect_update = []
         if not busy:
+            # Boite de stats
             self.box = {"image": GFX['stats_box']}
             self.box['rect'] = self.box["image"].get_rect()
             self.box["rect"].x = screen.get_width() - 450
             self.rect_update.append(screen.blit(
                 self.box["image"], (self.box["rect"])))
+            # Visage
             self.face = {"image": GFX[self.name]}
             self.face["rect"] = self.face["image"].get_rect()
             self.face["rect"].x = screen.get_width() - 150
             self.face["rect"].y = screen.get_height() // 20
             self.rect_update.append(screen.blit(
                 self.face["image"], (self.face["rect"])))
+            self.rect_update.append(screen.blit(
+                self.box["image"],
+                (screen.get_width() // 60, 0)))
         return self.rect_update
 
     def update_player_0(self, screen):
