@@ -106,6 +106,11 @@ GFX["loading"] = load_image(UI_PATH + "loading", win_scale).convert()
 loading_rect = surface.blit(GFX["loading"], (0, 0))
 pg.display.update(loading_rect)
 
+# charge la police
+pg.font.init()
+GFX["font"] = pg.font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 60)
+GFX["paladins"] = pg.font.Font('data/gfx/fonts/paladins.ttf', 60)
+
 # chargement des boutons et du menu pause.
 GFX["blur"] = load_image(UI_PATH + "blur", win_scale).convert_alpha()
 GFX["btn"] = load_dir(BUTTONS_PATH, (X // 8, Y // 10))

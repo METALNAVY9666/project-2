@@ -131,7 +131,6 @@ class BaseLevel:
     def update(self, delta, actions):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
-
         # met à jour les touches
         next_op = None
         keys = [self.pkg["pygame"].K_ESCAPE]

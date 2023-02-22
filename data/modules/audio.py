@@ -93,11 +93,8 @@ def load_dir(dirpath):
 
 SFX_PATTH = "data/sfx/"
 
-# initialise les sons de kim
-SFX["kim"] = load_dir(SFX_PATTH + "kim/")
 
-# initialise les sons du niveau
-SFX["level"] = load_dir(SFX_PATTH + "level/")
+folders = ("kim", "level", "events", "ui")
 
-# initialise les sons des évènements
-SFX["events"] = load_dir(SFX_PATTH + "events/")
+for folder in folders:
+    SFX[folder] = load_dir(SFX_PATTH + folder + "/")
