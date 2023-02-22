@@ -56,10 +56,10 @@ class Animate():
         self.vals["font"] = pg.font.Font(
             'test_olivier/gfx/fonts/04B_19__.TTF', 30)
         for element in self.spe.game.players:
-            dead = 'irj'
             if element.vals["health"] <= 0:
                 dead = element
                 txt = self.vals["font"].render(
-                    quotes[self.spe.game.name[dead.number]], 0, (244, 49, 14))
+                    quotes[self.spe.game.name[dead.number]],
+                    0, (244, 49, 14))
         txt_width = screen.get_width() - (txt.get_width()) * 2
         return screen.blit(txt, (txt_width, height))

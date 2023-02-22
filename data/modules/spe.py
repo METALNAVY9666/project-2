@@ -23,24 +23,26 @@ class Special(pg.sprite.Sprite):
         """
         Attaque spéciale de luffy
         """
-        if self.game.name == 'luffy':
-            if self.game.player_0.vals["percent_ult"] >= 130:
-                self.game.name = 'gear4'
-                self.game.player_0.vals['nbr_sprite'] = 0
-                self.game.elms['side'] = 'ult'
-                self.game.player_0.vals['strike'] = 30
-        elif self.game.player_0.vals["percent_ult"] <= 0:
-            if self.game.name == 'gear4':
-                self.game.name = 'luffy'
+        for element in self.game.players:
+            if element.game.name[element.number] == "luffy":
+                if element.vals["percent_ult"] >= 130:
+                    self.game.name[element.number] = 'gear4'
+                    element.vals['nbr_sprite'] = 0
+                    self.game.elms['side'][element.number] = 'ult'
+                    self.game.player_0.vals['strike'] = 30
 
     def spe_itachi(self):
         """
         Attaque spéciale d'itachi
         """
-        if self.game.name == 'itachi':
-            self.game.elms['side'] = 'ult'
-            self.game.player_1.physics["speed"] = self.pl1_speed
-            self.game.player_1.player["hp"] -= 0.01
+        victime = None
+        for element in self.game.players:
+            if self.game.name[element.number] == 'itachi':
+                self.game.elms['side'][element.number] = 'ult'
+            else:
+                victime = element
+            victime.vals["strike"] = self.pl1_speed
+            victime.vals["health"] -= 50
             print(self.game.player_1.player["hp"])
 
     def spe_vegeta(self):
@@ -65,8 +67,6 @@ class Special(pg.sprite.Sprite):
                     self.game.name[element.number] = "revive"
                     self.animate.fade(screen.get_width(),
                                         screen.get_height(), screen)
-                    #self.game.player_0.rect.y = 200
-                    pg.time.wait(1000)
                     self.game.elms["side"][element.number] = "transfo"
                     element.vals["health"] = 100
                     element.vals["percent_ult"] = 130

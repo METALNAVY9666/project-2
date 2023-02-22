@@ -28,7 +28,7 @@ class PunchingBall(pg.sprite.Sprite):
 
     def forward(self):
         '''Cette fonction permet de déplacer l'objet'''
-        if not self.game.collision(self, self.game.all_players):
+        if not self.game.collision():
             self.rect.x += 0.1
 
     def gravity_object(self):

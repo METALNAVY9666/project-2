@@ -174,13 +174,18 @@ class Jeu:
             if event.type == pg.KEYUP and self.elms["side"][self.player_0.number] == 'run':
                 self.player_0.vals['nbr_sprite'] = 5
 
-    def collision(self, sprite, group):
+    def collision(self):
         '''Cette fonction renvoi un bouléen,
         qui est sur True quand il y a une collision entre
         un sprite et un groupe de sprites. Le cas échéant, le
         bouléen est sur False.'''
         # Vérifie si il y a collision ou non
-        return pg.sprite.spritecollide(sprite, group,
+        for element in self.players:
+            if element.number == 0:
+                return pg.sprite.spritecollide(element, self.all_players_2,
+                                       False, pg.sprite.collide_mask)
+            elif element.number == 2:
+                return pg.sprite.spritecollide(element, self.all_players,
                                        False, pg.sprite.collide_mask)
 
     def add_groups(self):
@@ -193,23 +198,27 @@ class Jeu:
 
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
-        if self.collision(self.player_0, self.all_objects):
-            for objects in self.collision(self.player_0, self.all_objects):
-                objects.damage()
+        if self.collision():
+            for objects in self.collision():
+                objects.damages()
                 # Change l'animation en cas d'attaque
-                self.object.image = GFX['hit']
+                #self.object.image = GFX['hit']
+                print('EHo')
 
     def update_stats(self):
         """
         Met à jour les caractéristiques spéciale comme les barres,
         les attaques spéciales, et les stats.
         """
-        if self.name == "luffy" and self.player_0.vals["percent_ult"] <= 130:
-            self.player_0.vals["percent_ult"] += 0.1
-        elif self.name == 'gear4' and self.player_0.vals["percent_ult"] > 0:
-            self.player_0.vals["percent_ult"] -= 0.1
-        elif self.name == 'gear4' and self.player_0.vals["percent_ult"] <= 0:
-            self.name = 'luffy'
+        for element in self.players:
+            if self.name[element.number] == "luffy":
+                if element.vals["percent_ult"] <= 130:
+                    element.vals["percent_ult"] += 0.1
+            elif self.name[element.number] == "gear4":
+                if element.vals["percent_ult"] > 0:
+                    element.vals["percent_ult"] -= 0.1
+                else:
+                    self.name[element.number] = "luffy"
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
@@ -245,12 +254,13 @@ class Jeu:
                 width - 400, height // 10,
                 self.player_0.vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
-            if self.name in ['luffy', 'gear4', 'goku', 'revive']:
-                pg.draw.rect(surface, (64, 2, 97), [
-                             width - 400, height // 7, 130, 15])
-                pg.draw.rect(surface, (168, 30, 241), [
-                             width - 400, height // 7,
-                             self.player_0.vals['percent_ult'], 15])
+            for element in self.players:
+                if self.name[element.number] in ['luffy', 'gear4', 'goku', 'revive']:
+                    pg.draw.rect(surface, (64, 2, 97), [
+                        width - 400, height // 7, 130, 15])
+                    pg.draw.rect(surface, (168, 30, 241), [
+                        width - 400, height // 7,
+                        self.player_0.vals['percent_ult'], 15])
 
     def update_header(self, screen, busy):
         """

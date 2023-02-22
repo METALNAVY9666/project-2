@@ -28,7 +28,7 @@ class Fighter(pg.sprite.Sprite):
             'surface_height': self.game.elms['pkg']['surface'].get_height(),
             'surface_width': self.game.elms['pkg']['surface'].get_width(),
             "pkg": pkg, "prop": prop,
-            'tab': [], 'percent_ult': 50,
+            'tab': [], 'percent_ult': 130,
             'sp_tab': [], 'jumping': True,
             "dashing": [False, False, False]
         }
@@ -66,7 +66,7 @@ class Fighter(pg.sprite.Sprite):
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
-        test = not self.game.collision(self, self.game.all_objects)
+        test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if test or (not test and self.rect.y < self.game.object.rect.y):
             # Déplacement vers la gauche
@@ -117,7 +117,7 @@ class Fighter(pg.sprite.Sprite):
     def move_controller(self, valeur):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
-        test = not self.game.collision(self, self.game.all_objects)
+        test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if not self.vals["dashing"][self.number]:
             if test or (not test and self.rect.y < self.game.object.rect.y):
@@ -152,7 +152,6 @@ class Fighter(pg.sprite.Sprite):
     def jump(self):
         '''Fonction saut'''
         if self.vals["jumping"]:
-            print('hel')
             # Vérfie si ale perso est inférieur à la hauteur de saut mx
             if self.vals['current_height'] <= self.vals['max_height']:
                 # Vérifie si le perso n'a pas déjà sauté deux fois
@@ -175,7 +174,7 @@ class Fighter(pg.sprite.Sprite):
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
-        test = not self.game.collision(self, self.game.all_objects)
+        test = not self.game.collision()
         size_max = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
         if not test and self.rect.y < self.vals['ground']:
@@ -194,6 +193,7 @@ class Fighter(pg.sprite.Sprite):
                 self.vals['jumps'] = 0
                 # Réaffecte à zéro la hauteur actuelle
                 self.vals['current_height'] = 0
+                self.vals["jumping"] = True
 
     # Gestion de l'animation/affichage du joueur
 
@@ -266,7 +266,7 @@ class Fighter(pg.sprite.Sprite):
         préssées si il y a une collision.
         Tant qu'il y a moins de 10 éléments dans le tableau on en rajoute.
         """
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             if len(self.vals['tab']) < 4:
                 self.vals['tab'].append(event.key)
                 print(self.vals['tab'])
@@ -302,7 +302,7 @@ class Fighter(pg.sprite.Sprite):
             self.game.strike_collision()
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'attack'
-            if self.game.collision(self, self.game.all_objects):
+            if self.game.collision():
                 if len(self.vals['tab']) < 4:
                     self.vals['tab'].append(117)
                     print(self.vals['tab'])
@@ -376,10 +376,10 @@ class Fighter(pg.sprite.Sprite):
     def attack_up(self, choice):
         '''Attaque en l'air'''
         if choice[pg.K_UP]:
-            if self.game.collision(self, self.game.all_objects):
+            if self.game.collision():
                 self.game.elms["side"][self.number] = 'up'
                 self.game.object.rect.y = 250
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             self.vals['fall'] = False
             if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.elms["side"][self.number] = 'impact'
@@ -391,20 +391,20 @@ class Fighter(pg.sprite.Sprite):
         Attaque vers le bas
         """
         if choice[pg.K_DOWN] and (
-                self.game.collision(self, self.game.all_objects)):
+                self.game.collision()):
             self.game.elms["side"][self.number] = 'down'
             while self.game.object.rect.y <= self.settings['size_max']:
                 self.game.object.rect.y += 1
 
     def attack_down_controller(self):
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             self.game.elms["side"][self.number] = 'down'
             while self.game.object.rect.y <= self.settings['size_max']:
                 self.game.object.rect.y += 1
 
     def damages(self):
         '''Fonction qui gère les dommages'''
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             if not self.vals['attacked']:
                 self.vals['health'] -= 1
             # pass
@@ -422,7 +422,7 @@ class Fighter(pg.sprite.Sprite):
         '''Fonction qui actionne une esquive,
         le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             # On vérifie le nombre de tentatives autorisées
             if self.vals['nbr_vanish'] > 0 and event.key == pg.K_e:
                 # Relance l'animation à zéro
@@ -451,7 +451,7 @@ class Fighter(pg.sprite.Sprite):
         '''Fonction qui actionne une esquive,
         le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
-        if self.game.collision(self, self.game.all_objects):
+        if self.game.collision():
             # On vérifie le nombre de tentatives autorisées
             if self.vals['nbr_vanish'] > 0:
                 # Relance l'animation à zéro
@@ -479,7 +479,7 @@ class Fighter(pg.sprite.Sprite):
         EFfectue le dash
         """
         if self.vals["dashing"][self.number]:
-            if not self.game.collision(self, self.game.all_objects):
+            if not self.game.collision():
                 if self.game.elms["right"][self.number]:
                     self.game.elms["side"][self.number] = "dash"
                     if self.rect.x < self.vals["surface_width"] - 200:
