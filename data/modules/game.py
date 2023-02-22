@@ -82,7 +82,7 @@ class Jeu:
     def handle_input_player2(self, choice):
         """Saisie clavier pour le perso 2"""
         self.player_2.vals["pause"] = True
-        print(self.elms['right'][self.player_0.number])
+        # print(self.elms['right'][self.player_0.number])
         if choice[pg.K_RIGHT]:
             self.elms['right'][self.player_2.number] = True
             self.player_2.move()
