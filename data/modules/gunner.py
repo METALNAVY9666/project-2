@@ -231,7 +231,10 @@ class Gunner():
                 # si le joueur appuie sur une touche du pavé numérique
                 # alors renvoyer le code depuis un dictionnnaire
                 # car pygame ne prend pas en compte le numpad
-                pressed.append([key, choice[NUMPAD[keys[key]]]])
+                try:
+                    pressed.append([key, choice[NUMPAD[keys[key]]]])
+                except KeyError:
+                    print(f"Problème de touche ({keys[key]})")
         
         if not pause:
             sprite = GFX["kim"]["wait"]

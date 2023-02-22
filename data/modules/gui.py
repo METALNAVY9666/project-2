@@ -238,7 +238,15 @@ class SettingsMenu:
 
         new_key = keyboard.read_key()
         settings = read_settings()
-        settings["keys"][player][key] = new_key
+        try:
+            if int(new_key) in range(10):
+                new_key = "kp_" + new_key
+        except ValueError:
+            pass
+        try:
+            settings["keys"][player][key] = settings["trad"][new_key]
+        except KeyError:
+            settings["keys"][player][key] = new_key
         write_settings(settings)
 
     def update_keyboard(self):
@@ -254,7 +262,7 @@ class SettingsMenu:
 
         player_ind = 0
         for player in settings["keys"]:
-            texture = GFX["paladins"].render(f"Joueur {player_ind+1}", True, (0, 0, 0))
+            texture = GFX["paladins"].render(f"Joueur {player_ind+1}", True, (37, 150, 190))
             texture = self.resize(texture, (dims[0] // 5, dims[1] // 10))
             temp_pos = pos * 1
             rects.append(self.blit(texture, temp_pos))
