@@ -1,6 +1,6 @@
 """contient la classe d'un joueur"""
 from data.modules.texture_loader import GFX
-from data.modules.sound_loader import SFX
+from data.modules.audio import SFX
 from data.modules.keyboard import NUMPAD
 from data.modules.settings import read_settings
 
@@ -94,8 +94,7 @@ class Gunner():
         if animation == "shoot":
             if cooldown["barrett"] < 1:
                 cooldown["barrett"] = 3000
-                print(animation)
-                SFX[animation].play()
+                SFX["kim"]["shoot"].play()
                 side = self.physics["side"]
                 pos = self.physics["pos"]
                 bullet = Bullet(self.pkg, "barrett", side, pos)
