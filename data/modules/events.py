@@ -1,5 +1,6 @@
 """contient la classe permettant de créer des évènements aléatoires"""
 from random import randint
+from data.modules.audio import SFX
 
 
 class AE86:
@@ -68,7 +69,8 @@ class Countdown:
         ]
         for ind in range(len(counts)-1):
             if counts[ind][0] == clock:
-                self.pkg["mixer"].Sound(self.sound(counts[ind][1])).play()
+                sound = counts[ind][1]
+                SFX["level"][sound].play()
             if counts[ind][0] < clock < counts[ind+1][0]:
                 return "ctn", counts[ind][1]
         if clock > counts[-1][0]:
@@ -96,8 +98,7 @@ class End:
         pos = (width//2, height//2)
         pos = txt.get_rect(center=pos)
         if self.lock:
-            PATH = f"data/sfx/events/wins/win_{player}.mp3"
-            self.pkg["mixer"].Sound(PATH).play()
+            SFX["events"][f"win_{player}"].play()
             self.lock = False
         return self.pkg["surface"].blit(txt, pos)
 

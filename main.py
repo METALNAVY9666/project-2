@@ -34,7 +34,7 @@ pygame.display.set_icon(icon)
 y
 WIN = True
 
-level = read_levels()["highway"]
+level = read_levels()["tenkaichi_budokai"]
 
 current_map = BaseLevel(pack_pygame, level, game_settings)
 fps = FPS(pack_pygame)
