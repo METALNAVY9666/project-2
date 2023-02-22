@@ -123,7 +123,6 @@ class Fighter(pg.sprite.Sprite):
             if test or (not test and self.rect.y < self.game.object.rect.y):
                 if (not self.game.elms["right"][self.number] and
                     self.rect.x > 5):
-                    # self.game.elms["right"][self.number] = False
                     self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
                     # On change l'image du joueur
@@ -317,7 +316,7 @@ class Fighter(pg.sprite.Sprite):
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'impact'
-            if self.game.collision(self, self.game.all_objects):
+            if self.game.collision():
                 if len(self.vals['tab']) < 4:
                     self.vals['tab'].append(121)
                     print(self.vals['tab'])

@@ -1,7 +1,7 @@
 """stocke toutes les textures afin de ne pas faire beuger pygame"""
 from os import listdir
 import pygame as pg
-import numpy
+#import numpy
 from data.modules.settings import read_settings, read_levels
 
 
