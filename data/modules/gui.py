@@ -1,5 +1,5 @@
 """contient les fonctions permettant d'affucher les menus"""
-from data.modules.texture_loader import GFX
+from data.modules.texture_loader import GFX, grayscale
 from data.modules.audio import SFX
 from data.modules.settings import read_settings, write_settings
 from tkinter import Tk, Button, Entry, Label
@@ -21,11 +21,10 @@ def check(pkg, rect, old_click, onclick, args):
     if rect.collidepoint(mouse_pos):
         if pressed:
             old_click = True
-        else: 
+        else:
             if old_click:
-                print("cliqué")
                 onclick(*args)
-                old_click = False 
+                old_click = False
     else:
         if old_click:
             old_click = False
@@ -151,12 +150,12 @@ class SettingsMenu:
         if rect.collidepoint(mouse_pos):
             if pressed:
                 self.old_pressed_buttons[name] = True
-            else: 
+            else:
                 if self.old_pressed_buttons[name]:
                     self.sub_menu = name
                     SFX["ui"]["click"].play()
                     self.button_action(name)
-                    self.old_pressed_buttons[name] = False 
+                    self.old_pressed_buttons[name] = False
         else:
             if self.old_pressed_buttons[name]:
                 self.old_pressed_buttons[name] = False
@@ -180,7 +179,7 @@ class SettingsMenu:
     def update_audio(self):
         """met à jour le menu audio"""
         rects = []
-        
+
         dims = self.pkg["dimensions"]
         space = dims[1] // 64 + dims[1] // 10
         pos = [dims[0] // 64, dims[1] // 64]
@@ -196,7 +195,7 @@ class SettingsMenu:
     def update_screen(self):
         """met à jour le menu écran"""
         rects = []
-        
+
         dims = self.pkg["dimensions"]
         space = dims[1] // 64 + dims[1] // 10
         pos = [dims[0] // 64, dims[1] // 64]
@@ -223,9 +222,24 @@ class SettingsMenu:
         """renvoie une image redimensionnée"""
         return self.pkg["transform"].scale(img, size)
 
-    def change_key(key):
+    def change_key(self, player, key):
         """change la touche appuyée"""
-        print(keyboard.read_key())
+        SFX["ui"]["click"].play()
+        dims = self.pkg["dimensions"] * 1
+        texture = GFX["paladins"].render("Appuyez sur une touche", True, (0, 0, 0))
+        size = [dims[0] // 2, dims[1] // 5]
+        texture = self.resize(texture, size)
+        rect = texture.get_rect()
+        pos = list(rect.center)
+        pos[0] += dims[0] // 5
+        pos[1] += dims[1] // 3
+        rect = self.blit(texture, pos)
+        self.pkg["display"].update(rect)
+
+        new_key = keyboard.read_key()
+        settings = read_settings()
+        settings["keys"][player][key] = new_key
+        write_settings(settings)
 
     def update_keyboard(self):
         """met à jour le sous-menu clavier"""
@@ -241,6 +255,7 @@ class SettingsMenu:
         player_ind = 0
         for player in settings["keys"]:
             texture = GFX["paladins"].render(f"Joueur {player_ind+1}", True, (0, 0, 0))
+            texture = self.resize(texture, (dims[0] // 5, dims[1] // 10))
             temp_pos = pos * 1
             rects.append(self.blit(texture, temp_pos))
             pos[1] += space
@@ -248,9 +263,10 @@ class SettingsMenu:
                 subrects = []
                 button_rect = self.blit(GFX["btn"]["key"], pos)
                 old = self.old_pressed_buttons["keys"][player_ind][key]
-                args = [key]
+                args = [player_ind, key]
                 func = self.change_key
                 old = check(self.pkg, button_rect, old, func, args)
+                self.old_pressed_buttons["keys"][player_ind][key] = old
                 subrects.append(button_rect)
                 new_pos = pos * 1
                 for ind in (0, 1):
@@ -268,7 +284,7 @@ class SettingsMenu:
             pos[0] += dims[0] // 4
             player_ind += 1
         return rects
-            
+
     def askint(self, category, setting, mini, maxi):
         """modifie le paramètre demandé"""
         def yes():
@@ -289,7 +305,7 @@ class SettingsMenu:
         def cancel():
             """ne modifie pas les paramètres"""
             root.destroy()
-        
+
         SFX["ui"]["click"].play()
 
         root = Tk()
@@ -336,7 +352,7 @@ class SettingsMenu:
             settings[category][setting] = get_bool()
             write_settings(settings)
             root.destroy()
-        
+
         SFX["ui"]["click"].play()
 
         root = Tk()

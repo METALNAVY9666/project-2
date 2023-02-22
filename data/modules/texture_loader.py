@@ -1,7 +1,9 @@
 """stocke toutes les textures afin de ne pas faire beuger pygame"""
 from os import listdir
 import pygame as pg
+import numpy
 from data.modules.settings import read_settings, read_levels
+
 
 
 def load_image(filepath=str, dimensions=None):
@@ -77,6 +79,12 @@ def sprite_tab(name, position):
         tab[ind].convert_alpha()
     return tab
 
+def grayscale(img):
+    """renvoie l'image en noir et blanc"""
+    arr = pg.surfarray.array3d(img)
+    avgs = [[(r*0.298 + g*0.587 + b*0.114) for (r,g,b) in col] for col in arr]
+    arr = numpy.array([[[avg,avg,avg] for avg in col] for col in avgs])
+    return pg.surfarray.make_surface(arr)
 
 levels = read_levels()
 prop = read_settings()
