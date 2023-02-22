@@ -94,12 +94,14 @@ class Gunner():
         if animation == "shoot":
             if cooldown["barrett"] < 1:
                 cooldown["barrett"] = 3000
+                print(animation)
                 SFX[animation].play()
                 side = self.physics["side"]
                 pos = self.physics["pos"]
                 bullet = Bullet(self.pkg, "barrett", side, pos)
                 self.player["bullets"].append(bullet)
                 sprite = GFX["kim"]["sneak"]
+                self.physics["pos"][0] -= 32 * side
             elif cooldown["barrett"] >= 2500:
                 sprite = GFX["kim"]["sneak"]
             else:
@@ -274,27 +276,31 @@ class Gunner():
 class Bullet:
     """classe pour la balle du joueur"""
     def __init__(self, pkg, texture, side, pos):
+        dims = pkg["dimensions"]
         self.pkg = pkg
         self.pos = pos * 1
-        if side == 1:
-            self.texutre = GFX["bullets"][texture]
+        self.textures = [GFX["bullets"][texture], GFX["nuzzle"]]
+        self.origin = pos * 1
+        if side == -1:
+            for ind in range(len(self.textures)):
+                self.textures[ind] = self.flip(self.textures[ind])
         else:
-            self.texutre = self.flip(GFX["bullets"][texture])
+            self.origin[0] += dims[0] // 18
+        
         self.side = side
         self.out = False
-        vertical = self.pkg["dimensions"][1]
-        self.pos[1] += vertical//36
+        self.life = 0
+        self.speed = self.pkg["dimensions"][0] // 43
+        self.pos[1] += self.pkg["dimensions"][1] // 36
     
     def flip(self, sprite):
         """renvoie le sprite retourné"""
         image = self.pkg["transform"].flip(sprite, True, False)
         return image.convert_alpha()
 
-    def blit(self):
+    def blit(self, texture, pos):
         """affiche sur la surface la texture"""
         blit_texture = self.pkg["surface"].blit
-        texture = self.texutre
-        pos = self.pos
         rect = blit_texture(texture, pos)
         return rect
 
@@ -309,14 +315,24 @@ class Bullet:
                 player.player["hp"] -= 25
             self.out = True
 
+    def nuzzle(self):
+        """affiche une explosion de tir"""
+        self.life += 1
+        dims = self.pkg["dimensions"]
+        pos = self.origin * 1
+        pos[1] += dims[1]//36
+        if self.life <= 15:
+            return self.blit(self.textures[1], pos)
+
     def update(self, pause, other):
         """met à jour la balle"""
         if self.pos[0] > -720 and self.pos[0] < 7680:
             if not pause:
-                self.pos[0] += 30 * self.side
-                bullet_rect = self.blit()
+                dims = self.pkg["dimensions"]
+                self.pos[0] += self.speed * self.side
+                bullet_rect = self.blit(self.textures[0], self.pos)
                 self.check_player(bullet_rect, other)
-                return bullet_rect
+                return bullet_rect, self.nuzzle()
         else:
             self.out = True
         

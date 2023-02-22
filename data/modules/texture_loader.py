@@ -116,14 +116,14 @@ GFX["ae86"] = load_image(EVENTS_PATH + "trueno_drift/ae86", (X // 6, Y // 6))
 GFX["ae86"].convert_alpha()
 
 # chargement des effets visuels
-GFX["nuzzle"] = load_image(EFFECTS_PATH + "nuzzle", (X // 12, Y // 12))
+GFX["nuzzle"] = load_image(EFFECTS_PATH + "nuzzle", (X // 54, Y // 54))
 GFX["nuzzle"].convert_alpha()
 
 GFX["bullets"] = {}
 GFX["bullets"]["makarov"] = load_image(EFFECTS_PATH + "bullet_makarov", (X // 40, Y // 40))
 GFX["bullets"]["makarov"].convert_alpha()
 
-GFX["bullets"]["barrett"] = load_image(EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 72))
+GFX["bullets"]["barrett"] = load_image(EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 144))
 GFX["bullets"]["barrett"].convert_alpha()
 
 # chargement des niveaux

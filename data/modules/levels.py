@@ -109,13 +109,21 @@ class BaseLevel:
             pos = [(width // 2) - (width // 3), height // 1.5]
             return surface.blit(GFX["platform"], pos)
 
+    def is_list_or_tuple(self, object):
+        """renvoie True si l'objet est une liste ou un tuple"""
+        return str(type(object)).split("'")[1] in ["list", "tuple"]
+
     def clear_rect_list(self):
         """nettoie la liste des rects"""
         rects = []
         for rect in self.update_list:
-            if "list" in str(type(rect)):
+            if self.is_list_or_tuple(rect):
                 for subrect in rect:
-                    rects.append(subrect)
+                    if self.is_list_or_tuple(subrect):
+                        for subsubrect in subrect:
+                            rects.append(subsubrect)
+                    else:
+                        rects.append(subrect)
             else:
                 rects.append(rect)
         self.update_list = rects

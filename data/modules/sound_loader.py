@@ -10,3 +10,5 @@ PATH = "data/sfx/kim/"
 for file in listdir(PATH):
     name = file[0:-4]
     SFX[name] = pygame.mixer.Sound(PATH + file)
+    if name == "shoot":
+        SFX[name].set_volume(0.25)

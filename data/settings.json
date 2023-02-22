@@ -6,7 +6,7 @@
     "display": {
         "horizontal": 1280,
         "vertical": 720,
-        "fullscreen": true,
+        "fullscreen": false,
         "FPS": 60
     },
     "keys": [
