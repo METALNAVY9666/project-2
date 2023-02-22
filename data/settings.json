@@ -26,5 +26,8 @@
             "l_attack": "kp_1",
             "h_attack": "kp_2"
         }
+    ],
+    "commentaires":[
+        "kp_1 pour la touche 1 du pavé numérique etc"
     ]
 }

@@ -94,6 +94,7 @@ LEVELS_PATH = "data/gfx/levels/"
 EVENTS_PATH = "data/gfx/events/"
 BG_PATH = "data/gfx/images/"
 EFFECTS_PATH = "data/gfx/effects/"
+BUTTONS_PATH = UI_PATH + "buttons/"
 
 # convert permet de blit les images plus rapidement
 # et convert_alpha fait la même chose pour les images transparentes
@@ -105,9 +106,9 @@ GFX["loading"] = load_image(UI_PATH + "loading", win_scale).convert()
 loading_rect = surface.blit(GFX["loading"], (0, 0))
 pg.display.update(loading_rect)
 
-# chargement des texures du menu pause
+# chargement des boutons et du menu pause.
 GFX["blur"] = load_image(UI_PATH + "blur", win_scale).convert_alpha()
-GFX["exit"] = load_image(UI_PATH + "exit_btn", (X // 8, Y // 10)).convert()
+GFX["btn"] = load_dir(BUTTONS_PATH, (X // 8, Y // 10))
 
 # chargement des évènements
 for number in ["one", "two", "three", "go"]:

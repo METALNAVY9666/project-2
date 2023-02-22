@@ -308,5 +308,5 @@ class Jeu:
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
         self.update_players(screen)
-        print(self.elms["side"][self.player_0.number])
+        # print(self.elms["side"][self.player_0.number])
         return rects, self.player_0.update_pv()
