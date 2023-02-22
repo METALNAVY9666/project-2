@@ -58,14 +58,15 @@ class Special(pg.sprite.Sprite):
         """
         Animations + Transfo de goku
         """
-        if self.game.player_0.vals["percent_ult"] >= 130:
-            if self.game.name == "goku":
-                if self.game.player_0.vals["health"] <= 0:
-                    self.game.name = "revive"
+        for element in self.game.players:
+            if element.game.name[element.number] == "goku":
+                element.vals["percent_ult"] = 130
+                if element.vals["health"] <= 0:
+                    self.game.name[element.number] = "revive"
                     self.animate.fade(screen.get_width(),
-                                      screen.get_height(), screen)
+                                        screen.get_height(), screen)
                     #self.game.player_0.rect.y = 200
                     pg.time.wait(1000)
-                    self.game.elms["side"] = "transfo"
-                    self.game.player_0.vals["health"] = 100
-                    self.game.player_0.vals["percent_ult"] = 0
+                    self.game.elms["side"][element.number] = "transfo"
+                    element.vals["health"] = 100
+                    element.vals["percent_ult"] = 130

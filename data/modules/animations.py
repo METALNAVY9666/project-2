@@ -10,8 +10,9 @@ class Animate():
 
     def __init__(self, spe):
         self.spe = spe
-        self.vals = {"image": GFX["skill_box"],
-                     "face": GFX[self.spe.game.name]}
+        for element in self.spe.game.players:
+            self.vals = {"image": GFX["skill_box"],
+                         "face": GFX[self.spe.game.name[element.number]]}
         self.vals["rect"] = self.vals["image"].get_rect()
         self.vals["rect"].x = 0
         self.vals["rect"].y = 0
@@ -54,7 +55,11 @@ class Animate():
                   "kim": "Mouais mouais"}
         self.vals["font"] = pg.font.Font(
             'test_olivier/gfx/fonts/04B_19__.TTF', 30)
-        txt = self.vals["font"].render(
-            quotes[self.spe.game.name], 0, (244, 49, 14))
+        for element in self.spe.game.players:
+            dead = 'irj'
+            if element.vals["health"] <= 0:
+                dead = element
+                txt = self.vals["font"].render(
+                    quotes[self.spe.game.name[dead.number]], 0, (244, 49, 14))
         txt_width = screen.get_width() - (txt.get_width()) * 2
         return screen.blit(txt, (txt_width, height))
