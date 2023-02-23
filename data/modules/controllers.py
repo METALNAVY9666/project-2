@@ -1,5 +1,6 @@
 """ Modules qui gère les manettes. """
 import pygame as pg
+import pygame._sdl2
 from pygame._sdl2.controller import Controller
 from pygame.locals import *
 pg._sdl2.controller.init()
@@ -10,7 +11,7 @@ pg.init()
 def manage_joysticks():
     return [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
 
-def manage_controller():
+def manage_controller(contro):
     """
     Permet de savoir combien et quelles manettes sont utilisées.
     """
@@ -19,10 +20,10 @@ def manage_controller():
     # Permet de savoir le nombre de manettes utilisés
     if joysticks != []:
         for joystick in joysticks:
-            controller = Controller.from_joystick(joystick)
-        return controller
+            contro.append(Controller.from_joystick(joystick))
+        return contro
     return None
-
+print(manage_controller([]))
 
 def removed_and_added_controller():
     """

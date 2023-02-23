@@ -64,13 +64,13 @@ def reset_joysticks():
 
 
 joysticks = reset_joysticks()
-print(joysticks)
-print(joysticks[0].get_id())
 
 debug_messages = []
 
 while True:
     for event in pygame.event.get():
+        if 'joy' in event.dict:
+            print(event.dict['joy'])
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
             sys.exit()

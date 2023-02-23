@@ -255,11 +255,11 @@ class Fighter(pg.sprite.Sprite):
         self.single_tap(event, choice)
         self.combo()
 
-    def attack_controller(self, choice):
+    def attack_controller(self, choice, contro):
         '''
         Cette fonction permet de gérer l'attaque d'un perso à la manette.
         '''
-        self.single_tap_controller(choice)
+        self.single_tap_controller(choice, contro)
         self.combo()
 
     def combo_tab(self, event):
@@ -298,9 +298,8 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_down(choice)
 
     # Docstrings a ajouter
-    def single_tap_controller(self, choice):
-        controller = manage_controller()
-        if controller.get_button(1):
+    def single_tap_controller(self, choice, contro):
+        if contro.get_button(1):
             self.game.strike_collision()
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'attack'
@@ -314,7 +313,7 @@ class Fighter(pg.sprite.Sprite):
                 self.vals["tab"] = []
             return self.vals['tab']
 
-        elif controller.get_button(2):
+        elif contro.get_button(2):
             self.game.strike_collision()
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0

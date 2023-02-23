@@ -128,7 +128,7 @@ class BaseLevel:
                 rects.append(rect)
         self.update_list = rects
 
-    def update(self, delta, actions):
+    def update(self, delta, actions, contro):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
         # met à jour les touches
@@ -143,7 +143,7 @@ class BaseLevel:
         surface = self.pkg["surface"]
         pause = self.cls["pause"].bool
         busy = self.cls["busy"]
-        game = self.cls["game"].update(surface, delta, actions, pause, busy)
+        game = self.cls["game"].update(surface, delta, actions, pause, busy, contro)
         self.update_list += game[0]
         self.update_list.append(self.cls["game"].update_objects(surface))
 
