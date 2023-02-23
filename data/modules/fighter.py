@@ -66,9 +66,12 @@ class Fighter(pg.sprite.Sprite):
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
+        ennemy = self.game.player_2
+        if self.number == 2:
+            ennemy = self.game.player_0
         test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
-        if test or (not test and self.rect.y < self.game.object.rect.y):
+        if test or (not test and self.rect.y < ennemy.rect.y):
             # Déplacement vers la gauche
             if self.game.elms["right"][self.number] and (
                     self.rect.x < self.vals['surface_width'] - 100):
@@ -90,14 +93,14 @@ class Fighter(pg.sprite.Sprite):
                 else:
                     self.game.elms["side"][self.number] = 'run'
         if not test:
-            self.move_collide()
+            self.move_collide(ennemy)
 
-    def move_collide(self):
+    def move_collide(self, ennemy):
         """
         Mouvement en cas de collision(s)
         """
         if (self.game.elms["right"][self.number] and
-                self.game.object.rect.x < self.rect.x):
+                ennemy.rect.x < self.rect.x):
             self.rect.x += 6
             # On change l'image du joueur
             if self.game.name[self.number] in ['goku', 'vegeta']:
@@ -106,7 +109,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.game.elms["side"][self.number] = 'run'
         elif not self.game.elms["right"][self.number] and (
-                self.game.object.rect.x > self.rect.x):
+                ennemy.rect.x > self.rect.x):
             self.rect.x -= 6
             if self.game.name[self.number] in ['goku', 'vegeta']:
                 self.change_animation('left')
