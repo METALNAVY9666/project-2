@@ -3,6 +3,9 @@ import pygame
 from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
+pygame._sdl2.controller.init()
+pygame.joystick.init()
+
 
 game_settings = read_settings()
 x = game_settings["display"]["horizontal"]
@@ -46,6 +49,7 @@ while WIN:
     current_map.delta = dlt
     # Récupère les événements courants
     actions = pygame.event.get()
+    print(actions)
     # vérifie les évènements
     for event in actions:
         if event.type == pygame.QUIT:

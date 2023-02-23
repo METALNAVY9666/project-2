@@ -76,12 +76,10 @@ while True:
             sys.exit()
         if event.type in [pygame.JOYDEVICEADDED, pygame.JOYDEVICEREMOVED]:
             joysticks = reset_joysticks()
-    
     window.fill('white')
     #print(joysticks[0].get_id())
     for joystick in joysticks:
         controller = Controller.from_joystick(joystick)
-        print(controller)
         js = [joystick.get_guid(), joystick.get_name()]
         
         for button in range(joystick.get_numbuttons()):

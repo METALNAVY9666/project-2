@@ -155,6 +155,9 @@ class Jeu:
 
                     elif event.type == JOYBUTTONDOWN and event.button == 2:
                         self.player_0.attack_controller(contro.get_button(2))
+                    
+                    elif event.type == JOYBUTTONDOWN and event.button == 7:
+                        self.player_0.charge()
 
                 if contro.get_button(10):
                     self.player_0.vanish_controller()
@@ -309,6 +312,7 @@ class Jeu:
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
+        print(pg.joystick.get_count())
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         rects.append(self.player_2.blit_sprite(screen, dlt, pause))
@@ -319,8 +323,11 @@ class Jeu:
         self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
-        if manage_controller() != None:
-            self.handle_input_controller(actions, pause, busy)
+        for event in actions:
+            if 'joy' in event.dict:
+                if event.dict['joy'] == 1:
+                    if manage_controller() != None:
+                        self.handle_input_controller(actions, pause, busy)
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         # self.handle_input_controller(actions)
