@@ -116,7 +116,7 @@ class Jeu:
                 self.player_0.block()
             # Gère les mouvements à la manette
             elif contro[0].get_axis(0) // 3500 < -5 or (
-                contro[0].get_axis(0)  // 3500 > 5):
+                    contro[0].get_axis(0) // 3500 > 5):
                 if contro[0].get_axis(0) > 0:
                     choice[self.get_code("d")]
                     self.player_0.move()
@@ -135,14 +135,16 @@ class Jeu:
                         event.type == JOYBUTTONDOWN and event.button == 1):
                     self.player_0.dash_attack_up_controller()
                 elif (contro[0].get_axis(1) / 3500 > 5 and
-                    event.type == JOYBUTTONDOWN and event.button == 1):
+                      event.type == JOYBUTTONDOWN and event.button == 1):
                     print('sol')
                     self.player_0.attack_down_controller()
                 elif event.type == JOYBUTTONDOWN and event.button == 1:
-                    self.player_0.attack_controller(contro[0].get_button(1), contro[0])
+                    self.player_0.attack_controller(
+                        contro[0].get_button(1), contro[0])
                 elif event.type == JOYBUTTONDOWN and event.button == 2:
-                    self.player_0.attack_controller(contro[0].get_button(2), contro[0])
-                
+                    self.player_0.attack_controller(
+                        contro[0].get_button(2), contro[0])
+
                 elif event.type == JOYBUTTONDOWN and event.button == 7:
                     self.player_0.charge()
             if contro[0].get_button(10):
@@ -179,10 +181,10 @@ class Jeu:
         for element in self.players:
             if element.number == 0:
                 return pg.sprite.spritecollide(element, self.all_players_2,
-                                       False, pg.sprite.collide_mask)
+                                               False, pg.sprite.collide_mask)
             elif element.number == 2:
                 return pg.sprite.spritecollide(element, self.all_players,
-                                       False, pg.sprite.collide_mask)
+                                               False, pg.sprite.collide_mask)
 
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
@@ -198,7 +200,7 @@ class Jeu:
             for objects in self.collision():
                 objects.damages()
                 # Change l'animation en cas d'attaque
-                #self.object.image = GFX['hit']
+                # self.object.image = GFX['hit']
                 print('EHo')
 
     def update_stats(self):
@@ -232,31 +234,43 @@ class Jeu:
         width = self.elms["pkg"]["surface"].get_width()
         height = self.elms["pkg"]["surface"].get_height()
         if not busy:
-            # Dessin de la barre de vie
+            # Dessin de la barre de vie du perso 1
             pg.draw.rect(surface, (25, 70, 17), [
                 width - 400, height // 15,
                 self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (75, 198, 9), [
-                width - 400, height // 15, self.player_0.vals['health'], 15])
-            # Barre de vie de l'objet
-            pg.draw.rect(surface, (140, 138, 137), [
-                width // 8, height // 15, self.object.stats['max_health'], 15])
-            pg.draw.rect(surface, (1, 88, 33), [
-                width // 8, height // 15, self.object.stats['health'], 15])
-            # Nombre d'esquive possible
+                width - 400, height // 15,
+                self.players[0].vals['health'], 15])
+            # Nombre d'esquive possible perso 1
             pg.draw.rect(surface, (0, 91, 136), [
                          width - 400, height // 10, 4 * 30, 15])
             pg.draw.rect(surface, (159, 212, 239), [
                 width - 400, height // 10,
-                self.player_0.vals['nbr_vanish'] * 30, 15])
+                self.players[0].vals['nbr_vanish'] * 30, 15])
+            # Barre de vie du perso 2
+            pg.draw.rect(surface, (25, 70, 17), [
+                width // 8, height // 15,
+                self.players[1].vals['max_health'], 15])
+            pg.draw.rect(surface, (75, 198, 9), [
+                width // 8, height // 15,
+                self.players[1].vals['health'], 15])
+            # Nombre esquive perso 2
+            pg.draw.rect(surface, (0, 91, 136), [
+                         width // 8, height // 10, 4 * 30, 15])
+            pg.draw.rect(surface, (159, 212, 239), [
+                width // 8, height // 10,
+                self.players[1].vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
-            for element in self.players:
-                if self.name[element.number] in ['luffy', 'gear4', 'goku', 'revive']:
-                    pg.draw.rect(surface, (64, 2, 97), [
-                        width - 400, height // 7, 130, 15])
-                    pg.draw.rect(surface, (168, 30, 241), [
-                        width - 400, height // 7,
-                        self.player_0.vals['percent_ult'], 15])
+            pg.draw.rect(surface, (64, 2, 97), [
+                width - 400, height // 7, 130, 15])
+            pg.draw.rect(surface, (168, 30, 241), [
+                width - 400, height // 7,
+                self.player_0.vals['percent_ult'], 15])
+            pg.draw.rect(surface, (64, 2, 97), [
+                width // 8, height // 7, 130, 15])
+            pg.draw.rect(surface, (168, 30, 241), [
+                width // 8, height // 7,
+                self.player_2.vals['percent_ult'], 15])
 
     def update_header(self, screen, busy):
         """
@@ -288,7 +302,7 @@ class Jeu:
         """
         for element in self.players:
             element.gravity()
-            element.damages()
+            #element.damages()
             element.dash()
             element.combo()
             self.update_stats()
@@ -311,8 +325,8 @@ class Jeu:
         events = False
         for event in actions:
             if 'joy' in event.dict:
-                    if event.dict['joy'] == 0:
-                        events = True 
+                if event.dict['joy'] == 0:
+                    events = True
         if events:
             if contro != None:
                 print('la')
