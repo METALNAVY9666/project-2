@@ -71,7 +71,7 @@ class Fighter(pg.sprite.Sprite):
             ennemy = self.game.player_0
         test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
-        if test or (not test and self.rect.y < ennemy.rect.y):
+        if test or (not test and self.rect.y < ennemy.rect.y - 10):
             # Déplacement vers la gauche
             if self.game.elms["right"][self.number] and (
                     self.rect.x < self.vals['surface_width'] - 100):
@@ -121,11 +121,14 @@ class Fighter(pg.sprite.Sprite):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision()
+        ennemy = self.game.player_2
+        if self.number == 2:
+            ennemy = self.game.player_0
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if not self.vals["dashing"][self.number]:
-            if test or (not test and self.rect.y < self.game.object.rect.y):
+            if test or (not test and self.rect.y < ennemy.rect.y - 10):
                 if (not self.game.elms["right"][self.number] and
-                    self.rect.x > 5):
+                        self.rect.x > 5):
                     self.motion[0] = valeur / 3000
                     self.rect.x += self.motion[0]
                     # On change l'image du joueur
@@ -148,7 +151,7 @@ class Fighter(pg.sprite.Sprite):
                         self.game.elms["side"][self.number] = 'run'
 
         if not test and not self.vals["dashing"][self.number]:
-            self.move_collide()
+            self.move_collide(ennemy)
 
     # Saut du joueur
     def jump(self):
@@ -177,9 +180,8 @@ class Fighter(pg.sprite.Sprite):
     def gravity(self):
         '''Fonction qui simule une gravité'''
         test = not self.game.collision()
-        size_max = self.settings['dims'][1] - \
-            self.settings['dims'][1] // 12 - self.vals['ground']
-        if not test and self.rect.y < self.vals['ground']:
+        size_max = self.settings["size_max"]
+        if not test and self.rect.y <= self.vals["ground"]:
             self.vals['fall'] = False
         # Le joueur tombe tant qu'il n'est pas au sol
         if self.vals['fall']:
@@ -252,15 +254,21 @@ class Fighter(pg.sprite.Sprite):
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
-        self.single_tap(event, choice)
-        self.combo()
+        ennemy = self.game.player_0
+        if self.number == 0:
+            ennemy = self.game.player_2
+        self.single_tap(event, choice, ennemy)
+        self.combo(ennemy)
 
     def attack_controller(self, choice, contro):
         '''
         Cette fonction permet de gérer l'attaque d'un perso à la manette.
         '''
-        self.single_tap_controller(choice, contro)
-        self.combo()
+        ennemy = self.game.player_0
+        if self.number == 0:
+            ennemy = self.game.player_2
+        self.single_tap_controller(choice, contro, ennemy)
+        self.combo(ennemy)
 
     def combo_tab(self, event):
         """
@@ -278,7 +286,7 @@ class Fighter(pg.sprite.Sprite):
             self.vals["tab"] = []
         return self.vals['tab']
 
-    def single_tap(self, event, choice):
+    def single_tap(self, event, choice, ennemy):
         """
         Attaque normale de base avec y et u
         """
@@ -294,8 +302,8 @@ class Fighter(pg.sprite.Sprite):
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
             if event.key == pg.K_y:
-                self.attack_up(choice)
-                self.attack_down(choice)
+                self.attack_up(choice, ennemy)
+                self.attack_down(choice, ennemy)
 
     # Docstrings a ajouter
     def single_tap_controller(self, choice, contro):
@@ -365,50 +373,52 @@ class Fighter(pg.sprite.Sprite):
         else:
             self.rect.x -= 100
 
-    def combo(self):
+    def combo(self, ennemy):
         """
         Dégats du combo final
         """
         if self.vals['tab'] == [121, 121, 117, 117]:
             self.game.elms["side"][self.number] = 'spe'
-            self.game.object.rect.x -= 200
+            if self.game.elms["right"][self.number]:
+                ennemy.rect.x += 200
+            else:
+                ennemy.rect.x -= 200
             self.vals['tab'] = []
 
-    def attack_up(self, choice):
+    def attack_up(self, choice, ennemy):
         '''Attaque en l'air'''
         if choice[pg.K_UP]:
             if self.game.collision():
                 self.game.elms["side"][self.number] = 'up'
-                self.game.object.rect.y = 250
+                ennemy.rect.y = 250
         if self.game.collision():
             self.vals['fall'] = False
             if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.elms["side"][self.number] = 'impact'
                 self.vals['fall'] = False
-                self.game.object.rect.x -= 100
+                ennemy.rect.x -= 100
 
-    def attack_down(self, choice):
+    def attack_down(self, choice, ennemy):
         """
         Attaque vers le bas
         """
         if choice[pg.K_DOWN] and (
                 self.game.collision()):
             self.game.elms["side"][self.number] = 'down'
-            while self.game.object.rect.y <= self.settings['size_max']:
-                self.game.object.rect.y += 1
+            while ennemy.rect.y <= self.settings['size_max']:
+                ennemy.rect.y += 1
 
-    def attack_down_controller(self):
+    def attack_down_controller(self, ennemy):
         if self.game.collision():
             self.game.elms["side"][self.number] = 'down'
-            while self.game.object.rect.y <= self.settings['size_max']:
-                self.game.object.rect.y += 1
+            while ennemy.rect.y <= self.settings['size_max']:
+                ennemy.rect.y += 1
 
     def damages(self):
         '''Fonction qui gère les dommages'''
         if self.game.collision():
             if not self.vals['attacked']:
                 self.vals['health'] -= 1
-            # pass
 
     # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
@@ -471,9 +481,15 @@ class Fighter(pg.sprite.Sprite):
         """
         Autorise le dash avant
         """
-        if choice[pg.K_q] or choice[pg.K_d]:
-            if event.key == pg.K_s:
-                self.vals["dashing"][self.number] = True
+        if self.number == 0:
+            if choice[pg.K_q] or choice[pg.K_d]:
+                if event.key == pg.K_s:
+                    self.vals["dashing"][self.number] = True
+        elif self.number == 2:
+            if choice[self.game.get_code("left")] or (
+                choice[self.game.get_code("right")]):
+                if choice[self.game.get_code("down")]:
+                    self.vals["dashing"][self.number] = True
 
     def dash(self):
         """

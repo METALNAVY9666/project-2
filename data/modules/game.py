@@ -83,21 +83,21 @@ class Jeu:
         """Saisie clavier pour le perso 2"""
         self.player_2.vals["pause"] = True
         # print(self.elms['right'][self.player_0.number])
-        if choice[pg.K_RIGHT]:
+        if choice[self.get_code("right")]:
             self.elms['right'][self.player_2.number] = True
             self.player_2.move()
-            if choice[pg.K_UP]:
+            if choice[self.get_code("up")]:
                 self.player_2.jump()
-        elif choice[pg.K_LEFT]:
+        elif choice[self.get_code("left")]:
             self.elms['right'][self.player_2.number] = False
             self.player_2.move()
-            if choice[pg.K_UP]:
+            if choice[self.get_code("up")]:
                 self.player_2.jump()
-        elif choice[pg.K_UP]:
+        elif choice[self.get_code("up")]:
             self.player_2.jump()
-        elif choice[pg.K_DOWN]:
+        elif choice[self.get_code("down")]:
             self.player_2.block()
-        if choice[pg.K_DOWN] and choice[pg.K_UP]:
+        if choice[self.get_code("down")] and choice[self.get_code("up")]:
             self.player_2.charge()
 
     def handle_input_controller(self, actions, pause, busy, contro):
@@ -169,7 +169,9 @@ class Jeu:
                 # dash attack
                 self.player_0.dash_attack_up(choice, event)
                 self.player_0.is_dashing(choice, event)
-            if event.type == pg.KEYUP and self.elms["side"][self.player_0.number] == 'run':
+                self.player_2.is_dashing(choice, event)
+            if event.type == pg.KEYUP and (
+                self.elms["side"][self.player_0.number] == 'run'):
                 self.player_0.vals['nbr_sprite'] = 5
 
     def collision(self):
@@ -294,6 +296,13 @@ class Jeu:
             self.rect_update.append(screen.blit(
                 self.box["image"],
                 (screen.get_width() // 60, 0)))
+            # Visage
+            self.face2 = {"image": GFX[self.name[self.player_2.number]]}
+            self.face2["rect"] = self.face2["image"].get_rect()
+            self.face2["rect"].x = screen.get_width() // 20
+            self.face2["rect"].y = screen.get_height() // 20
+            self.rect_update.append(screen.blit(
+                self.face2["image"], (self.face2["rect"])))
         return self.rect_update
 
     def update_players(self, screen):
@@ -304,7 +313,6 @@ class Jeu:
             element.gravity()
             #element.damages()
             element.dash()
-            element.combo()
             self.update_stats()
             self.ulti.spe_goku(screen)
 
@@ -334,5 +342,4 @@ class Jeu:
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         self.update_players(screen)
-        # print(self.elms["side"][self.player_0.number])
         return rects, self.player_0.update_pv()

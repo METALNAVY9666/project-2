@@ -21,7 +21,7 @@
         "music": "data/sfx/music/tenkaichi_budokai/",
         "animated": false,
         "music_folder": true,
-        "drop": 6,
+        "drop": 0,
         "events": [],
         "ground_level": 25
     },
