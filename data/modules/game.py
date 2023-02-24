@@ -20,22 +20,29 @@ class Jeu:
     def __init__(self, name, pkg, prop):
         # On récupère le nom du perso choisi.
         self.name = name
-        self.elms = {'right': [False, True, True], 'fps': 60,
-                     'side': ["left", "left", "left"], 'is_playing': True,
+        self.elms = {'right': [False, True, True],
+                     'fps': 60,
+                     'side': ["left", "left", "left"],
+                     'is_playing': True,
                      'pkg': pkg, 'prop': prop}
-        # Génération de personnages
-        self.player_0 = Fighter(self, pkg, prop, 0)
-        self.player_1 = Gunner(pkg, prop, 1)
-        self.player_2 = Fighter(self, pkg, prop, 2)
-        self.players = [self.player_0, self.player_2]
+        self.init_players(pkg, prop)
+        self.init_group()
+
+    def init_players(self, pkg, prop):
+        if self.name[0] == "kim":
+            self.player_0 = Gunner(self, pkg, prop, 0)
+            self.player_1 = Fighter(self, pkg, prop, 1)
+        elif self.name[1] == "kim":
+            self.player_0 = Fighter(self, pkg, prop, 0)
+            self.player_1 = Gunner(self, pkg, prop, 1)
+        self.players = [self.player_0, self.player_1]
         self.ulti = Special(self)
-        # Génération d'un objet
         self.object = PunchingBall(self)
-        # Crée des groupes de sprites vide
-        self.all_players = pg.sprite.Group()
+
+    def init_group(self):
         self.all_objects = pg.sprite.Group()
-        self.all_players_2 = pg.sprite.Group()
-        # Ajout dans des groupes de sprites
+        self.all_players_0 = pg.sprite.Group()
+        self.all_players_1 = pg.sprite.Group()
         self.add_groups()
 
     def get_code(self, key):
@@ -47,9 +54,9 @@ class Jeu:
         En fonction de celles-ci, on effectue des opération spécifiques.
         La fonction get_pressed() récupère les touches préssées actuellement,
         et gère des actions en continu comme le fait d'avancer.'''
-        if not pause and not busy:
+        choice = pg.key.get_pressed()
+        if not pause and not busy and self.name[0] != "kim":
             # Récupère les touches préssées actuellement
-            choice = pg.key.get_pressed()
             self.player_0.vals['pause'] = True
             # Réaffecte l'image de l'objet
             self.object.image = GFX['punchingball']
@@ -78,28 +85,29 @@ class Jeu:
             self.ulti.spe_manager(screen, choice)
             # Actions qui nécessitent une boucle 'for'
             self.loop_input(actions)
-            self.handle_input_player2(choice)
+        self.handle_input_player2(choice, pause, busy)
 
-    def handle_input_player2(self, choice):
+    def handle_input_player2(self, choice, pause, busy):
         """Saisie clavier pour le perso 2"""
-        self.player_2.vals["pause"] = True
-        # print(self.elms['right'][self.player_0.number])
-        if choice[self.get_code("right")]:
-            self.elms['right'][self.player_2.number] = True
-            self.player_2.move()
-            if choice[self.get_code("up")]:
-                self.player_2.jump()
-        elif choice[self.get_code("left")]:
-            self.elms['right'][self.player_2.number] = False
-            self.player_2.move()
-            if choice[self.get_code("up")]:
-                self.player_2.jump()
-        elif choice[self.get_code("up")]:
-            self.player_2.jump()
-        elif choice[self.get_code("down")]:
-            self.player_2.block()
-        if choice[self.get_code("down")] and choice[self.get_code("up")]:
-            self.player_2.charge()
+        if not pause and not busy and self.name[1] != "kim":
+            self.player_1.vals["pause"] = True
+            # print(self.elms['right'][self.player_0.number])
+            if choice[self.get_code("right")]:
+                self.elms['right'][self.player_1.number] = True
+                self.player_1.move()
+                if choice[self.get_code("up")]:
+                    self.player_1.jump()
+            elif choice[self.get_code("left")]:
+                self.elms['right'][self.player_1.number] = False
+                self.player_1.move()
+                if choice[self.get_code("up")]:
+                    self.player_1.jump()
+            elif choice[self.get_code("up")]:
+                self.player_1.jump()
+            elif choice[self.get_code("down")]:
+                self.player_1.block()
+            if choice[self.get_code("down")] and choice[self.get_code("up")]:
+                self.player_1.charge()
 
     def handle_input_controller(self, actions, pause, busy, contro):
         """
@@ -162,14 +170,15 @@ class Jeu:
             if event.type == pg.KEYDOWN:
                 # Le perso tombe
                 for element in self.players:
-                    element.vals["fall"] = True
-                    element.attack(event, choice)
-                    element.move_manager(event)
-                    element.vanish(event)
-                    element.is_dashing(choice, event)
-                    element.dash_attack_up(choice, event)
+                    if self.name[element.number] != "kim":
+                        element.vals["fall"] = True
+                        element.attack(event, choice)
+                        element.move_manager(event)
+                        element.vanish(event)
+                        element.is_dashing(choice, event)
+                        element.dash_attack_up(choice, event)
             if event.type == pg.KEYUP and (
-                self.elms["side"][self.player_0.number] == 'run'):
+                    self.elms["side"][self.player_0.number] == 'run'):
                 self.player_0.vals['nbr_sprite'] = 5
 
     def collision(self):
@@ -180,10 +189,10 @@ class Jeu:
         # Vérifie si il y a collision ou non
         for element in self.players:
             if element.number == 0:
-                return pg.sprite.spritecollide(element, self.all_players_2,
+                return pg.sprite.spritecollide(element, self.all_players_1,
                                                False, pg.sprite.collide_mask)
-            elif element.number == 2:
-                return pg.sprite.spritecollide(element, self.all_players,
+            elif element.number == 1:
+                return pg.sprite.spritecollide(element, self.all_players_0,
                                                False, pg.sprite.collide_mask)
 
     def add_groups(self):
@@ -191,8 +200,8 @@ class Jeu:
         # Ajout de l'objet dans le groue de sprite de tout les objets
         self.all_objects.add(self.object)
         # Ajoute un joueur au groupe de sprite de tout les joueurs
-        self.all_players.add(self.player_0)
-        self.all_players_2.add(self.player_2)
+        self.all_players_0.add(self.player_0)
+        self.all_players_1.add(self.player_1)
 
     def strike_collision(self):
         '''Actionne l'attaque du personnage'''
@@ -201,7 +210,6 @@ class Jeu:
                 objects.damages()
                 # Change l'animation en cas d'attaque
                 # self.object.image = GFX['hit']
-                print('EHo')
 
     def update_stats(self):
         """
@@ -234,7 +242,11 @@ class Jeu:
         width = self.elms["pkg"]["surface"].get_width()
         height = self.elms["pkg"]["surface"].get_height()
         if not busy:
-            # Dessin de la barre de vie du perso 1
+            self.update_hp_player_0(surface, width, height)
+            self.update_hp_player_1(surface, width, height)
+
+    def update_hp_player_0(self, surface, width, height):
+        if self.name[0] != "kim":
             pg.draw.rect(surface, (25, 70, 17), [
                 width - 400, height // 15,
                 self.player_0.vals['max_health'], 15])
@@ -247,6 +259,14 @@ class Jeu:
             pg.draw.rect(surface, (159, 212, 239), [
                 width - 400, height // 10,
                 self.players[0].vals['nbr_vanish'] * 30, 15])
+            pg.draw.rect(surface, (64, 2, 97), [
+                width - 400, height // 7, 130, 15])
+            pg.draw.rect(surface, (168, 30, 241), [
+                width - 400, height // 7,
+                self.player_0.vals['percent_ult'], 15])
+
+    def update_hp_player_1(self, surface, width, height):
+        if self.name[1] != 'kim':
             # Barre de vie du perso 2
             pg.draw.rect(surface, (25, 70, 17), [
                 width // 8, height // 15,
@@ -262,15 +282,10 @@ class Jeu:
                 self.players[1].vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
             pg.draw.rect(surface, (64, 2, 97), [
-                width - 400, height // 7, 130, 15])
-            pg.draw.rect(surface, (168, 30, 241), [
-                width - 400, height // 7,
-                self.player_0.vals['percent_ult'], 15])
-            pg.draw.rect(surface, (64, 2, 97), [
                 width // 8, height // 7, 130, 15])
             pg.draw.rect(surface, (168, 30, 241), [
                 width // 8, height // 7,
-                self.player_2.vals['percent_ult'], 15])
+                self.player_1.vals['percent_ult'], 15])
 
     def update_header(self, screen, busy):
         """
@@ -295,7 +310,11 @@ class Jeu:
                 self.box["image"],
                 (screen.get_width() // 60, 0)))
             # Visage
-            self.face2 = {"image": GFX[self.name[self.player_2.number]]}
+            if self.name[1] == "kim":
+                self.face2 = {
+                    "image": GFX[self.name[self.player_1.number]+"_face"]}
+            else:
+                self.face2 = {"image": GFX[self.name[self.player_1.number]]}
             self.face2["rect"] = self.face2["image"].get_rect()
             self.face2["rect"].x = screen.get_width() // 20
             self.face2["rect"].y = screen.get_height() // 20
@@ -308,11 +327,12 @@ class Jeu:
         Mis à jour des persos
         """
         for element in self.players:
-            element.gravity()
-            #element.damages()
-            element.dash()
-            self.update_stats()
-            self.ulti.spe_goku(screen)
+            if self.name[element.number] != "kim":
+                element.gravity()
+                # element.damages()
+                element.dash()
+                self.update_stats()
+                self.ulti.spe_goku(screen)
 
     def update(self, screen, dlt, actions, pause, busy, contro, music):
         '''Cette fonction permet de mettre à jour les événements
@@ -320,8 +340,9 @@ class Jeu:
         # Affiche le personnage sur l'écran
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_2.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update(dlt, pause, busy, self.player_0, music))
+        # rects.append(self.player_1.blit_sprite(screen, dlt, pause))
+        rects.append(self.player_1.update(
+            dlt, pause, busy, self.player_0, music))
         for element in self.update_header(screen, busy):
             rects.append(element)
         # Gère les inputs

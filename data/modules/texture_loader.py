@@ -53,7 +53,8 @@ def sprites_images(name):
                  "luffy": (X // 9, Y // 10),
                  "gear4": (X // 9, Y // 10),
                  "vegeta": (X // 9, Y // 10),
-                 "revive": (X // 14, Y // 8)}
+                 "revive": (X // 14, Y // 8),
+                 "kim": (X // 12, Y // 12)}
     size = dict_size[name]
     return convert_alpha_dict(sprites_dict, size)
 
@@ -68,7 +69,8 @@ def sprite_tab(name, position):
                  "luffy": (X // 9, X // 10),
                  "gear4": (X // 9, X // 10),
                  "vegeta": (X // 9, X // 10),
-                 "revive": (X // 14, X // 12)}
+                 "revive": (X // 14, X // 12),
+                 "kim": (X // 12, X // 12)}
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):
@@ -169,6 +171,7 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter l'exponentielle", ]
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 12, Y // 12))
+GFX["kim_face"] = load_image("test_olivier/gfx/box/"+"kim", (X//15, X//15)).convert_alpha()
 GFX["luffy"] = load_image("test_olivier/gfx/box/" +
                           "luffy", (X // 15, X // 15)).convert_alpha()
 GFX["itachi"] = load_image("test_olivier/gfx/box/" +

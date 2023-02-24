@@ -1,4 +1,5 @@
 """contient la classe d'un joueur"""
+import pygame as pg
 from copy import copy
 from random import randint
 from data.modules.texture_loader import GFX
@@ -7,11 +8,12 @@ from data.modules.keyboard import NUMPAD
 from data.modules.settings import read_settings
 
 
-class Gunner():
+class Gunner(pg.sprite.Sprite):
     """créee un objet joueur"""
 
-    def __init__(self, pkg, prop, id):
+    def __init__(self, game, pkg, prop, id):
         """initialise les propriétés du joueur"""
+        super().__init__()
         self.pkg = pkg
         self.prop = prop
 
@@ -19,6 +21,14 @@ class Gunner():
         self.init_player(id)
         self.init_graphics()
         self.init_weapons()
+
+    def init_vovo(self, game):
+        """Ajout d'un rectangle de l'image du joueur"""
+        self.number = id
+        self.image = self.gfx["sprite"]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = self.physics["pos"][0], self.physics["pos"][1]
+        self.game = game
 
     def init_physics(self):
         """initialise les propriétés physiques du gunner"""
@@ -50,8 +60,8 @@ class Gunner():
         self.player["cooldown"] = {
             "barrett": 0,
             "kick": 0,
-            "rocket" : 0
-                    }
+            "rocket": 0
+        }
         self.player["bullets"] = []
         self.player["combos"] = []
         self.player["ult"] = {}
@@ -61,6 +71,7 @@ class Gunner():
         self.player["ult"]["load"] = 7 * self.pkg["FPS"]
         self.player["ult"]["delta"] = self.pkg["FPS"] // 14
         self.player["ult"]["music"] = True
+
     def init_graphics(self):
         """le nom est équivoque je pense"""
         self.gfx = {}
@@ -184,11 +195,25 @@ class Gunner():
     # ------ Physiques ------
 
     def move(self, dlt):
-        """déplace le gunner"""
+        """déplace le gunner
+        l'ideal serait un truc du style:
+        if not self.game.collision():
+            side = self.physics["side"]
+        speed = self.physics["speed"]
+        pos = self.physics["pos"]
+        print(self.game.collision())
+        print(self.rect)
+        pos[0] += int(speed * side)
+        self.rect.x = pos[0]
+        return self.play_animation("run", dlt)"""
+
         side = self.physics["side"]
         speed = self.physics["speed"]
         pos = self.physics["pos"]
+        print(self.game.collision())
+        print(self.rect)
         pos[0] += int(speed * side)
+        self.rect.x = pos[0]
         return self.play_animation("run", dlt)
 
     def gravity(self):
@@ -269,7 +294,6 @@ class Gunner():
             self.player["ult"]["delta"] = fps // 14
         return rect
 
-
     def update_ulti(self, pause, music, busy):
         """met à jour l'ultime de kim"""
         if not pause:
@@ -284,7 +308,8 @@ class Gunner():
                             side = self.gfx["side"]
                             dims = self.pkg["dimensions"]
                             pos = [randint(0, dims[0]), 0]
-                            rocket = Bullet(self.pkg, "rocket", side, pos, 50, 0.2)
+                            rocket = Bullet(self.pkg, "rocket",
+                                            side, pos, 50, 0.2)
                             self.player["bullets"].append(rocket)
                             self.player["cooldown"]["rocket"] = self.pkg["FPS"] // 4
                         else:
@@ -299,7 +324,6 @@ class Gunner():
     def update_health(self):
         """met à jour la vie"""
         self.player["old_hp"] = copy(self.player["hp"])
-
 
     def update_keys(self, dlt, pause, busy, other):
         """met à jour les mouvements du joueur"""
@@ -402,25 +426,21 @@ class Gunner():
         return rects
 
 
-
-
-
-
-
 class Bullet:
     """classe pour la balle du joueur"""
+
     def __init__(self, pkg, texture, side, pos, damage=25, speed=1):
         dims = pkg["dimensions"]
         self.pkg = pkg
         self.pos = pos * 1
         self.specs = {
-            "type" : texture,
-            "origin" : pos * 1,
-            "out" : False,
-            "life" : 0,
-            "speed" : self.pkg["dimensions"][0] // 43 * speed,
-            "damage" : damage,
-            "explosion" : self.pkg["FPS"] // 2,
+            "type": texture,
+            "origin": pos * 1,
+            "out": False,
+            "life": 0,
+            "speed": self.pkg["dimensions"][0] // 43 * speed,
+            "damage": damage,
+            "explosion": self.pkg["FPS"] // 2,
             "exploded": False,
             "show": True
         }

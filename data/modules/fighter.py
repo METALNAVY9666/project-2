@@ -59,7 +59,7 @@ class Fighter(pg.sprite.Sprite):
                             'final', 'impact', 'spe']
         # Axe droite-gauche
         self.motion = [0]
-        if number == 2:
+        if number == 1:
             self.rect.x = 200
 
     # Déplacement horizontal du joueur
@@ -67,8 +67,8 @@ class Fighter(pg.sprite.Sprite):
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
-        ennemy = self.game.player_2
-        if self.number == 2:
+        ennemy = self.game.player_1
+        if self.number == 1:
             ennemy = self.game.player_0
         test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
@@ -122,8 +122,8 @@ class Fighter(pg.sprite.Sprite):
         "Cette fonction gère les déplacements de droite à gauche a la manette"
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision()
-        ennemy = self.game.player_2
-        if self.number == 2:
+        ennemy = self.game.player_1
+        if self.number == 1:
             ennemy = self.game.player_0
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
         if not self.vals["dashing"][self.number]:
@@ -257,7 +257,7 @@ class Fighter(pg.sprite.Sprite):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         ennemy = self.game.player_0
         if self.number == 0:
-            ennemy = self.game.player_2
+            ennemy = self.game.player_1
         self.single_tap(event, choice, ennemy)
         self.combo(ennemy)
 
@@ -267,7 +267,7 @@ class Fighter(pg.sprite.Sprite):
         '''
         ennemy = self.game.player_0
         if self.number == 0:
-            ennemy = self.game.player_2
+            ennemy = self.game.player_1
         self.single_tap_controller(choice, contro, ennemy)
         self.combo(ennemy)
 
@@ -293,7 +293,7 @@ class Fighter(pg.sprite.Sprite):
         """
         if  self.number == 0:
             dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
-        elif self.number == 2:
+        elif self.number == 1:
             dict_keys = {pg.K_o: 'attack', pg.K_p: 'impact'}
         # Le joueur fait une action
         if event.key in dict_keys:
@@ -489,7 +489,7 @@ class Fighter(pg.sprite.Sprite):
             if choice[pg.K_q] or choice[pg.K_d]:
                 if event.key == pg.K_s:
                     self.vals["dashing"][self.number] = True
-        elif self.number == 2:
+        elif self.number == 1:
             if choice[self.game.get_code("left")] or (
                 choice[self.game.get_code("right")]):
                 if choice[self.game.get_code("down")]:

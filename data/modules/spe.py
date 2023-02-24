@@ -11,7 +11,7 @@ class Special(pg.sprite.Sprite):
         self.game = game
         self.animate = Animate(self)
         print('la spé de', self.game.name, 'est chargée.')
-        self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
+        #self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
 
     def spe_manager(self, screen, choice):
         "Gestion des attaque spéciales"
@@ -46,8 +46,8 @@ class Special(pg.sprite.Sprite):
                                           screen.get_height(), screen)
             else:
                 victime = element
-                victime.vals["strike"] = self.pl1_speed
-            print(self.game.player_1.player["hp"])
+                #victime.vals["strike"] = self.pl1_speed
+            #print(self.game.player_1.player["hp"])
 
     def spe_vegeta(self):
         """
