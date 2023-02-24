@@ -1,5 +1,5 @@
 """contient les fonctions permettant d'affucher les menus"""
-from data.modules.texture_loader import GFX, grayscale
+from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
 from data.modules.settings import read_settings, write_settings
 from tkinter import Tk, Button, Entry, Label

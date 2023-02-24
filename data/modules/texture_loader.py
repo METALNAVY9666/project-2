@@ -1,7 +1,6 @@
 """stocke toutes les textures afin de ne pas faire beuger pygame"""
 from os import listdir
 import pygame as pg
-#import numpy
 from data.modules.settings import read_settings, read_levels
 
 
@@ -30,7 +29,6 @@ def load_dir(filepath=str, dimensions=tuple):
         image.convert_alpha()
         sprites[name] = image
     return sprites
-
 
 def convert_alpha_dict(dicti, size):
     """renvoie le dictionnaire de sprites convertis"""
@@ -79,13 +77,6 @@ def sprite_tab(name, position):
         tab[ind].convert_alpha()
     return tab
 
-def grayscale(img):
-    """renvoie l'image en noir et blanc"""
-    arr = pg.surfarray.array3d(img)
-    avgs = [[(r*0.298 + g*0.587 + b*0.114) for (r,g,b) in col] for col in arr]
-    arr = numpy.array([[[avg,avg,avg] for avg in col] for col in avgs])
-    return pg.surfarray.make_surface(arr)
-
 levels = read_levels()
 prop = read_settings()
 X = prop["display"]["horizontal"]
@@ -129,9 +120,15 @@ for number in ["one", "two", "three", "go"]:
 GFX["ae86"] = load_image(EVENTS_PATH + "trueno_drift/ae86", (X // 6, Y // 6))
 GFX["ae86"].convert_alpha()
 
+GFX["kim_ult"] = load_image(EVENTS_PATH + "kim_ult/meme", (X // 2, Y // 2))
+GFX["kim_ult"].convert()
+
 # chargement des effets visuels
 GFX["nuzzle"] = load_image(EFFECTS_PATH + "nuzzle", (X // 54, Y // 54))
 GFX["nuzzle"].convert_alpha()
+
+GFX["explosion"] = load_image(EFFECTS_PATH + "explosion", (X // 16, Y // 8))
+GFX["explosion"].convert_alpha()
 
 GFX["bullets"] = {}
 GFX["bullets"]["makarov"] = load_image(EFFECTS_PATH + "bullet_makarov", (X // 40, Y // 40))
@@ -139,6 +136,9 @@ GFX["bullets"]["makarov"].convert_alpha()
 
 GFX["bullets"]["barrett"] = load_image(EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 144))
 GFX["bullets"]["barrett"].convert_alpha()
+
+GFX["bullets"]["rocket"] = load_image(EFFECTS_PATH + "rocket", (X // 32, Y // 8))
+GFX["bullets"]["rocket"].convert_alpha()
 
 # chargement des niveaux
 for level in list(levels.keys()):
@@ -181,3 +181,6 @@ GFX["gear4"] = load_image("test_olivier/gfx/box/" +
                           "gear4", (X // 15, X // 15)).convert_alpha()
 GFX["revive"] = load_image("test_olivier/gfx/box/" +
                            "revive", (X // 15, X // 15)).convert_alpha()
+
+TEMP = EVENTS_PATH+"kim_ult/"
+GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y)) for filename in listdir(TEMP)]

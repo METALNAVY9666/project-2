@@ -91,10 +91,13 @@ def load_dir(dirpath):
         sounds[filename] = load_sound(filepath)
     return sounds
 
-SFX_PATTH = "data/sfx/"
+SFX_PATH = "data/sfx/"
+EFFECTS_PATH = SFX_PATH + "effects/"
 
 
 folders = ("kim", "level", "events", "ui")
 
 for folder in folders:
-    SFX[folder] = load_dir(SFX_PATTH + folder + "/")
+    SFX[folder] = load_dir(SFX_PATH + folder + "/")
+
+SFX["explosion"] = load_sound(EFFECTS_PATH + "explosion.mp3")

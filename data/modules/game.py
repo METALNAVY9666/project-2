@@ -54,6 +54,7 @@ class Jeu:
             # Réaffecte l'image de l'objet
             self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
+            self.player_0.vals["attacked"] = False
             if choice[self.get_code("d")]:
                 if choice[self.get_code("z")]:
                     self.player_0.jump()
@@ -316,14 +317,14 @@ class Jeu:
             self.update_stats()
             self.ulti.spe_goku(screen)
 
-    def update(self, screen, dlt, actions, pause, busy, contro):
+    def update(self, screen, dlt, actions, pause, busy, contro, music):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         rects = []
         rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         rects.append(self.player_2.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update(dlt, pause, busy, self.player_0))
+        rects.append(self.player_1.update(dlt, pause, busy, self.player_0, music))
         for element in self.update_header(screen, busy):
             rects.append(element)
         # Gère les inputs

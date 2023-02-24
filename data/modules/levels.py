@@ -122,9 +122,9 @@ class BaseLevel:
                     if self.is_list_or_tuple(subrect):
                         for subsubrect in subrect:
                             rects.append(subsubrect)
-                    else:
+                    elif not subrect is None:
                         rects.append(subrect)
-            else:
+            elif not rect is None:
                 rects.append(rect)
         self.update_list = rects
 
@@ -143,7 +143,8 @@ class BaseLevel:
         surface = self.pkg["surface"]
         pause = self.cls["pause"].bool
         busy = self.cls["busy"]
-        game = self.cls["game"].update(surface, delta, actions, pause, busy, contro)
+        music = self.cls["pause"].bg_music
+        game = self.cls["game"].update(surface, delta, actions, pause, busy, contro, music)
         self.update_list += game[0]
         self.update_list.append(self.cls["game"].update_objects(surface))
 
@@ -151,6 +152,7 @@ class BaseLevel:
         self.update_list.append(self.update_obstacles())
 
         # met à jour les évènements
+        
         self.update_list += self.update_events(self.cls["pause"].bool,
                                                self.cls["busy"])
 
@@ -168,7 +170,6 @@ class BaseLevel:
                 self.update_list.append(rect)
         
         self.clear_rect_list()
-
         self.pkg["display"].update(self.update_list)
         self.update_list = []
         return next_op
