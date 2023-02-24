@@ -16,7 +16,7 @@ class Special(pg.sprite.Sprite):
     def spe_manager(self, screen, choice):
         "Gestion des attaque spéciales"
         if choice[self.game.get_code("r")]:
-            self.spe_itachi()
+            self.spe_itachi(screen)
             self.spe_luffy()
 
     def spe_luffy(self):
@@ -31,18 +31,22 @@ class Special(pg.sprite.Sprite):
                     self.game.elms['side'][element.number] = 'ult'
                     self.game.player_0.vals['strike'] = 30
 
-    def spe_itachi(self):
+    def spe_itachi(self, screen):
         """
         Attaque spéciale d'itachi
         """
         victime = None
         for element in self.game.players:
             if self.game.name[element.number] == 'itachi':
-                self.game.elms['side'][element.number] = 'ult'
+                self.game.elms['side'][element.number] = "ult"
+                if 0 < element.vals["health"] < element.vals["max_health"] // 5:
+                    if element.vals["percent_ult"] >= 130:
+                        element.vals["percent_ult"] = 0
+                        self.animate.fade(screen.get_width(),
+                                          screen.get_height(), screen)
             else:
                 victime = element
-            victime.vals["strike"] = self.pl1_speed
-            victime.vals["health"] -= 50
+                victime.vals["strike"] = self.pl1_speed
             print(self.game.player_1.player["hp"])
 
     def spe_vegeta(self):
@@ -66,7 +70,7 @@ class Special(pg.sprite.Sprite):
                 if element.vals["health"] <= 0:
                     self.game.name[element.number] = "revive"
                     self.animate.fade(screen.get_width(),
-                                        screen.get_height(), screen)
+                                      screen.get_height(), screen)
                     self.game.elms["side"][element.number] = "transfo"
                     element.vals["health"] = 100
                     element.vals["percent_ult"] = 130

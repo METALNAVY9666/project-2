@@ -181,6 +181,7 @@ GFX["gear4"] = load_image("test_olivier/gfx/box/" +
                           "gear4", (X // 15, X // 15)).convert_alpha()
 GFX["revive"] = load_image("test_olivier/gfx/box/" +
                            "revive", (X // 15, X // 15)).convert_alpha()
-
+GFX["itachi_spe"] = load_image("test_olivier/gfx/itachi/itachi_spe",
+                            (X // 1, X //2)).convert_alpha()
 TEMP = EVENTS_PATH+"kim_ult/"
 GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y)) for filename in listdir(TEMP)]

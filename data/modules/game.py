@@ -161,16 +161,13 @@ class Jeu:
             # On vérifie si le joueur appuie sur une touche
             if event.type == pg.KEYDOWN:
                 # Le perso tombe
-                self.player_0.vals['fall'] = True
-                # Attaque du joueur
-                self.player_0.attack(event, choice)
-                self.player_0.move_manager(event)
-                # Esquive du joueur
-                self.player_0.vanish(event)
-                # dash attack
-                self.player_0.dash_attack_up(choice, event)
-                self.player_0.is_dashing(choice, event)
-                self.player_2.is_dashing(choice, event)
+                for element in self.players:
+                    element.vals["fall"] = True
+                    element.attack(event, choice)
+                    element.move_manager(event)
+                    element.vanish(event)
+                    element.is_dashing(choice, event)
+                    element.dash_attack_up(choice, event)
             if event.type == pg.KEYUP and (
                 self.elms["side"][self.player_0.number] == 'run'):
                 self.player_0.vals['nbr_sprite'] = 5

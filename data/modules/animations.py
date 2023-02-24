@@ -50,7 +50,7 @@ class Animate():
         quotes = {"vegeta": "blabla",
                   "goku": "Ce n'est pas encore terminé...",
                   "luffy": "Tu ne peux plus rien contre moi.",
-                  "itachi": "[Itachi-Quotes]",
+                  "itachi": "Toute technique est inutile devant mes yeux.",
                   "revive": "Ce n'est toujours pas fini...",
                   "kim": "Mouais mouais"}
         self.vals["font"] = pg.font.Font(
@@ -60,6 +60,22 @@ class Animate():
                 dead = element
                 txt = self.vals["font"].render(
                     quotes[self.spe.game.name[dead.number]],
+                    0, (244, 49, 14))   
+                txt_width = screen.get_width() - (txt.get_width()) * 2
+                return screen.blit(txt, (txt_width, height))
+            if element.game.name[element.number] == "itachi":
+                txt = self.vals["font"].render(
+                    quotes[element.game.name[element.number]],
                     0, (244, 49, 14))
-        txt_width = screen.get_width() - (txt.get_width()) * 2
-        return screen.blit(txt, (txt_width, height))
+                txt_width = screen.get_width() - (txt.get_width()) * 1.5
+                self.animation_itachi(screen)
+                height = screen.get_height() - (screen.get_height() // 5)
+                return screen.blit(txt, (txt_width, height))
+
+
+    def animation_itachi(self, screen):
+        """
+        Animation pour la spé d'itachi"""
+        image = GFX["itachi_spe"]
+        image_rect = image.get_rect()
+        self.rect_update.append(screen.blit(image, image_rect))

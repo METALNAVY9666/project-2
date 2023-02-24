@@ -291,7 +291,10 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaque normale de base avec y et u
         """
-        dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
+        if  self.number == 0:
+            dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
+        elif self.number == 2:
+            dict_keys = {pg.K_o: 'attack', pg.K_p: 'impact'}
         # Le joueur fait une action
         if event.key in dict_keys:
             if self.game.elms["right"][self.number]:
@@ -302,7 +305,7 @@ class Fighter(pg.sprite.Sprite):
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
-            if event.key == pg.K_y:
+            if event.key == pg.K_y or pg.K_o:
                 self.attack_up(choice, ennemy)
                 self.attack_down(choice, ennemy)
 
