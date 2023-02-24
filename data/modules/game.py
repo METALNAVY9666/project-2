@@ -343,4 +343,4 @@ class Jeu:
         # Renvoi le rectangle du joueur
         self.update_health(screen, busy)
         self.update_players(screen)
-        return rects, self.player_0.update_pv()
+        return rects, [self.player_0, self.player_1]

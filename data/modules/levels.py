@@ -161,7 +161,15 @@ class BaseLevel:
 
         # màj l'état des personnages
         end = self.cls["end"]
-        self.update_list.append(end.update(game[1]))
+        end_response = end.update(game[1], music, delta)
+        
+        plus = None
+        if end_response is None:
+            self.update_list.append(end_response)
+        else:
+            plus = end_response[1]
+            self.update_list.append(end_response[0])
+
 
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
@@ -172,4 +180,7 @@ class BaseLevel:
         self.clear_rect_list()
         self.pkg["display"].update(self.update_list)
         self.update_list = []
+
+        if plus == "menu":
+            return "menu"
         return next_op

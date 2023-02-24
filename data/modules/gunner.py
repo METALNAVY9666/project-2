@@ -39,6 +39,7 @@ class Gunner():
         """initialise les propriétés du joueur"""
         width, height = self.pkg["dimensions"]
         self.player = {}
+        self.player["name"] = "Kim"
         self.player["hp"] = 20
         self.player["old_hp"] = 20
         self.player["size"] = [width // 8, height // 6]
@@ -173,7 +174,7 @@ class Gunner():
         cooldown = self.player["cooldown"]
         keys = list(cooldown.keys())
         for key in keys:
-            if cooldown[key] > 0:
+            if cooldown[key] > 0 and key != "rocket":
                 cooldown[key] -= dlt
         for animation in list(self.gfx["animations"]):
             if self.gfx["animations"][animation] > 0:
@@ -246,13 +247,14 @@ class Gunner():
                 self.player["ult"]["time"] = self.pkg["FPS"] * 5
                 self.player["ult"]["status"] = True
 
-    def ult_animation(self, music):
+    def ult_animation(self, music, busy):
         fps = self.pkg["FPS"]
         frame = 7 * fps - self.player["ult"]["load"]
         rect = None
         if self.player["ult"]["music"]:
             SFX["kim"]["default_dance"].play()
             music.pause(True)
+            busy = True
             self.player["ult"]["music"] = False
 
         if len(GFX["kim_dance"]) > frame:
@@ -260,6 +262,7 @@ class Gunner():
         else:
             self.player["ult"]["load"] = 0
             music.pause(False)
+            busy = False
         self.player["ult"]["delta"] -= 1
         if self.player["ult"]["delta"] == 0:
             self.player["ult"]["load"] -= 1
@@ -267,7 +270,7 @@ class Gunner():
         return rect
 
 
-    def update_ulti(self, pause, music):
+    def update_ulti(self, pause, music, busy):
         """met à jour l'ultime de kim"""
         if not pause:
             if self.player["ult"]["status"]:
@@ -287,12 +290,11 @@ class Gunner():
                         else:
                             self.player["cooldown"]["rocket"] -= 1
                 else:
-                    return self.ult_animation(music)
+                    return self.ult_animation(music, busy)
             else:
                 if self.player["old_hp"] != self.player["hp"]:
                     delta = self.player["old_hp"] - self.player["hp"]
                     self.player["ult"]["power"] += randint(delta, 20 * delta)
-                    print(self.player["ult"]["power"], self.player["hp"])
 
     def update_health(self):
         """met à jour la vie"""
@@ -322,7 +324,7 @@ class Gunner():
                 except KeyError:
                     print(f"Problème de touche ({keys[key]})")
 
-        if not pause:
+        if pause is busy is False:
             sprite = GFX["kim"]["wait"]
             pack = []
             for couple in pressed:
@@ -387,7 +389,6 @@ class Gunner():
 
     def update(self, dlt, pause, busy, other, music):
         """met à jour le sprite du joueur"""
-        print(self.player["hp"])
         self.update_health()
         self.check_ground()
         self.gravity()
@@ -397,7 +398,7 @@ class Gunner():
         rects = []
         rects.append(self.update_keys(dlt, pause, busy, other))
         rects += self.update_bullets(pause, other)
-        rects.append(self.update_ulti(pause, music))
+        rects.append(self.update_ulti(pause, music, busy))
         return rects
 
 

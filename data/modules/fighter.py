@@ -30,7 +30,8 @@ class Fighter(pg.sprite.Sprite):
             "pkg": pkg, "prop": prop,
             'tab': [], 'percent_ult': 130,
             'sp_tab': [], 'jumping': True,
-            "dashing": [False, False, False]
+            "dashing": [False, False, False],
+            "name": self.game.name[self.number]
         }
         self.settings = {
             'dims': self.vals["pkg"]["dimensions"],

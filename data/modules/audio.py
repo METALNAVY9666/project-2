@@ -52,6 +52,10 @@ class Music:
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
 
+    def end(self):
+        """joue l'outro"""
+        self.loader.load(self.get_segment("outro"))
+        self.loader.play()
 
     def play(self):
         if self.folder:

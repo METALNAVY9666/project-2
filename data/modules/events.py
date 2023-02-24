@@ -1,7 +1,7 @@
 """contient la classe permettant de créer des évènements aléatoires"""
 from random import randint
 from data.modules.audio import SFX
-
+from data.modules.settings import read_levels
 
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
@@ -89,22 +89,38 @@ class End:
         self.font = pkg["pygame"].font.Font(
             'test_olivier/gfx/fonts/04B_19__.TTF', 60)
         self.lock = True
+        self.delta_sum = 0
 
-    def death(self, player):
+    def death(self, player, music, dt):
         """lance la fonction quand un joueur meurt"""
-        txt = self.font.render(player + " wins", True, (0, 0, 0))
-        width = self.settings["display"]["horizontal"]
-        height = self.settings["display"]["vertical"]
-        pos = (width//2, height//2)
-        pos = txt.get_rect(center=pos)
-        if self.lock:
-            SFX["events"][f"win_{player}"].play()
-            self.lock = False
-        return self.pkg["surface"].blit(txt, pos)
+        if self.delta_sum <= self.prop["outro"] * 1000:
+            player_name = type(player).__name__
+            if player_name == "Fighter":
+                name = player.vals["name"]
+            elif player_name == "Gunner":
+                name = player.player["name"]
+            
+            txt = self.font.render(name + " wins", True, (0, 0, 0))
+            width = self.settings["display"]["horizontal"]
+            height = self.settings["display"]["vertical"]
+            pos = (width//2, height//2)
+            pos = txt.get_rect(center=pos)
+            self.delta_sum += dt
+            if self.lock:
+                music.end()
+                # SFX["events"][f"win_{name}"].play()
+                self.lock = False
+            return self.pkg["surface"].blit(txt, pos), None
+        return None, "menu"
 
-    def update(self, players):
+    def update(self, players, music, dt):
         """met à jour l'état de la partie"""
         self.players = players
-        for i in [0, 1]:
-            if players[i][1] <= 0:
-                return self.death(players[1-i][0])
+        for ind in range(len(self.players)):
+            player_name = type(self.players[ind]).__name__
+            if player_name == "Fighter":
+                hp = self.players[ind].update_pv()[0][1]
+            elif player_name == "Gunner":
+                hp = self.players[ind].player["hp"]
+            if hp <= 0:
+               return self.death(self.players[1-ind], music, dt)
