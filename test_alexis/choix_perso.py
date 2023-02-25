@@ -1,6 +1,7 @@
 # Créé par Alexis, le 29/11/2022 en Python 3.7
 
 import pygame
+import time
 import sys
 from textures import *
 from persos_choisis import *
@@ -82,6 +83,8 @@ def main():
     xa = (67, 143)
     xb = (698, 143)
     
+    posok = (3000, 3000)
+    
     list_pos1 = ([(67, 143), (205, 143), (343, 143), (481, 143)],
                  [(67, 312), (67, 312), (67, 312), (67, 312)])
     
@@ -127,6 +130,8 @@ def main():
         
         aff_surface.blit(itachired, (77, 323))
         aff_surface.blit(itachibleu, (708, 323))
+        
+        aff_surface.blit(ok, posok)
 
         retour = Bouton.dessin()
         
@@ -167,9 +172,10 @@ def main():
                     
                 if event.key == pygame.K_SPACE:
                     print("espace")
-
-                    print(perso1[x][i], perso2[z][j])
-                    return(perso1[x][i], perso2[z][j], "suivant")
+                    if perso1[x][i] != perso2[z][j]:
+                        print(perso1[x][i], perso2[z][j])
+                        posok = (200, 200)
+                        return(perso1[x][i], perso2[z][j], "suivant")
                     
                 if event.key == pygame.K_DOWN:
                     print("bas")
@@ -193,7 +199,7 @@ def main():
                     xb = list_pos2[z][j]
                     
                 if event.key == pygame.K_z:
-                    print("haut")
+                    print("z")
                     x = x - 1
                     if x == -1:
                         x = 0

@@ -79,21 +79,24 @@ def main():
     y = 7687
     z = 6787
 
-    xa = (37, 104)
+    xa = (36, 126)
     xb = (698, 143)
     
-    list_pos1 = ([(37, 104), (275, 104), (513, 104), (751, 104)],
-                 [(67, 312), (67, 312), (67, 312), (67, 312)])
+    list_pos1 = [(37, 126), (275, 126), (513, 126), (751, 126)]
     
-    perso1 = (["goku", "vegeta", "kim", "luffy"],
-                 ["itachi", "itachi", "itachi", "itachi"])
+    tabmap = [map1bis, map2bis, map3bis, map4bis]
     
+    mapchoisi = ["highway", "laboratory", "neo_tokyo", "tenkaichi_budokai"]
+    
+    map = tabmap[0]
     
     i = 0
     j = 0  
     
     x = 0
     z = 0  
+    
+    
     
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
@@ -107,17 +110,18 @@ def main():
         
         aff_surface.blit(cadre3, xa)
         
-        aff_surface.blit(map1, (47, 114))
+        aff_surface.blit(map1, (47, 134))
         
-        aff_surface.blit(map2, (285, 114))
+        aff_surface.blit(map2, (287, 134))
         
-        aff_surface.blit(map3, (523, 114))
+        aff_surface.blit(map3, (526, 134))
         
-        aff_surface.blit(map4, (761, 114))
+        aff_surface.blit(map4, (764, 134))
         
-        aff_surface.blit(titre, (0, 0))
+        aff_surface.blit(titre, (280, 0))
         
-
+        aff_surface.blit(map, (240, 370))
+        
 
         retour = Bouton.dessin()
         
@@ -133,34 +137,22 @@ def main():
                     i += 1
                     if i == 4:
                         i = 4 - 1
-                    xa = list_pos1[x][i]
+                    xa = list_pos1[i]
+                    map = tabmap[i]
                     
                 if event.key == pygame.K_q:
                     print("q")
                     i -= 1
                     if i == -1:
                         i = 0
-                    xa = list_pos1[x][i]
+                    xa = list_pos1[i]
+                    map = tabmap[i]
                     
                 if event.key == pygame.K_SPACE:
                     print("espace")
-                    pass
+                    print(mapchoisi[i])
+                    return mapchoisi[i]
                     
-
-                if event.key == pygame.K_s:
-                    print("s")
-                    x = x + 1
-                    if x == len(list_pos1):
-                        x = x - 1
-                    xa = list_pos1[x][i]
-                    
-                    
-                if event.key == pygame.K_z:
-                    print("haut")
-                    x = x - 1
-                    if x == -1:
-                        x = 0
-                    xa = list_pos1[x][i]
                     
 
             pygame.display.update()
