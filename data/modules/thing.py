@@ -12,8 +12,8 @@ class PunchingBall(pg.sprite.Sprite):
         self.image = GFX['punchingball']
         # Récupère le rectangle de l'image
         self.rect = self.image.get_rect()
-        self.rect.x = self.game.player_0.vals['surface_height'] // 9 + 500
-        self.rect.y = self.game.player_0.rect.y
+        #self.rect.x = self.game.player_0.vals['surface_height'] // 9 + 500
+        #self.rect.y = self.game.player_0.rect.y
         self.stats = {'health': 200, 'max_health': 200,
                       'fall': True, 'is_attacked': True}
         self.dims = self.game.player_0.vals['pkg']['dimensions']

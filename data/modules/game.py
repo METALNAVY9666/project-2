@@ -3,7 +3,7 @@ les différents événements dans le jeu.'''
 import pygame as pg
 from data.modules.fighter import Fighter
 from data.modules.gunner import Gunner
-from data.modules.thing import PunchingBall
+# from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
 from data.modules.spe import Special
 from data.modules.controllers import manage_controller, manage_joysticks
@@ -37,10 +37,10 @@ class Jeu:
             self.player_1 = Gunner(self, pkg, prop, 1)
         self.players = [self.player_0, self.player_1]
         self.ulti = Special(self)
-        self.object = PunchingBall(self)
+        # self.object = PunchingBall(self)
 
     def init_group(self):
-        self.all_objects = pg.sprite.Group()
+        # self.all_objects = pg.sprite.Group()
         self.all_players_0 = pg.sprite.Group()
         self.all_players_1 = pg.sprite.Group()
         self.add_groups()
@@ -59,7 +59,7 @@ class Jeu:
             # Récupère les touches préssées actuellement
             self.player_0.vals['pause'] = True
             # Réaffecte l'image de l'objet
-            self.object.image = GFX['punchingball']
+            #self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
             self.player_0.vals["attacked"] = False
             if choice[self.get_code("d")]:
@@ -188,17 +188,33 @@ class Jeu:
         bouléen est sur False.'''
         # Vérifie si il y a collision ou non
         for element in self.players:
-            if element.number == 0:
-                return pg.sprite.spritecollide(element, self.all_players_1,
-                                               False, pg.sprite.collide_mask)
-            elif element.number == 1:
-                return pg.sprite.spritecollide(element, self.all_players_0,
-                                               False, pg.sprite.collide_mask)
+            if "kim" not in self.name:
+                if element.number == 0:
+                    return pg.sprite.spritecollide(element,
+                                                   self.all_players_1,
+                                                   False,
+                                                   pg.sprite.collide_mask)
+                elif element.number == 1:
+                    return pg.sprite.spritecollide(element,
+                                                   self.all_players_0,
+                                                   False,
+                                                   pg.sprite.collide_mask)
+            else:
+                if self.name[element.number] == "kim":
+                    if element.number == 0:
+                        return element.pkg["Rect"].colliderect(element.get_rect(), self.player_1)
+                    elif element.number == 1:
+                        return element.pkg["Rect"].colliderect(element.get_rect(), self.player_0)
+                """elif self.name[element.number] != "kim":
+                    if element.number == 0:
+                        return pg.sprite.collide_rect(element, self.player_1)
+                elif element.number == 1:
+                    return pg.sprite.collide_rect(element, self.player_0)"""
 
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
         # Ajout de l'objet dans le groue de sprite de tout les objets
-        self.all_objects.add(self.object)
+        # self.all_objects.add(self.object)
         # Ajoute un joueur au groupe de sprite de tout les joueurs
         self.all_players_0.add(self.player_0)
         self.all_players_1.add(self.player_1)
@@ -228,10 +244,10 @@ class Jeu:
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
-        self.object.forward()
+        """self.object.forward()
         self.object.gravity_object()
         # Met le punching ball à jour
-        return screen.blit(self.object.image, (self.object.rect))
+        return screen.blit(self.object.image, (self.object.rect))"""
 
     def update_health(self, surface, busy):
         '''Cette fonction dessine la barre de vie, d'énergie, et de défense du
@@ -300,7 +316,11 @@ class Jeu:
             self.rect_update.append(screen.blit(
                 self.box["image"], (self.box["rect"])))
             # Visage
-            self.face = {"image": GFX[self.name[self.player_0.number]]}
+            if self.name[0] == "kim":
+                self.face = {
+                    "image": GFX[self.name[self.player_0.number]+"_face"]}
+            else:
+                self.face = {"image": GFX[self.name[self.player_0.number]]}
             self.face["rect"] = self.face["image"].get_rect()
             self.face["rect"].x = screen.get_width() - 150
             self.face["rect"].y = screen.get_height() // 20
@@ -334,15 +354,27 @@ class Jeu:
                 self.update_stats()
                 self.ulti.spe_goku(screen)
 
+    def rect_append_gunner(self, rects, dlt, pause, busy, music):
+        if self.name[0] == "kim":
+            rects.append(self.player_0.update(
+                dlt, pause, busy, self.player_1, music))
+        elif self.name[1] == "kim":
+            rects.append(self.player_1.update(
+                dlt, pause, busy, self.player_0, music))
+
+    def rect_append_fighter(self, rects, screen, dlt, pause):
+        if self.name[0] != "kim":
+            rects.append(self.player_0.blit_sprite(screen, dlt, pause))
+        if self.name[1] != "kim":
+            rects.append(self.player_1.blit_sprite(screen, dlt, pause))
+
     def update(self, screen, dlt, actions, pause, busy, contro, music):
         '''Cette fonction permet de mettre à jour les événements
         du jeu.'''
         # Affiche le personnage sur l'écran
         rects = []
-        rects.append(self.player_0.blit_sprite(screen, dlt, pause))
-        # rects.append(self.player_1.blit_sprite(screen, dlt, pause))
-        rects.append(self.player_1.update(
-            dlt, pause, busy, self.player_0, music))
+        self.rect_append_gunner(rects, dlt, pause, busy, music)
+        self.rect_append_fighter(rects, screen, dlt, pause)
         for element in self.update_header(screen, busy):
             rects.append(element)
         # Gère les inputs

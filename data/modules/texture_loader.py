@@ -153,8 +153,6 @@ TEMP = LEVELS_PATH + "platform"
 GFX["platform"] = load_image(TEMP, (X // 1.5, Y // 1.5)).convert_alpha()
 
 # Images pour le menu
-GFX['punchingball'] = load_image(BG_PATH + 'image', (120, 120)).convert_alpha()
-GFX['hit'] = load_image(BG_PATH + 'punched', (120, 120)).convert_alpha()
 GFX['stats_box'] = load_image(
     "test_olivier/gfx/box/" + "stats_box", (X // 3, X // 8)).convert_alpha()
 GFX["skill_box"] = load_image(

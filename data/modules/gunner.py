@@ -21,14 +21,8 @@ class Gunner(pg.sprite.Sprite):
         self.init_player(id)
         self.init_graphics()
         self.init_weapons()
-
-    def init_vovo(self, game):
-        """Ajout d'un rectangle de l'image du joueur"""
-        self.number = id
-        self.image = self.gfx["sprite"]
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = self.physics["pos"][0], self.physics["pos"][1]
         self.game = game
+        self.number = id
 
     def init_physics(self):
         """initialise les propriétés physiques du gunner"""
@@ -210,10 +204,7 @@ class Gunner(pg.sprite.Sprite):
         side = self.physics["side"]
         speed = self.physics["speed"]
         pos = self.physics["pos"]
-        print(self.game.collision())
-        print(self.rect)
         pos[0] += int(speed * side)
-        self.rect.x = pos[0]
         return self.play_animation("run", dlt)
 
     def gravity(self):

@@ -63,16 +63,24 @@ class Fighter(pg.sprite.Sprite):
             self.rect.x = 200
 
     # Déplacement horizontal du joueur
+    def is_gunner(self):
+        """
+        Vérifie quel joueur est un gunner ou un fighter
+        """
+        ennemy = self.game.player_1
+        if self.number == 1:
+            ennemy = self.game.player_0
+        if ennemy.game.name[ennemy.number] == "kim":
+            return ennemy.get_rect()
+        return ennemy.rect
 
     def move(self):
         '''Cette fonction gère les déplacements à droite ou à gauche.'''
         # Vérifie s'il n'y a pas de collisions
-        ennemy = self.game.player_1
-        if self.number == 1:
-            ennemy = self.game.player_0
+        rect = self.is_gunner()
         test = not self.game.collision()
         self.settings['dims'] = self.vals["pkg"]["dimensions"]
-        if test or (not test and self.rect.y < ennemy.rect.y - 10):
+        if test or (not test and self.rect.y < rect.y - 10):
             # Déplacement vers la gauche
             if self.game.elms["right"][self.number] and (
                     self.rect.x < self.vals['surface_width'] - 100):
@@ -94,14 +102,14 @@ class Fighter(pg.sprite.Sprite):
                 else:
                     self.game.elms["side"][self.number] = 'run'
         if not test:
-            self.move_collide(ennemy)
+            self.move_collide(rect)
 
-    def move_collide(self, ennemy):
+    def move_collide(self, rect):
         """
         Mouvement en cas de collision(s)
         """
         if (self.game.elms["right"][self.number] and
-                ennemy.rect.x < self.rect.x):
+                rect.x < self.rect.x):
             self.rect.x += 6
             # On change l'image du joueur
             if self.game.name[self.number] in ['goku', 'vegeta']:
@@ -110,7 +118,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.game.elms["side"][self.number] = 'run'
         elif not self.game.elms["right"][self.number] and (
-                ennemy.rect.x > self.rect.x):
+                rect.x > self.rect.x):
             self.rect.x -= 6
             if self.game.name[self.number] in ['goku', 'vegeta']:
                 self.change_animation('left')
@@ -291,7 +299,7 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaque normale de base avec y et u
         """
-        if  self.number == 0:
+        if self.number == 0:
             dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
         elif self.number == 1:
             dict_keys = {pg.K_o: 'attack', pg.K_p: 'impact'}
@@ -491,7 +499,7 @@ class Fighter(pg.sprite.Sprite):
                     self.vals["dashing"][self.number] = True
         elif self.number == 1:
             if choice[self.game.get_code("left")] or (
-                choice[self.game.get_code("right")]):
+                    choice[self.game.get_code("right")]):
                 if choice[self.game.get_code("down")]:
                     self.vals["dashing"][self.number] = True
 
@@ -519,5 +527,4 @@ class Fighter(pg.sprite.Sprite):
 
     def update_pv(self):
         '''renvoi les pvs'''
-        return [[self.game.name[self.number], self.vals['health']],
-                ['punchingball', self.game.object.stats['health']]]
+        return [[self.game.name[self.number], self.vals['health']]]
