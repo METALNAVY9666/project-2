@@ -168,7 +168,7 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter le logarithme",
            "Je fais donc péter l'exponentielle", ]
 
-GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 12, Y // 12))
+GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 8, Y // 8))
 GFX["kim_face"] = load_image("test_olivier/gfx/box/"+"kim", (X//15, X//15)).convert_alpha()
 GFX["luffy"] = load_image("test_olivier/gfx/box/" +
                           "luffy", (X // 15, X // 15)).convert_alpha()

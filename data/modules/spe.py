@@ -11,7 +11,7 @@ class Special(pg.sprite.Sprite):
         self.game = game
         self.animate = Animate(self)
         print('la spé de', self.game.name, 'est chargée.')
-        #self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
+        # self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
 
     def spe_manager(self, screen, choice):
         "Gestion des attaque spéciales"
@@ -35,19 +35,30 @@ class Special(pg.sprite.Sprite):
         """
         Attaque spéciale d'itachi
         """
-        victime = None
         for element in self.game.players:
             if self.game.name[element.number] == 'itachi':
                 self.game.elms['side'][element.number] = "ult"
-                if 0 < element.vals["health"] < element.vals["max_health"] // 5:
+                if 0 < element.vals["health"] < element.vals["max_health"] // 3:
                     if element.vals["percent_ult"] >= 130:
                         element.vals["percent_ult"] = 0
                         self.animate.fade(screen.get_width(),
                                           screen.get_height(), screen)
-            else:
-                victime = element
-                #victime.vals["strike"] = self.pl1_speed
-            #print(self.game.player_1.player["hp"])
+                        victime = self.who_is_victime(element)
+                        if victime.game.name[victime.number] == "kim":
+                            victime.player["hp"] = victime.pkg["dimensions"][0] / 1920 * 3
+                        else:
+                            victime.vals["nbr_vanish"] = 0
+
+    def who_is_victime(self, element):
+        """
+        Mais qui sera la victime d'Itachi ?
+        """
+        victime = element
+        if self.game.name[0] == "itachi":
+            victime = self.game.players[1]
+        elif self.game.name[1] == "itachi":
+            victime = self.game.players[0]
+        return victime
 
     def spe_vegeta(self):
         """
@@ -73,4 +84,4 @@ class Special(pg.sprite.Sprite):
                                       screen.get_height(), screen)
                     self.game.elms["side"][element.number] = "transfo"
                     element.vals["health"] = 100
-                    element.vals["percent_ult"] = 130
+                    element.vals["percent_ult"] = 0

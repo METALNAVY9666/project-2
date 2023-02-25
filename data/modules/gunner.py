@@ -44,8 +44,8 @@ class Gunner(pg.sprite.Sprite):
         width, height = self.pkg["dimensions"]
         self.player = {}
         self.player["name"] = "Kim"
-        self.player["hp"] = 20
-        self.player["old_hp"] = 20
+        self.player["hp"] = 100
+        self.player["old_hp"] = 100
         self.player["size"] = [width // 8, height // 6]
         self.player["weapon"] = "fist"
         self.player["block"] = False

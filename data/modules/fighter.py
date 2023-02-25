@@ -16,33 +16,55 @@ class Fighter(pg.sprite.Sprite):
         self.number = number
         # Dictionnaire des attributs du personnage
         print('Voici le perso:', number)
-        self.vals = {
-            'nbr_sprite': 0, 'strike': 10,
-            'max_height': 400, 'jumps': 1,
-            'current_height': 0, 'pause': True,
-            'idle_speed': 125, 'delta_sum': 0,
-            'nbr_combo': 0, 'nbr_vanish': 4,
-            'max_health': 100, 'health': 100,
-            'attacked': False, 'fall': True,
-            'nbr_combo_q': 0, 'nbr_combo_w': 0,
-            'surface_height': self.game.elms['pkg']['surface'].get_height(),
-            'surface_width': self.game.elms['pkg']['surface'].get_width(),
-            "pkg": pkg, "prop": prop,
-            'tab': [], 'percent_ult': 130,
-            'sp_tab': [], 'jumping': True,
-            "dashing": [False, False, False],
-            "name": self.game.name[self.number]
-        }
-        self.settings = {
-            'dims': self.vals["pkg"]["dimensions"],
-            'level': self.vals["prop"]["ground_level"],
+        self.init_dict(pkg, prop)
+        self.init_perso()
+        # Tableau d'actions
+        self.actions_tab = ['attack', 'combo',
+                            'final', 'impact', 'spe']
+        # Axe droite-gauche
+        self.motion = [0]
+        if number == 1:
+            self.rect.x = 200
 
-        }
+    def init_dict(self, pkg, prop):
+        """
+        Dictionnaire
+        """
+        self.vals = {}
+        self.vals["nbr_sprite"] = 0
+        self.vals["strike"] = 10
+        self.vals["max_height"] = 400
+        self.vals["jumps"] = 1
+        self.vals["current_height"] = 0
+        self.vals["pause"] = True
+        self.vals["idle_speed"] = 125
+        self.vals["delta_sum"] = 0
+        self.vals["health"] = 100
+        self.vals["max_health"] = 100
+        self.vals["attacked"] = False
+        self.vals["fall"] = True
+        self.vals["nbr_vanish"] = 4
+        self.vals["nbr_combo_q"] = 0
+        self.vals["nbr_combo_w"] = 0
+        self.vals["surface_height"] = self.game.elms["pkg"]['surface'].get_height()
+        self.vals["surface_width"] = self.game.elms["pkg"]['surface'].get_width()
+        self.vals["pkg"] = pkg
+        self.vals["prop"] = prop
+        self.vals["tab"] = []
+        self.vals["percent_ult"] = 130
+        self.vals["sp_tab"] = []
+        self.vals["jumping"] = True
+        self.vals["dashing"] = [False, False]
+        self.vals["name"] = self.game.name[self.number]
+        self.settings = {}
+        self.settings["dims"] = self.vals["pkg"]["dimensions"]
+        self.settings["level"] = self.vals["prop"]["ground_level"]
         self.vals["ground"] = (self.settings['level'] *
                                self.settings['dims'][1]) // 100
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
-        # Récupération du tableau des images du persos
+    
+    def init_perso(self):
         self.tab = sprite_tab(
             self.game.name[self.number], self.game.elms["side"][self.number])
         # Affectation de l'image
@@ -54,15 +76,8 @@ class Fighter(pg.sprite.Sprite):
         self.rect.y = self.vals['surface_width'] // 3
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name[self.number])
-        # Tableau d'actions
-        self.actions_tab = ['attack', 'combo',
-                            'final', 'impact', 'spe']
-        # Axe droite-gauche
-        self.motion = [0]
-        if number == 1:
-            self.rect.x = 200
-
     # Déplacement horizontal du joueur
+
     def is_gunner(self):
         """
         Vérifie quel joueur est un gunner ou un fighter

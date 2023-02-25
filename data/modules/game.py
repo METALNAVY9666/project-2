@@ -20,15 +20,22 @@ class Jeu:
     def __init__(self, name, pkg, prop):
         # On récupère le nom du perso choisi.
         self.name = name
-        self.elms = {'right': [False, True, True],
-                     'fps': 60,
-                     'side': ["left", "left", "left"],
-                     'is_playing': True,
-                     'pkg': pkg, 'prop': prop}
+        self.init_dict(pkg, prop)
         self.init_players(pkg, prop)
         self.init_group()
 
+    def init_dict(self, pkg, prop):
+        """
+        Initialisation des dictionnaires"""
+        self.elms = {}
+        self.elms["right"] = [False, True, True]
+        self.elms["fps"] = 60
+        self.elms["side"] = ["left", "left", "left"]
+        self.elms["pkg"] = pkg
+        self.elms["prop"] = prop
+
     def init_players(self, pkg, prop):
+        """Initialisation des personnages"""
         if self.name[0] == "kim":
             self.player_0 = Gunner(self, pkg, prop, 0)
             self.player_1 = Fighter(self, pkg, prop, 1)
@@ -43,6 +50,7 @@ class Jeu:
         # self.object = PunchingBall(self)
 
     def init_group(self):
+        """Initialisation des personnages dans leur groupes"""
         # self.all_objects = pg.sprite.Group()
         self.all_players_0 = pg.sprite.Group()
         self.all_players_1 = pg.sprite.Group()
@@ -205,14 +213,11 @@ class Jeu:
             else:
                 if self.name[element.number] == "kim":
                     if element.number == 0:
-                        return element.pkg["Rect"].colliderect(element.get_rect(), self.player_1)
+                        return element.pkg["Rect"].colliderect(
+                            element.get_rect(), self.player_1)
                     elif element.number == 1:
-                        return element.pkg["Rect"].colliderect(element.get_rect(), self.player_0)
-                """elif self.name[element.number] != "kim":
-                    if element.number == 0:
-                        return pg.sprite.collide_rect(element, self.player_1)
-                elif element.number == 1:
-                    return pg.sprite.collide_rect(element, self.player_0)"""
+                        return element.pkg["Rect"].colliderect(
+                            element.get_rect(), self.player_0)
 
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
@@ -227,12 +232,13 @@ class Jeu:
         if self.collision():
             if "kim" not in self.name:
                 for element in self.collision():
-                    element.damages()
+                    if self.players[ennemy.number] == self.player_0:
+                        self.player_0.vals["health"] -= 10
+                    elif self.players[element.number] == self.player_1:
+                        self.player_1.vals["health"] -= 10
             else:
                 if self.name[ennemy.number] == "kim":
-                    print(ennemy.player["hp"])
                     ennemy.player["hp"] -= 10
-                    print(ennemy.player["hp"])
 
                 # Change l'animation en cas d'attaque
                 # self.object.image = GFX['hit']
@@ -290,6 +296,13 @@ class Jeu:
             pg.draw.rect(surface, (168, 30, 241), [
                 width // 8, height // 7,
                 self.player_0.vals['percent_ult'], 15])
+        else:
+            pg.draw.rect(surface, (25, 70, 17), [
+                width // 8, height // 15,
+                100, 15])
+            pg.draw.rect(surface, (75, 198, 9), [
+                width // 8, height // 15,
+                self.players[0].player['hp'], 15])
 
     def update_hp_player_1(self, surface, width, height):
         if self.name[1] != 'kim':
@@ -302,7 +315,7 @@ class Jeu:
                 self.players[1].vals['health'], 15])
             # Nombre esquive perso 2
             pg.draw.rect(surface, (0, 91, 136), [
-                         width // 8, height // 10, 4 * 30, 15])
+                         width - 400, height // 10, 4 * 30, 15])
             pg.draw.rect(surface, (159, 212, 239), [
                 width - 400, height // 10,
                 self.players[1].vals['nbr_vanish'] * 30, 15])
@@ -310,49 +323,68 @@ class Jeu:
             pg.draw.rect(surface, (64, 2, 97), [
                 width - 400, height // 7, 130, 15])
             pg.draw.rect(surface, (168, 30, 241), [
-                width // 8, height // 7,
+                width - 400, height // 7,
                 self.player_1.vals['percent_ult'], 15])
+        else:
+            pg.draw.rect(surface, (25, 70, 17), [
+                width - 400, height // 15,
+                100, 15])
+            pg.draw.rect(surface, (75, 198, 9), [
+                width - 400, height // 15,
+                self.players[1].player['hp'], 15])
 
     def update_header(self, screen, busy):
         """
         Fonction qui met à jour les élements du haut de l'écran
         """
-        self.rect_update = []
+        rect_update = []
         if not busy:
-            # Boite de stats
-            self.box = {"image": GFX['stats_box']}
-            self.box['rect'] = self.box["image"].get_rect()
-            self.box["rect"].x = screen.get_width() - 450
-            self.rect_update.append(screen.blit(
-                self.box["image"], (self.box["rect"])))
-            # Visage
-            if self.name[0] == "kim":
-                self.face = {
-                    "image": GFX[self.name[self.player_0.number]+"_face"]}
-            else:
-                self.face = {"image": GFX[self.name[self.player_0.number]]}
-            self.face["rect"] = self.face["image"].get_rect()
-            self.face["rect"].x = screen.get_width() // 20
-            self.face["rect"].y = screen.get_height() // 20
-            self.rect_update.append(screen.blit(
-                self.box["image"],
-                (screen.get_width() // 60, 0)))
-            self.rect_update.append(screen.blit(
-                self.face["image"], (self.face["rect"])))
-            # Visage
-            if self.name[1] == "kim":
-                self.face2 = {
-                    "image": GFX[self.name[self.player_1.number]+"_face"]}
-            else:
-                self.face2 = {"image": GFX[self.name[self.player_1.number]]}
-            self.face2["rect"] = self.face2["image"].get_rect()
-            self.face2["rect"].x = screen.get_width() - 150
-            self.face2["rect"].y = screen.get_height() // 20
-            self.rect_update.append(screen.blit(
-                self.face2["image"], (self.face2["rect"])))
-        return self.rect_update
+            self.update_box(screen, rect_update)
+            self.update_face(screen, rect_update)
+        return rect_update
 
-    def update_players(self, screen):
+    def update_box(self, screen, rect_update):
+        """
+        Mis à jour des box
+        """
+        # Boite de stats
+        self.box = {"image": GFX['stats_box']}
+        self.box['rect'] = self.box["image"].get_rect()
+        self.box["rect"].x = screen.get_width() - 450
+        rect_update.append(screen.blit(
+            self.box["image"], (self.box["rect"])))
+        rect_update.append(screen.blit(
+            self.box["image"],
+            (screen.get_width() // 60, 0)))
+
+    def update_face(self, screen, rect_update):
+        """
+        Mis à jour des visages
+        """
+        # Visage
+        if self.name[0] == "kim":
+            self.face = {
+                "image": GFX[self.name[self.player_0.number]+"_face"]}
+        else:
+            self.face = {"image": GFX[self.name[self.player_0.number]]}
+        self.face["rect"] = self.face["image"].get_rect()
+        self.face["rect"].x = screen.get_width() // 20
+        self.face["rect"].y = screen.get_height() // 20
+        rect_update.append(screen.blit(
+            self.face["image"], (self.face["rect"])))
+        # Visage
+        if self.name[1] == "kim":
+            self.face2 = {
+                "image": GFX[self.name[self.player_1.number]+"_face"]}
+        else:
+            self.face2 = {"image": GFX[self.name[self.player_1.number]]}
+        self.face2["rect"] = self.face2["image"].get_rect()
+        self.face2["rect"].x = screen.get_width() - 150
+        self.face2["rect"].y = screen.get_height() // 20
+        rect_update.append(screen.blit(
+            self.face2["image"], (self.face2["rect"])))
+
+    def update_players(self, screen, busy):
         """
         Mis à jour des persos
         """
@@ -361,10 +393,14 @@ class Jeu:
                 element.gravity()
                 # element.damages()
                 element.dash()
-                self.update_stats()
                 self.ulti.spe_goku(screen)
+                self.update_stats()
+        self.update_health(screen, busy)
 
     def rect_append_gunner(self, rects, dlt, pause, busy, music):
+        """
+        Rect des gunners
+        """
         if self.name[0] == "kim":
             rects.append(self.player_0.update(
                 dlt, pause, busy, self.player_1, music))
@@ -373,6 +409,9 @@ class Jeu:
                 dlt, pause, busy, self.player_0, music))
 
     def rect_append_fighter(self, rects, screen, dlt, pause):
+        """
+        rect des fighters
+        """
         if self.name[0] != "kim":
             rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         if self.name[1] != "kim":
@@ -401,6 +440,5 @@ class Jeu:
                 print('la')
                 self.handle_input_controller(actions, pause, busy, contro)
         # Renvoi le rectangle du joueur
-        self.update_health(screen, busy)
-        self.update_players(screen)
-        return rects, [self.player_0, self.player_1]
+        self.update_players(screen, busy)
+        return rects, self.players
