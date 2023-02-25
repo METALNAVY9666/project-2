@@ -35,6 +35,9 @@ class Jeu:
         elif self.name[1] == "kim":
             self.player_0 = Fighter(self, pkg, prop, 0)
             self.player_1 = Gunner(self, pkg, prop, 1)
+        elif "kim" not in self.name:
+            self.player_0 = Fighter(self, pkg, prop, 0)
+            self.player_1 = Fighter(self, pkg, prop, 1)
         self.players = [self.player_0, self.player_1]
         self.ulti = Special(self)
         # self.object = PunchingBall(self)
@@ -59,7 +62,7 @@ class Jeu:
             # Récupère les touches préssées actuellement
             self.player_0.vals['pause'] = True
             # Réaffecte l'image de l'objet
-            #self.object.image = GFX['punchingball']
+            # self.object.image = GFX['punchingball']
             # Modifie les animations en fonction de l'input
             self.player_0.vals["attacked"] = False
             if choice[self.get_code("d")]:
@@ -219,11 +222,18 @@ class Jeu:
         self.all_players_0.add(self.player_0)
         self.all_players_1.add(self.player_1)
 
-    def strike_collision(self):
+    def strike_collision(self, ennemy):
         '''Actionne l'attaque du personnage'''
         if self.collision():
-            for objects in self.collision():
-                objects.damages()
+            if "kim" not in self.name:
+                for element in self.collision():
+                    element.damages()
+            else:
+                if self.name[ennemy.number] == "kim":
+                    print(ennemy.player["hp"])
+                    ennemy.player["hp"] -= 10
+                    print(ennemy.player["hp"])
+
                 # Change l'animation en cas d'attaque
                 # self.object.image = GFX['hit']
 
@@ -264,41 +274,41 @@ class Jeu:
     def update_hp_player_0(self, surface, width, height):
         if self.name[0] != "kim":
             pg.draw.rect(surface, (25, 70, 17), [
-                width - 400, height // 15,
+                width // 8, height // 15,
                 self.player_0.vals['max_health'], 15])
             pg.draw.rect(surface, (75, 198, 9), [
-                width - 400, height // 15,
+                width // 8, height // 15,
                 self.players[0].vals['health'], 15])
             # Nombre d'esquive possible perso 1
             pg.draw.rect(surface, (0, 91, 136), [
-                         width - 400, height // 10, 4 * 30, 15])
+                         width // 8, height // 10, 4 * 30, 15])
             pg.draw.rect(surface, (159, 212, 239), [
-                width - 400, height // 10,
+                width // 8, height // 10,
                 self.players[0].vals['nbr_vanish'] * 30, 15])
             pg.draw.rect(surface, (64, 2, 97), [
-                width - 400, height // 7, 130, 15])
+                width // 8, height // 7, 130, 15])
             pg.draw.rect(surface, (168, 30, 241), [
-                width - 400, height // 7,
+                width // 8, height // 7,
                 self.player_0.vals['percent_ult'], 15])
 
     def update_hp_player_1(self, surface, width, height):
         if self.name[1] != 'kim':
             # Barre de vie du perso 2
             pg.draw.rect(surface, (25, 70, 17), [
-                width // 8, height // 15,
+                width - 400, height // 15,
                 self.players[1].vals['max_health'], 15])
             pg.draw.rect(surface, (75, 198, 9), [
-                width // 8, height // 15,
+                width - 400, height // 15,
                 self.players[1].vals['health'], 15])
             # Nombre esquive perso 2
             pg.draw.rect(surface, (0, 91, 136), [
                          width // 8, height // 10, 4 * 30, 15])
             pg.draw.rect(surface, (159, 212, 239), [
-                width // 8, height // 10,
+                width - 400, height // 10,
                 self.players[1].vals['nbr_vanish'] * 30, 15])
             # Jauge de spé
             pg.draw.rect(surface, (64, 2, 97), [
-                width // 8, height // 7, 130, 15])
+                width - 400, height // 7, 130, 15])
             pg.draw.rect(surface, (168, 30, 241), [
                 width // 8, height // 7,
                 self.player_1.vals['percent_ult'], 15])
@@ -322,13 +332,13 @@ class Jeu:
             else:
                 self.face = {"image": GFX[self.name[self.player_0.number]]}
             self.face["rect"] = self.face["image"].get_rect()
-            self.face["rect"].x = screen.get_width() - 150
+            self.face["rect"].x = screen.get_width() // 20
             self.face["rect"].y = screen.get_height() // 20
-            self.rect_update.append(screen.blit(
-                self.face["image"], (self.face["rect"])))
             self.rect_update.append(screen.blit(
                 self.box["image"],
                 (screen.get_width() // 60, 0)))
+            self.rect_update.append(screen.blit(
+                self.face["image"], (self.face["rect"])))
             # Visage
             if self.name[1] == "kim":
                 self.face2 = {
@@ -336,7 +346,7 @@ class Jeu:
             else:
                 self.face2 = {"image": GFX[self.name[self.player_1.number]]}
             self.face2["rect"] = self.face2["image"].get_rect()
-            self.face2["rect"].x = screen.get_width() // 20
+            self.face2["rect"].x = screen.get_width() - 150
             self.face2["rect"].y = screen.get_height() // 20
             self.rect_update.append(screen.blit(
                 self.face2["image"], (self.face2["rect"])))

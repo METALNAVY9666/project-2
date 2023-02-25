@@ -309,7 +309,7 @@ class Fighter(pg.sprite.Sprite):
                 self.rect.x += 5
             else:
                 self.rect.x -= 5
-            self.game.strike_collision()
+            self.game.strike_collision(ennemy)
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
