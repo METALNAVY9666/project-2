@@ -20,5 +20,5 @@ def read_levels():
 def write_settings(dico):
     """écrit le json options"""
     with open("data/settings.json", "w", encoding="utf-8") as file:
-        json.dump(dico, file)
+        json.dump(dico, file, indent=4, ensure_ascii=False)
         file.close()

@@ -348,6 +348,7 @@ class Gunner(pg.sprite.Sprite):
             sprite = GFX["kim"]["wait"]
             pack = []
             for couple in pressed:
+                print(couple)
                 if couple[1]:
                     pack.append(couple[0])
                     self.player["combos"].append(pressed)

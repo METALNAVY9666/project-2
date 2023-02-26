@@ -51,18 +51,18 @@ class SimController:
             "Lstick_y": round(-controller.get_axis(1), 3),
             "Rstick_x": round(controller.get_axis(2), 3),
             "Rstick_y": round(-controller.get_axis(3), 3),
-            "Ltrig": round((controller.get_axis(4)+1)/2, 3),
-            "Rtrig": round((controller.get_axis(5)+1)/2, 3),
                 }
         return pressed
     
     def press(self, key, release=False):
         """simule la pression d'une touche, la lache si release = True, (convertit AZERTY en QWE)"""
         if not key is None:
-            if not release:
-                keyboard.press(azerty_to_qwerty(key))
+            new_key = azerty_to_qwerty(key)
+            print(new_key)
+            if release:
+                keyboard.release(new_key)
             else:
-                keyboard.release(azerty_to_qwerty(key))
+                keyboard.press(new_key)
 
     def check_buttons(self, pressed):
         """fait les actions et agit en conséquence"""
@@ -70,11 +70,25 @@ class SimController:
         self.buttons = []
         for button in pressed.keys():
             key = self.get_key(button)
-            if pressed[button]:
-                press(key)
-                self.buttons.append(button)
+            button_type = type(pressed[button]).__name__
+            if button_type == "bool":
+                if pressed[button]:
+                    press(key)
+                    self.buttons.append(button)
+                else:
+                    press(key, True)
             else:
-                press(key, True)
+                if button == "Lstick_x":
+                    if abs(pressed[button]) > 20000:
+                        if pressed[button] < 0:
+                            press("right", True)
+                            press("left")
+                        else:
+                            press("left", True)
+                            press("right")
+                    else:
+                        press("right", True)
+                        press("left", True)
 
     def get_key(self, button):
         """renvoie la clé correspondant au bouton appuyé (ne convertit pas AZERTY en QWERTY)"""
@@ -84,6 +98,8 @@ class SimController:
                 return keys["l_attack"]
             case "Y":
                 return keys["h_attack"]
+            case "Lstick_x":
+                pass
 
     def update(self):
         """met presses les touches des boutons de la manette pressés"""
