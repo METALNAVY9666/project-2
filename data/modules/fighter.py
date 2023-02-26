@@ -2,8 +2,7 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
-from data.modules.controllers import (manage_controller,
-                                      removed_and_added_controller)
+from data.modules.controllers import manage_controller
 from data.modules.settings import read_settings
 from data.modules.keyboard import azerty_to_qwerty
 

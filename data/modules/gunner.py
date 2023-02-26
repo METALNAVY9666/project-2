@@ -1,4 +1,5 @@
 """contient la classe d'un joueur"""
+import keyboard
 import pygame as pg
 from copy import copy
 from random import randint
@@ -6,7 +7,7 @@ from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
 from data.modules.keyboard import azerty_to_qwerty, NUMPAD
 from data.modules.settings import read_settings
-
+from data.modules.controllers import SimController
 
 class Gunner(pg.sprite.Sprite):
     """créee un objet joueur"""
@@ -16,17 +17,18 @@ class Gunner(pg.sprite.Sprite):
         super().__init__()
         self.pkg = pkg
         self.prop = prop
+        self.number = id
+        self.game = game
 
         self.init_physics()
         self.init_player(id)
         self.init_graphics()
         self.init_weapons()
-        self.game = game
-        self.number = id
 
     def init_physics(self):
         """initialise les propriétés physiques du gunner"""
         self.physics = {}
+        self.physics["controller"] = SimController(self.number)
         self.physics["gravity"] = 9.81 * 2
         self.physics["grounded"] = True
         self.physics["jump_height"] = self.pkg["dimensions"][1] // 3
@@ -413,6 +415,7 @@ class Gunner(pg.sprite.Sprite):
         self.gravity()
         self.update_jump()
         self.update_cooldowns(dlt)
+        self.physics["controller"].update()
         self.check_combos(pause, busy)
         rects = []
         rects.append(self.update_keys(dlt, pause, busy, other))
