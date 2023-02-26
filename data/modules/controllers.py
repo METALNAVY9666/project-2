@@ -1,5 +1,4 @@
 """ Modules qui gère les manettes. """
-import keyboard
 import pygame as pg
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
@@ -28,11 +27,16 @@ def manage_controller(contro):
     return None
 
 
-class SimController:
+class SimpleController:
     """permet de simuler des pressions de touches avec la manette"""
     def __init__(self, number):
+        self.buttons = {
+            "B": "l_attack",
+            "Y": "h_attack",
+            "A": "jump",
+            "X": "block"
+        }
         self.keys = read_settings()["keys"][number]
-        self.buttons = []
 
     def get_pressed(self, controller):
         """renvoie un dico de boutons pressés"""
@@ -52,54 +56,40 @@ class SimController:
             "Rstick_x": round(controller.get_axis(2), 3),
             "Rstick_y": round(-controller.get_axis(3), 3),
                 }
-        return pressed
-    
-    def press(self, key, release=False):
-        """simule la pression d'une touche, la lache si release = True, (convertit AZERTY en QWE)"""
-        if not key is None:
-            new_key = azerty_to_qwerty(key)
-            print(new_key)
-            if release:
-                keyboard.release(new_key)
-            else:
-                keyboard.press(new_key)
+        return pressed       
 
     def check_buttons(self, pressed):
         """fait les actions et agit en conséquence"""
-        press = self.press
-        self.buttons = []
+        buttons = []
         for button in pressed.keys():
             key = self.get_key(button)
             button_type = type(pressed[button]).__name__
             if button_type == "bool":
                 if pressed[button]:
-                    press(key)
-                    self.buttons.append(button)
-                else:
-                    press(key, True)
+                    buttons.append(key)
             else:
                 if button == "Lstick_x":
                     if abs(pressed[button]) > 20000:
                         if pressed[button] < 0:
-                            press("right", True)
-                            press("left")
+                            buttons.append("left")
                         else:
-                            press("left", True)
-                            press("right")
-                    else:
-                        press("right", True)
-                        press("left", True)
+                            buttons.append("right")
+        return buttons
 
     def get_key(self, button):
-        """renvoie la clé correspondant au bouton appuyé (ne convertit pas AZERTY en QWERTY)"""
-        keys = self.keys
-        match button:
-            case "B":
-                return keys["l_attack"]
-            case "Y":
-                return keys["h_attack"]
-            case "Lstick_x":
-                pass
+        """renvoie la clé correspondant au bouton appuyé"""
+        try:
+            return self.buttons[button]
+        except KeyError:
+            return None
+        
+    def clean_nones(self, old_list):
+        """supprime tout les Nones d'une liste"""
+        new_list = []
+        for element in old_list:
+            if not element is None:
+                new_list.append(element)
+        return new_list
 
     def update(self):
         """met presses les touches des boutons de la manette pressés"""
@@ -108,4 +98,6 @@ class SimController:
         if plugged:
             controller = contro[0]
             pressed = self.get_pressed(controller)
-            self.check_buttons(pressed)
+            buttons = self.check_buttons(pressed)
+            buttons = self.clean_nones(buttons)
+        return buttons

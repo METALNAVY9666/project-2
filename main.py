@@ -40,9 +40,8 @@ icon = pygame.image.load("data/gfx/icon.png")
 pygame.init()
 pygame.mixer.init()
 pygame.display.set_icon(icon)
-y
-WIN = True
 
+WIN = True
 
 level_name = "highway"
 players = ["goku", "kim"]
@@ -68,6 +67,8 @@ while WIN:
             # vérifie si la touche F11 est enfoncée et met en plein écran
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
+            if event.key == pygame.K_RIGHT:
+                print("Allez la putain de ta mère")
     # actualise la map, si elle renvoie "quit", alors quitter
     if current_map.update(dlt, actions, contro) == "exit":
         WIN = False

@@ -7,7 +7,7 @@ from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
 from data.modules.keyboard import azerty_to_qwerty, NUMPAD
 from data.modules.settings import read_settings
-from data.modules.controllers import SimController
+from data.modules.controllers import SimpleController
 
 class Gunner(pg.sprite.Sprite):
     """créee un objet joueur"""
@@ -28,7 +28,7 @@ class Gunner(pg.sprite.Sprite):
     def init_physics(self):
         """initialise les propriétés physiques du gunner"""
         self.physics = {}
-        self.physics["controller"] = SimController(self.number)
+        self.physics["controller"] = SimpleController(self.number)
         self.physics["gravity"] = 9.81 * 2
         self.physics["grounded"] = True
         self.physics["jump_height"] = self.pkg["dimensions"][1] // 3
@@ -257,11 +257,13 @@ class Gunner(pg.sprite.Sprite):
         else:
             self.physics["falling"] = False
 
-    def check_combos(self, pause, busy):
+    def check_combos(self, pause, busy, buttons):
         """vérifie les combos présents"""
         if not pause:
             combos = self.player["combos"]
             ultimate = "block" in combos and "h_attack" in combos
+            if not ultimate:
+                ultimate = "block" in buttons and "h_attack" in buttons
             if ultimate and self.player["ult"]["power"] >= 100:
                 self.player["ult"]["time"] = self.pkg["FPS"] * 5
                 self.player["ult"]["status"] = True
@@ -319,7 +321,7 @@ class Gunner(pg.sprite.Sprite):
         """met à jour la vie"""
         self.player["old_hp"] = copy(self.player["hp"])
 
-    def update_keys(self, dlt, pause, busy, other):
+    def update_keys(self, dlt, pause, busy, other, buttons):
         """met à jour les mouvements du joueur"""
         choice = self.pkg["key"].get_pressed()
         keys = self.player["keys"]
@@ -347,8 +349,8 @@ class Gunner(pg.sprite.Sprite):
         if pause is busy is False:
             sprite = GFX["kim"]["wait"]
             pack = []
+            # verifie les touches du clavier
             for couple in pressed:
-                print(couple)
                 if couple[1]:
                     pack.append(couple[0])
                     self.player["combos"].append(pressed)
@@ -366,6 +368,22 @@ class Gunner(pg.sprite.Sprite):
                         sprite = self.kick(other)
                     elif couple[0] == "h_attack":
                         sprite = self.barrett_shoot(dlt)
+            # verifie les touches de la manette
+            for button in buttons:
+                if button == "jump":
+                    self.jump()
+                if button == "left":
+                    self.physics["side"] = -1
+                    sprite = self.move(dlt)
+                elif button == "right":
+                    self.physics["side"] = 1
+                    sprite = self.move(dlt)
+                elif button == "l_attack":
+                    sprite = self.kick(other)
+                elif button == "h_attack":
+                    sprite = self.barrett_shoot(dlt)
+                elif button == "block":
+                    sprite = self.block()
             print("---")
             self.gfx["sprite"] = sprite
             self.player["combos"] = pack
@@ -416,10 +434,10 @@ class Gunner(pg.sprite.Sprite):
         self.gravity()
         self.update_jump()
         self.update_cooldowns(dlt)
-        self.physics["controller"].update()
-        self.check_combos(pause, busy)
+        buttons = self.physics["controller"].update()
+        self.check_combos(pause, busy, buttons)
         rects = []
-        rects.append(self.update_keys(dlt, pause, busy, other))
+        rects.append(self.update_keys(dlt, pause, busy, other, buttons))
         rects += self.update_bullets(pause, other)
         rects.append(self.update_ulti(pause, music, busy))
         return rects
