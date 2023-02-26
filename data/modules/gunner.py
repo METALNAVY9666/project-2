@@ -91,8 +91,7 @@ class Gunner(pg.sprite.Sprite):
     def get_code(self, key):
         "renvoie la valeur de la touche"
         new_key = azerty_to_qwerty(key)
-        print(key, self.pkg["key"].key_code(new_key))
-        return self.pkg["key"].key_code(key)
+        return self.pkg["key"].key_code(new_key)
 
     def flip(self, sprite):
         """renvoie le sprite retourné"""

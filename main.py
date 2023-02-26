@@ -40,9 +40,8 @@ icon = pygame.image.load("data/gfx/icon.png")
 pygame.init()
 pygame.mixer.init()
 pygame.display.set_icon(icon)
-
+y
 WIN = True
-
 
 level_name = "highway"
 players = ["goku", "kim"]

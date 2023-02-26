@@ -4,6 +4,8 @@ import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
 from data.modules.controllers import (manage_controller,
                                       removed_and_added_controller)
+from data.modules.settings import read_settings
+from data.modules.keyboard import azerty_to_qwerty
 
 
 class Fighter(pg.sprite.Sprite):
@@ -63,7 +65,8 @@ class Fighter(pg.sprite.Sprite):
                                self.settings['dims'][1]) // 100
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
-    
+        self.vals["keymap"] = read_settings()["keys"][self.number]
+
     def init_perso(self):
         self.tab = sprite_tab(
             self.game.name[self.number], self.game.elms["side"][self.number])
@@ -310,15 +313,23 @@ class Fighter(pg.sprite.Sprite):
             self.vals["tab"] = []
         return self.vals['tab']
 
+    def convert_key(self, key):
+        """renvoie la classe pygame de la clé"""
+        return pg.key.key_code(azerty_to_qwerty(key))
+    
     def single_tap(self, event, choice, ennemy):
         """
-        Attaque normale de base avec y et u
+        Attaque normale de base selon les paramètres du joueur
         """
-        if self.number == 0:
-            dict_keys = {pg.K_y: 'attack', pg.K_u: 'impact'}
-        elif self.number == 1:
-            dict_keys = {pg.K_o: 'attack', pg.K_p: 'impact'}
+        keymap = self.vals["keymap"]
+        l_attack = azerty_to_qwerty(keymap["l_attack"])
+        h_attack = azerty_to_qwerty(keymap["h_attack"])
+        l_attack = pg.key.key_code(l_attack)
+        h_attack = pg.key.key_code(h_attack)
+
+        dict_keys = {l_attack: "attack", h_attack: "impact"}
         # Le joueur fait une action
+        print(event.key)
         if event.key in dict_keys:
             if self.game.elms["right"][self.number]:
                 self.rect.x += 10
