@@ -95,6 +95,7 @@ class SimpleController:
         """met presses les touches des boutons de la manette pressés"""
         contro = manage_controller([])
         plugged = not contro is None
+        buttons = []
         if plugged:
             controller = contro[0]
             pressed = self.get_pressed(controller)
