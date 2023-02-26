@@ -120,7 +120,7 @@ class Jeu:
             if choice[self.get_code("down")] and choice[self.get_code("up")]:
                 self.player_1.charge()
 
-    def handle_input_controller(self, actions, pause, busy, contro):
+    def handle_input_controller(self, actions, pause, busy, contro, num):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes. La fonction
@@ -131,13 +131,13 @@ class Jeu:
         if not pause and not busy:
             # Modifie les animations en fonction de l'input
             # Gère le blocage
-            if (contro[0].get_button(3) and
+            if (contro[num].get_button(3) and
                     self.player_0.vals['current_height'] == 0):
                 self.player_0.block()
             # Gère les mouvements à la manette
-            elif contro[0].get_axis(0) // 3500 < -5 or (
-                    contro[0].get_axis(0) // 3500 > 5):
-                if contro[0].get_axis(0) > 0:
+            elif contro[num].get_axis(0) // 3500 < -5 or (
+                    contro[num].get_axis(0) // 3500 > 5):
+                if contro[num].get_axis(0) > 0:
                     choice[self.get_code("d")]
                     self.player_0.move()
                     self.elms['right'][self.player_0.number] = True
@@ -146,7 +146,7 @@ class Jeu:
                     self.player_0.move()
                     self.elms['right'][self.player_0.number] = False
             # Gère les sauts
-            if (contro[0].get_button(0) and
+            if (contro[num].get_button(0) and
                     self.player_0.vals['current_height'] < 400):
                 self.player_0.jump_controller(8)
             # Gère les attaques
@@ -154,20 +154,20 @@ class Jeu:
                 if self.player_0.vals['current_height'] > 40 and (
                         event.type == JOYBUTTONDOWN and event.button == 1):
                     self.player_0.dash_attack_up_controller()
-                elif (contro[0].get_axis(1) / 3500 > 5 and
+                elif (contro[num].get_axis(1) / 3500 > 5 and
                       event.type == JOYBUTTONDOWN and event.button == 1):
                     print('sol')
                     self.player_0.attack_down_controller()
                 elif event.type == JOYBUTTONDOWN and event.button == 1:
                     self.player_0.attack_controller(
-                        contro[0].get_button(1), contro[0])
+                        contro[num].get_button(1), contro[num])
                 elif event.type == JOYBUTTONDOWN and event.button == 2:
                     self.player_0.attack_controller(
-                        contro[0].get_button(2), contro[0])
+                        contro[num].get_button(2), contro[num])
 
                 elif event.type == JOYBUTTONDOWN and event.button == 7:
                     self.player_0.charge()
-            if contro[0].get_button(10):
+            if contro[num].get_button(10):
                 self.player_0.vanish_controller()
 
     def loop_input(self, actions):
@@ -432,15 +432,9 @@ class Jeu:
         self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
-        events = False
-        for event in actions:
-            if 'joy' in event.dict:
-                if event.dict['joy'] == 0:
-                    events = True
-        if events:
-            if contro != None:
-                print('la')
-                self.handle_input_controller(actions, pause, busy, contro)
+        if contro != None and len(contro) == 2:
+            print('la')
+            self.handle_input_controller(actions, pause, busy, contro, 1)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players

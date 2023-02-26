@@ -344,9 +344,9 @@ class Fighter(pg.sprite.Sprite):
                 self.attack_down(choice, ennemy)
 
     # Docstrings a ajouter
-    def single_tap_controller(self, choice, contro):
+    def single_tap_controller(self, choice, contro, ennemy):
         if contro.get_button(1):
-            self.game.strike_collision()
+            self.game.strike_collision(ennemy)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'attack'
             if self.game.collision():
@@ -360,7 +360,7 @@ class Fighter(pg.sprite.Sprite):
             return self.vals['tab']
 
         elif contro.get_button(2):
-            self.game.strike_collision()
+            self.game.strike_collision(ennemy)
             # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'impact'
