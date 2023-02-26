@@ -151,7 +151,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     print("espace")
                     print(mapchoisi[i])
-                    return mapchoisi[i]
+                    return (mapchoisi[i], "fini")
                     
                     
 

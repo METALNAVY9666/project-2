@@ -3,44 +3,65 @@ from choix_perso import main as choix
 from choix_map import main as choix2 
 
 
-def suivant1():
-    
-    suiv = "feur"
-    while suiv != "quitter":
-        suiv = choix()
+def debut():
+
+    tabinfo = ["", "", ""]
+
+    def suivant1(tabinfo):
         
-        if suiv == "retour":
-            manager()
+        suiv = "feur"
+        while suiv != "quitter":
+            suiv = choix()
             
-        if suiv[2] == "suivant":
-            suivant2()
-            
-def suivant2():
-    
-    print("SUIVVVVANNNT")
-    suiv = "feur"
-    while suiv != "quitter":
-        suiv = choix2()
+            if suiv == "retour":
+                manager(tabinfo)
+                
+            if suiv[2] == "suivant":
+                tabinfo[1] = suiv[0]
+                tabinfo[2] = suiv[1]
+                print(tabinfo)
+                suivant2(tabinfo)
+                
+    def suivant2(tabinfo):
         
-        if suiv == "retour":
-            manager()
+        print("SUIVVVVANNNT")
+        suiv = "feur"
+        while suiv != "quitter":
+            suiv = choix2()
+            
+            if suiv == "retour":
+                manager(tabinfo)
+            
+            if suiv[1] == "fini":
+                tabinfo[0] = suiv[0]
+                print(tabinfo)
+                manager(tabinfo)
+                
+                
             
 
-
-def manager():
-    suiv = "feur"
-    
-    while suiv != "stop":
-
-        suiv = starting()
+    def manager(tabinfo):
         
-        print(suiv)
-        if suiv == "choix_perso":
-            suivant1()
+        
+        if tabinfo[0] == "":
             
-        if suiv == "quitter":
-            quit()
+            suiv = "feur"
+            while suiv != "stop":
+
+                suiv = starting()
+                
+                print(suiv)
+                if suiv == "choix_perso":
+                    suivant1(tabinfo)
+                    
+                if suiv == "quitter":
+                    quit()
         
-manager()
+        print(tabinfo)
+        return tabinfo
+
+    return manager(tabinfo)
+
+debut()
     
 
