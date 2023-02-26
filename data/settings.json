@@ -1,1 +1,39 @@
-{"audio": {"music": 5, "effects": 20}, "display": {"horizontal": 1280, "vertical": 720, "fullscreen": false, "FPS": 70}, "keys": [{"jump": "z", "block": "s", "left": "q", "right": "d", "l_attack": "a", "h_attack": "w"}, {"jump": "up", "block": "down", "left": "left", "right": "right", "l_attack": "o", "h_attack": "p"}], "commentaires": ["kp_1 pour la touche 1 du pav\u00e9 num\u00e9rique etc"], "trad": {"haut": "up", "bas": "down", "gauche": "left", "droite": "right"}}
+{
+    "audio": {
+        "music": 5,
+        "effects": 20
+    },
+    "display": {
+        "horizontal": 1280,
+        "vertical": 720,
+        "fullscreen": false,
+        "FPS": 70
+    },
+    "keys": [
+        {
+            "jump": "z",
+            "block": "s",
+            "left": "q",
+            "right": "d",
+            "l_attack": "a",
+            "h_attack": "w"
+        },
+        {
+            "jump": "up",
+            "block": "down",
+            "left": "left",
+            "right": "right",
+            "l_attack": "o",
+            "h_attack": "p"
+        }
+    ],
+    "commentaires": [
+        "kp_1 pour la touche 1 du pavé numérique etc"
+    ],
+    "trad": {
+        "haut": "up",
+        "bas": "down",
+        "gauche": "left",
+        "droite": "right"
+    }
+}

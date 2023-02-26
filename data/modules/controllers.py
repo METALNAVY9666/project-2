@@ -1,10 +1,11 @@
 """ Modules qui gère les manettes. """
+import keyboard
 import pygame as pg
 import pygame._sdl2
 from pygame._sdl2.controller import Controller
 from pygame.locals import *
 from data.modules.settings import read_settings
-import keyboard
+from data.modules.keyboard import azerty_to_qwerty
 pg._sdl2.controller.init()
 pg.joystick.init()
 pg.init()
@@ -31,8 +32,9 @@ class SimController:
     """permet de simuler des pressions de touches avec la manette"""
     def __init__(self, number):
         self.keys = read_settings()["keys"][number]
+        self.buttons = []
 
-    def get_pressed(controller):
+    def get_pressed(self, controller):
         """renvoie un dico de boutons pressés"""
         pressed = {
             "B": bool(controller.get_button(1)),
@@ -54,8 +56,34 @@ class SimController:
                 }
         return pressed
     
-    def simulate(self, key):
-        """simule la pression d'une touche"""
+    def press(self, key, release=False):
+        """simule la pression d'une touche, la lache si release = True, (convertit AZERTY en QWE)"""
+        if not key is None:
+            if not release:
+                keyboard.press(azerty_to_qwerty(key))
+            else:
+                keyboard.release(azerty_to_qwerty(key))
+
+    def check_buttons(self, pressed):
+        """fait les actions et agit en conséquence"""
+        press = self.press
+        self.buttons = []
+        for button in pressed.keys():
+            key = self.get_key(button)
+            if pressed[button]:
+                press(key)
+                self.buttons.append(button)
+            else:
+                press(key, True)
+
+    def get_key(self, button):
+        """renvoie la clé correspondant au bouton appuyé (ne convertit pas AZERTY en QWERTY)"""
+        keys = self.keys
+        match button:
+            case "B":
+                return keys["l_attack"]
+            case "Y":
+                return keys["h_attack"]
 
     def update(self):
         """met presses les touches des boutons de la manette pressés"""
@@ -64,3 +92,4 @@ class SimController:
         if plugged:
             controller = contro[0]
             pressed = self.get_pressed(controller)
+            self.check_buttons(pressed)
