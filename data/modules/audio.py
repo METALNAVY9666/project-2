@@ -99,9 +99,10 @@ SFX_PATH = "data/sfx/"
 EFFECTS_PATH = SFX_PATH + "effects/"
 
 
-folders = ("kim", "level", "events", "ui")
+folders = ("kim", "level", "events", "ui", "goku")
 
 for folder in folders:
     SFX[folder] = load_dir(SFX_PATH + folder + "/")
+    print(SFX[folder])
 
 SFX["explosion"] = load_sound(EFFECTS_PATH + "explosion.mp3")

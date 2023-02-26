@@ -321,12 +321,8 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaque normale de base selon les paramètres du joueur
         """
-        keymap = self.vals["keymap"]
-        l_attack = azerty_to_qwerty(keymap["l_attack"])
-        h_attack = azerty_to_qwerty(keymap["h_attack"])
-        l_attack = pg.key.key_code(l_attack)
-        h_attack = pg.key.key_code(h_attack)
-
+        l_attack = self.convert_key("l_attack")
+        h_attack = self.convert_key("h_attack")
         dict_keys = {l_attack: "attack", h_attack: "impact"}
         # Le joueur fait une action
         if event.key in dict_keys:
@@ -416,7 +412,10 @@ class Fighter(pg.sprite.Sprite):
         """
         Dégats du combo final
         """
-        if self.vals['tab'] == [121, 121, 117, 117]:
+        if self.vals['tab'] == ([self.convert_key("l_attack"),
+                                  self.convert_key("l_attack"),
+                                  self.convert_key("h_attack"),
+                                    self.convert_key("h_attack")]):
             self.game.elms["side"][self.number] = 'spe'
             if self.game.name[ennemy.number] != "kim":
                 self.game.elms["side"][ennemy.number] = "back"
