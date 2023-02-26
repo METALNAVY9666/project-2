@@ -433,8 +433,9 @@ class Jeu:
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
         if contro != None and len(contro) == 2:
-            print('la')
             self.handle_input_controller(actions, pause, busy, contro, 1)
+        elif contro != None and len(contro) == 1:
+            self.handle_input_controller(actions, pause, busy, contro, 0)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players
