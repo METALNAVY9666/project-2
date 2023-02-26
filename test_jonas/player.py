@@ -120,7 +120,7 @@ def getInputs(controller:pygame.joystick.Joystick) -> dict:
             "A": bool(controller.get_button(0)),
             "X": bool(controller.get_button(2)),
             "Y": bool(controller.get_button(3)),
-            "LB": bool(xboxController.get_button(4)),
+            "LB": bool(Controller.get_button(4)),
             "RB": bool(controller.get_button(5)),
             "BACK": bool(controller.get_button(6)),
             "START": bool(controller.get_button(7)),
