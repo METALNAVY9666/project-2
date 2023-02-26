@@ -321,9 +321,9 @@ class Fighter(pg.sprite.Sprite):
         # Le joueur fait une action
         if event.key in dict_keys:
             if self.game.elms["right"][self.number]:
-                self.rect.x += 5
+                self.rect.x += 10
             else:
-                self.rect.x -= 5
+                self.rect.x -= 10
             self.game.strike_collision(ennemy)
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
@@ -406,10 +406,12 @@ class Fighter(pg.sprite.Sprite):
         """
         if self.vals['tab'] == [121, 121, 117, 117]:
             self.game.elms["side"][self.number] = 'spe'
-            if self.game.elms["right"][self.number]:
-                ennemy.rect.x += 200
-            else:
-                ennemy.rect.x -= 200
+            if self.game.name[ennemy.number] != "kim":
+                self.game.elms["side"][ennemy.number] = "back"
+                if self.game.elms["right"][self.number]:
+                    ennemy.rect.x += 200
+                else:
+                    ennemy.rect.x -= 200
             self.vals['tab'] = []
 
     def attack_up(self, choice, ennemy):

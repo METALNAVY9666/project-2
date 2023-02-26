@@ -28,9 +28,9 @@ class Jeu:
         """
         Initialisation des dictionnaires"""
         self.elms = {}
-        self.elms["right"] = [False, True, True]
+        self.elms["right"] = [False, True]
         self.elms["fps"] = 60
-        self.elms["side"] = ["left", "left", "left"]
+        self.elms["side"] = ["left", "left"]
         self.elms["pkg"] = pkg
         self.elms["prop"] = prop
 
@@ -234,8 +234,10 @@ class Jeu:
                 for element in self.collision():
                     if self.players[ennemy.number] == self.player_0:
                         self.player_0.vals["health"] -= 10
+                        self.elms["side"][0] = "hit"
                     elif self.players[element.number] == self.player_1:
                         self.player_1.vals["health"] -= 10
+                        self.elms["side"][1] = "hit"
             else:
                 if self.name[ennemy.number] == "kim":
                     ennemy.player["hp"] -= 10

@@ -17,15 +17,16 @@ class Special(pg.sprite.Sprite):
         "Gestion des attaque spéciales"
         if choice[self.game.get_code("r")]:
             self.spe_itachi(screen)
-            self.spe_luffy()
+            self.spe_luffy(screen)
 
-    def spe_luffy(self):
+    def spe_luffy(self, screen):
         """
         Attaque spéciale de luffy
         """
         for element in self.game.players:
             if element.game.name[element.number] == "luffy":
                 if element.vals["percent_ult"] >= 130:
+                    self.animate.fade(screen.get_width(), screen.get_height(), screen)
                     self.game.name[element.number] = 'gear4'
                     element.vals['nbr_sprite'] = 0
                     self.game.elms['side'][element.number] = 'ult'

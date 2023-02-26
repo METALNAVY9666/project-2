@@ -67,7 +67,7 @@ def sprite_tab(name, position):
     dict_size = {"itachi": (X // 10, X // 12),
                  "goku": (X // 9, X // 10),
                  "luffy": (X // 9, X // 10),
-                 "gear4": (X // 9, X // 10),
+                 "gear4": (X // 8, X // 9),
                  "vegeta": (X // 9, X // 10),
                  "revive": (X // 14, X // 12),
                  "kim": (X // 12, X // 12)}

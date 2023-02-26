@@ -49,7 +49,7 @@ class Animate():
         """Fonction qui permet d'afficher le texte"""
         quotes = {"vegeta": "blabla",
                   "goku": "Ce n'est pas encore terminé...",
-                  "luffy": "Tu ne peux plus rien contre moi.",
+                  "luffy": "Tu ne peux plus rien contre moi... GEAR 4 !",
                   "itachi": "Toute technique est inutile devant mes yeux.",
                   "revive": "Ce n'est toujours pas fini...",
                   "kim": "Mouais mouais"}
@@ -70,6 +70,12 @@ class Animate():
                 txt_width = screen.get_width() - (txt.get_width()) * 1.5
                 self.animation_itachi(screen)
                 height = screen.get_height() - (screen.get_height() // 5)
+                return screen.blit(txt, (txt_width, height))
+            elif element.game.name[element.number] == "luffy":
+                txt = self.vals["font"].render(
+                    quotes[element.game.name[element.number]],
+                    0, ( 244, 49, 14))
+                txt_width = screen.get_width() - (txt.get_width() * 1.5) 
                 return screen.blit(txt, (txt_width, height))
 
 
