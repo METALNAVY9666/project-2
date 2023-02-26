@@ -449,7 +449,7 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaque vers le bas
         """
-        if choice[pg.K_DOWN] and (
+        if choice[self.convert_key("block")] and (
                 self.game.collision()):
             self.game.elms["side"][self.number] = 'down'
             if self.game.name[ennemy.number] == "kim":
@@ -485,7 +485,7 @@ class Fighter(pg.sprite.Sprite):
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision():
             # On vérifie le nombre de tentatives autorisées
-            if self.vals['nbr_vanish'] > 0 and event.key == pg.K_e:
+            if self.vals['nbr_vanish'] > 0 and event.key == self.convert_key("block"):
                 # Relance l'animation à zéro
                 self.vals['nbr_sprite'] = 0
                 # Change l'animation
@@ -532,13 +532,13 @@ class Fighter(pg.sprite.Sprite):
         Autorise le dash avant
         """
         if self.number == 0:
-            if choice[pg.K_q] or choice[pg.K_d]:
-                if event.key == pg.K_s:
+            if choice[self.convert_key("left")] or choice[self.convert_key("right")]:
+                if event.key == self.convert_key("block"):
                     self.vals["dashing"][self.number] = True
         elif self.number == 1:
-            if choice[self.game.get_code("left")] or (
-                    choice[self.game.get_code("right")]):
-                if choice[self.game.get_code("down")]:
+            if choice[self.convert_key("left")] or (
+                    choice[self.convert_key("right")]):
+                if choice[self.convert_key("down")]:
                     self.vals["dashing"][self.number] = True
 
     def dash(self):
@@ -548,7 +548,6 @@ class Fighter(pg.sprite.Sprite):
         if self.vals["dashing"][self.number]:
             if not self.game.collision():
                 if self.game.elms["right"][self.number]:
-                    self.game.elms["side"][self.number] = "dash"
                     if self.rect.x < self.vals["surface_width"] - 200:
                         self.rect.x += 30
                     else:
@@ -559,6 +558,8 @@ class Fighter(pg.sprite.Sprite):
                         self.rect.x -= 30
                     else:
                         self.vals["dashing"][self.number] = False
+                self.vals["nbr_sprite"] = 0
+                self.game.elms["side"][self.number] = "dash"
             else:
                 self.vals["dashing"][self.number] = False
     # Autres
