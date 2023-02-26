@@ -49,7 +49,7 @@ def sprites_images(name):
                     'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
                     'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
     dict_size = {"itachi": (X // 9, Y // 8),
-                 "goku": (X // 9,  Y // 10),
+                 "goku": (X // 7,  Y // 8),
                  "luffy": (X // 9, Y // 10),
                  "gear4": (X // 9, Y // 10),
                  "vegeta": (X // 9, Y // 10),
@@ -65,7 +65,7 @@ def sprite_tab(name, position):
     # Name est le nom du perso, position permet de savoir si il est à gauche
     # ou non
     dict_size = {"itachi": (X // 10, X // 12),
-                 "goku": (X // 9, X // 10),
+                 "goku": (X // 10, X // 11),
                  "luffy": (X // 9, X // 10),
                  "gear4": (X // 8, X // 9),
                  "vegeta": (X // 9, X // 10),

@@ -416,16 +416,22 @@ class Fighter(pg.sprite.Sprite):
 
     def attack_up(self, choice, ennemy):
         '''Attaque en l'air'''
-        if choice[pg.K_UP]:
+        if choice[pg.K_UP] or choice[pg.K_z]:
             if self.game.collision():
                 self.game.elms["side"][self.number] = 'up'
-                ennemy.rect.y = 250
+                if self.game.name[ennemy.number] == "kim":
+                    print("kim va voler")
+                else:
+                    ennemy.rect.y = 250
         if self.game.collision():
             self.vals['fall'] = False
             if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
                 self.game.elms["side"][self.number] = 'impact'
                 self.vals['fall'] = False
-                ennemy.rect.x -= 100
+                if self.game.name[ennemy.number] == "kim":
+                    print("OH KIM PTN")
+                else:
+                    ennemy.rect.x -= 100
 
     def attack_down(self, choice, ennemy):
         """
@@ -434,8 +440,11 @@ class Fighter(pg.sprite.Sprite):
         if choice[pg.K_DOWN] and (
                 self.game.collision()):
             self.game.elms["side"][self.number] = 'down'
-            while ennemy.rect.y <= self.settings['size_max']:
-                ennemy.rect.y += 1
+            if self.game.name[ennemy.number] == "kim":
+                print("ALLO")
+            else:
+                while ennemy.rect.y <= self.settings['size_max']:
+                    ennemy.rect.y += 1
 
     def attack_down_controller(self, ennemy):
         if self.game.collision():

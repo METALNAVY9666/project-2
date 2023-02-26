@@ -86,7 +86,7 @@ class Jeu:
                 if self.name in ['goku', 'vegeta']:
                     self.elms["side"][self.player_0.number] = 'left'
             # Gère les sauts
-            elif choice[self.get_code("z")]:
+            elif choice[self.get_code("z")] and not choice[self.get_code("y")]:
                 self.player_0.jump()
             # Gère le bloquage
             elif choice[self.get_code("s")]:
@@ -188,9 +188,9 @@ class Jeu:
                         element.vanish(event)
                         element.is_dashing(choice, event)
                         element.dash_attack_up(choice, event)
-            if event.type == pg.KEYUP and (
-                    self.elms["side"][self.player_0.number] == 'run'):
-                self.player_0.vals['nbr_sprite'] = 5
+                    if event.type == pg.KEYUP and (
+                            self.elms["side"][element.number] == 'run'):
+                        self.player_0.vals['nbr_sprite'] = 5
 
     def collision(self):
         '''Cette fonction renvoi un bouléen,
