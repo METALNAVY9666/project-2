@@ -538,7 +538,7 @@ class Fighter(pg.sprite.Sprite):
         elif self.number == 1:
             if choice[self.convert_key("left")] or (
                     choice[self.convert_key("right")]):
-                if choice[self.convert_key("down")]:
+                if choice[self.convert_key("block")]:
                     self.vals["dashing"][self.number] = True
 
     def dash(self):

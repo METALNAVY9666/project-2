@@ -23,8 +23,8 @@
             "block": "down",
             "left": "left",
             "right": "right",
-            "l_attack": "o",
-            "h_attack": "p"
+            "l_attack": "kp_1",
+            "h_attack": "kp_2"
         }
     ],
     "commentaires": [

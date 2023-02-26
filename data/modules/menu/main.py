@@ -1,6 +1,6 @@
-from menu import main as starting
-from choix_perso import main as choix
-from choix_map import main as choix2 
+from data.modules.menu.menu import main as starting
+from data.modules.menu.choix_perso import main as choix
+from data.modules.menu.choix_map import main as choix2
 
 
 def debut():
@@ -62,8 +62,5 @@ def debut():
     manager(tabinfo)
     print(tabinfo)
     return tabinfo
-    
-
-debut()
     
 

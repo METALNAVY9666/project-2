@@ -3,9 +3,7 @@
 """ Ce module est le menu de démarage du jeu. """
 
 import pygame
-import sys
-from choix_perso import main as choix
-from textures import * 
+from data.modules.menu.textures import *
 
 class Bouton:
     """ L'objet bouton permet de créer des boutons pour que le joueur
@@ -30,8 +28,6 @@ class Bouton:
         pygame.draw.rect(aff_surface, self.top_color, self.top_rect)
         aff_surface.blit(self.text_surf, self.text_rect)
         return self.check_click()
-        
-        
 
     # Fonction qui va vérifier le click de la souri sur le bouton
     def check_click(self):

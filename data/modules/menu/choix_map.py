@@ -1,10 +1,8 @@
 # Créé par Alexis, le 15/02/2023 en Python 3.7
 
 import pygame
-import sys
-from textures import *
-from persos_choisis import *
-print("textures chargées")
+from data.modules.menu.textures import *
+from data.modules.menu.persos_choisis import *
 
 class Bouton_quit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """

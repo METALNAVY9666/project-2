@@ -1,5 +1,4 @@
 """contient la classe d'un joueur"""
-import keyboard
 import pygame as pg
 from copy import copy
 from random import randint
@@ -32,6 +31,7 @@ class Gunner(pg.sprite.Sprite):
         self.physics["gravity"] = 9.81 * 2
         self.physics["grounded"] = True
         self.physics["jump_height"] = self.pkg["dimensions"][1] // 3
+        # vovo
         self.physics["pos"] = [0, 0]
         self.physics["jump_state"] = False
         self.physics["falling"] = False
@@ -61,7 +61,8 @@ class Gunner(pg.sprite.Sprite):
         self.player["bullets"] = []
         self.player["combos"] = []
         self.player["ult"] = {}
-        self.player["ult"]["power"] = 100
+        # vovo
+        self.player["ult"]["power"] = 0
         self.player["ult"]["status"] = False
         self.player["ult"]["time"] = 0
         self.player["ult"]["load"] = 7 * self.pkg["FPS"]
@@ -408,11 +409,11 @@ class Gunner(pg.sprite.Sprite):
                 player.vals["health"] -= dmg
             elif player_type == "Gunner":
                 if player.player["block"]:
-                    dmg /= 4
+                    dmg /= 2
                 player.player["hp"] -= dmg
 
     def kick(self, rect):
-        """coup de pied yahoo"""
+        """coup de pied"""
         if self.player["cooldown"]["kick"] <= 0:
             self.player["cooldown"]["kick"] = 333
             SFX["kim"]["kick"].play()

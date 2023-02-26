@@ -4,6 +4,7 @@ from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
 from data.modules.controllers import manage_controller, manage_joysticks
+from data.modules.menu.main import debut as menu
 import pygame._sdl2
 pygame.joystick.init()
 pygame.init()
@@ -43,8 +44,10 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-level_name = "highway"
-players = ["goku", "kim"]
+menu_vals = menu()
+
+level_name = menu_vals[0]
+players = [menu_vals[1], menu_vals[2]]
 
 
 level = read_levels()[level_name]
