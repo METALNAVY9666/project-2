@@ -6,6 +6,8 @@ from data.modules.gunner import Gunner
 # from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
 from data.modules.spe import Special
+from data.modules.settings import read_settings
+from data.modules.keyboard import azerty_to_qwerty
 from data.modules.controllers import manage_controller, manage_joysticks
 from pygame._sdl2.controller import Controller
 from pygame.locals import *
@@ -46,6 +48,9 @@ class Jeu:
             self.player_0 = Fighter(self, pkg, prop, 0)
             self.player_1 = Fighter(self, pkg, prop, 1)
         self.players = [self.player_0, self.player_1]
+        for player in self.players:
+            if type(player).__name__ == "Fighter":
+                self.elms["keymap"] = read_settings()["keys"][player.number]
         self.ulti = Special(self)
         # self.object = PunchingBall(self)
 
@@ -59,6 +64,11 @@ class Jeu:
     def get_code(self, key):
         "renvoie la valeur de la touche"
         return pg.key.key_code(key)
+    
+    def convert_key(self, key):
+        """renvoie la classe pygame de la clé"""
+        keymap = self.elms["keymap"]
+        return pg.key.key_code(azerty_to_qwerty(keymap[key]))
 
     def handle_input(self, actions, pause, busy, screen):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -71,25 +81,25 @@ class Jeu:
             self.player_0.vals['pause'] = True
             # Modifie les animations en fonction de l'input
             self.player_0.vals["attacked"] = False
-            if choice[self.get_code("d")]:
-                if choice[self.get_code("z")]:
+            if choice[self.convert_key("right")]:
+                if choice[self.convert_key("up")]:
                     self.player_0.jump()
                 self.player_0.move()
                 self.elms['right'][self.player_0.number] = True
-            elif choice[self.get_code("q")]:
-                if choice[self.get_code("z")]:
+            elif choice[self.convert_key("left")]:
+                if choice[self.convert_key("up")]:
                     self.player_0.jump()
                 self.player_0.move()
                 self.elms['right'][self.player_0.number] = False
                 if self.name in ['goku', 'vegeta']:
                     self.elms["side"][self.player_0.number] = 'left'
             # Gère les sauts
-            elif choice[self.get_code("z")] and not choice[self.get_code("y")]:
+            elif choice[self.convert_key("up")] and not choice[self.convert_key("l_attack")]:
                 self.player_0.jump()
             # Gère le bloquage
-            elif choice[self.get_code("s")]:
+            elif choice[self.convert_key("down")]:
                 self.player_0.block()
-            if choice[self.get_code("z")] and choice[self.get_code("s")]:
+            if choice[self.convert_key("up")] and choice[self.convert_key("down")]:
                 self.player_0.charge()
             self.ulti.spe_manager(screen, choice)
             # Actions qui nécessitent une boucle 'for'

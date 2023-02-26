@@ -15,8 +15,8 @@
             "block": "s",
             "left": "q",
             "right": "d",
-            "l_attack": "a",
-            "h_attack": "w"
+            "l_attack": "y",
+            "h_attack": "u"
         },
         {
             "jump": "up",

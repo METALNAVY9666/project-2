@@ -314,7 +314,8 @@ class Fighter(pg.sprite.Sprite):
 
     def convert_key(self, key):
         """renvoie la classe pygame de la clé"""
-        return pg.key.key_code(azerty_to_qwerty(key))
+        keymap = self.vals["keymap"]
+        return pg.key.key_code(azerty_to_qwerty(keymap[key]))
     
     def single_tap(self, event, choice, ennemy):
         """
@@ -328,7 +329,6 @@ class Fighter(pg.sprite.Sprite):
 
         dict_keys = {l_attack: "attack", h_attack: "impact"}
         # Le joueur fait une action
-        print(event.key)
         if event.key in dict_keys:
             if self.game.elms["right"][self.number]:
                 self.rect.x += 10
@@ -338,7 +338,7 @@ class Fighter(pg.sprite.Sprite):
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
-            if event.key == pg.K_y or pg.K_o:
+            if event.key == l_attack or h_attack:
                 self.attack_up(choice, ennemy)
                 self.attack_down(choice, ennemy)
 
@@ -389,7 +389,9 @@ class Fighter(pg.sprite.Sprite):
         """
         Gère l'attaque rapide en l'air
         """
-        if choice[self.game.get_code('z')] and event.key == pg.K_y:
+        jump = self.convert_key("jump")
+        l_attack = self.convert_key("l_attack")
+        if choice[jump] and event.key == l_attack:
             self.vals['jumping'] = False
             self.vals['nb_sprite'] = 0
             self.game.elms["side"][self.number] = 'attack'
@@ -426,7 +428,7 @@ class Fighter(pg.sprite.Sprite):
 
     def attack_up(self, choice, ennemy):
         '''Attaque en l'air'''
-        if choice[pg.K_UP] or choice[pg.K_z]:
+        if choice[self.convert_key("jump")]:
             if self.game.collision():
                 self.game.elms["side"][self.number] = 'up'
                 if self.game.name[ennemy.number] == "kim":
