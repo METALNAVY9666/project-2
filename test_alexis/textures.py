@@ -75,3 +75,20 @@ titre = pygame.transform.scale(titre, (700, 80))
 # Import image OK
 
 ok = pygame.image.load("img/ok.png").convert_alpha()
+
+# Import des grandes images des personnages
+
+goku_grand_r = pygame.image.load("img/goku_grand.png").convert_alpha()
+goku_grand_b = pygame.image.load("img/goku_grand_b.png").convert_alpha()
+
+vegeta_grand_r = pygame.image.load("img/vegeta_grand.png").convert_alpha()
+vegeta_grand_b = pygame.image.load("img/vegeta_grand_b.png").convert_alpha()
+
+kim_grand_r = pygame.image.load("img/kim_grand.png").convert_alpha()
+kim_grand_b = pygame.image.load("img/kim_grand_b.png").convert_alpha()
+
+luffy_grand_r = pygame.image.load("img/luffy_grand.png").convert_alpha()
+luffy_grand_b = pygame.image.load("img/luffy_grand_b.png").convert_alpha()
+
+itachi_grand_r = pygame.image.load("img/itachi_grand.png").convert_alpha()
+itachi_grand_b = pygame.image.load("img/itachi_grand_b.png").convert_alpha()

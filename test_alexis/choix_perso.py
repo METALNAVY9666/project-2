@@ -97,6 +97,20 @@ def main():
     perso2 = (["goku", "vegeta", "kim", "luffy"],
                  ["itachi", "itachi", "itachi", "itachi"])
     
+    tab1_grand_perso = ([goku_grand_r, vegeta_grand_r, kim_grand_r,
+                        luffy_grand_r], 
+                        [itachi_grand_r, itachi_grand_r, itachi_grand_r, 
+                         itachi_grand_r])
+    
+    tab2_grand_perso = ([goku_grand_b, vegeta_grand_b, kim_grand_b,
+                        luffy_grand_b], 
+                        [itachi_grand_b, itachi_grand_b, itachi_grand_b, 
+                         itachi_grand_b])
+    
+    grand_perso1 = tab1_grand_perso[0][0]
+    grand_perso2 = tab2_grand_perso[0][0]
+    
+    
     i = 0
     j = 0  
     
@@ -132,6 +146,9 @@ def main():
         aff_surface.blit(itachibleu, (708, 323))
         
         aff_surface.blit(ok, posok)
+        
+        aff_surface.blit(grand_perso1, (255, 333))
+        aff_surface.blit(grand_perso2, (888, 333))
 
         retour = Bouton.dessin()
         
@@ -148,6 +165,7 @@ def main():
                     if j == 4:
                         j = 4 - 1
                     xb = list_pos2[z][j]
+                    grand_perso2 = tab2_grand_perso[z][j]
                     
                 if event.key == pygame.K_LEFT:
                     print("gauche")
@@ -155,6 +173,7 @@ def main():
                     if j == -1:
                         j = 0
                     xb = list_pos2[z][j]
+                    grand_perso2 = tab2_grand_perso[z][j]
                     
                 if event.key == pygame.K_d:
                     print("d")
@@ -162,6 +181,7 @@ def main():
                     if i == 4:
                         i = 4 - 1
                     xa = list_pos1[x][i]
+                    grand_perso1 = tab1_grand_perso[x][i]
                     
                 if event.key == pygame.K_q:
                     print("q")
@@ -169,6 +189,7 @@ def main():
                     if i == -1:
                         i = 0
                     xa = list_pos1[x][i]
+                    grand_perso1 = tab1_grand_perso[x][i]
                     
                 if event.key == pygame.K_SPACE:
                     print("espace")
@@ -183,6 +204,7 @@ def main():
                     if z == len(list_pos2):
                         z = z - 1
                     xb = list_pos2[z][j]
+                    grand_perso2 = tab2_grand_perso[z][j]
 
                 if event.key == pygame.K_s:
                     print("s")
@@ -190,6 +212,7 @@ def main():
                     if x == len(list_pos1):
                         x = x - 1
                     xa = list_pos1[x][i]
+                    grand_perso1 = tab1_grand_perso[x][i]
                     
                 if event.key == pygame.K_UP:
                     print("haut")
@@ -197,6 +220,7 @@ def main():
                     if z == -1:
                         z = 0
                     xb = list_pos2[z][j]
+                    grand_perso2 = tab2_grand_perso[z][j]
                     
                 if event.key == pygame.K_z:
                     print("z")
@@ -204,6 +228,7 @@ def main():
                     if x == -1:
                         x = 0
                     xa = list_pos1[x][i]
+                    grand_perso1 = tab1_grand_perso[x][i]
                     
 
             pygame.display.update()
