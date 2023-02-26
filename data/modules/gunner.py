@@ -4,7 +4,7 @@ from copy import copy
 from random import randint
 from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
-from data.modules.keyboard import NUMPAD
+from data.modules.keyboard import azerty_to_qwerty, NUMPAD
 from data.modules.settings import read_settings
 
 
@@ -90,6 +90,8 @@ class Gunner(pg.sprite.Sprite):
 
     def get_code(self, key):
         "renvoie la valeur de la touche"
+        new_key = azerty_to_qwerty(key)
+        print(key, self.pkg["key"].key_code(new_key))
         return self.pkg["key"].key_code(key)
 
     def flip(self, sprite):
@@ -329,7 +331,9 @@ class Gunner(pg.sprite.Sprite):
             try:
                 # renvoie un couple ("jump", True) si le joueur appuie
                 # sur la touche assignée au saut dans settings.json
-                pressed.append([key, choice[self.get_code(keys[key])]])
+                code = self.get_code(keys[key])
+                is_pressed = choice[code]
+                pressed.append([key, is_pressed])
             except ValueError:
                 # si le joueur appuie sur une touche du pavé numérique
                 # alors renvoyer le code depuis un dictionnnaire
@@ -360,6 +364,7 @@ class Gunner(pg.sprite.Sprite):
                         sprite = self.kick(other)
                     elif couple[0] == "h_attack":
                         sprite = self.barrett_shoot(dlt)
+            print("---")
             self.gfx["sprite"] = sprite
             self.player["combos"] = pack
 

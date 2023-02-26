@@ -33,6 +33,22 @@ class KeyChecker:
                 self.pause_menu.switch()
 
 
+def azerty_to_qwerty(key, reverse=False):
+    """convertit une lettre du clavier azerty en qwerty"""
+    if len(key) != 1:
+        return key
+    azerty = 'azqwAZQW&é"\'(-è_çà)^$Mù,?;:!§1234567890'
+    qwerty = 'qwazQWAZ1234567890-[]:\'mM,./?!@#$%^&*()'
+    if reverse:
+        if not key in qwerty:
+            return key
+        ind = qwerty.index(key)
+        return azerty[ind]
+    if not key in azerty:
+            return key
+    ind = azerty.index(key)
+    return qwerty[ind]
+
 NUMPAD = {
     "kp_0": pygame.K_KP0,
     "kp_1": pygame.K_KP1,
