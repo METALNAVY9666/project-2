@@ -32,7 +32,7 @@ class Background:
 class BaseLevel:
     """générateur de niveaux"""
 
-    def __init__(self, pygame_pack, prop, game_settings):
+    def __init__(self, pygame_pack, prop, game_settings, players):
         """mettre pack_pygame, les propriétés du niveau et les paramètres
         du jeu en parametres afin de pouvoir modifier la scène sans recharger
         """
@@ -40,7 +40,7 @@ class BaseLevel:
         self.init_prop(pygame_pack, prop, game_settings)
         self.init_ui()
         self.init_audio()
-        self.init_game()
+        self.init_game(players)
         self.init_events()
 
     def init_prop(self, pygame_pack, prop, game_settings):
@@ -64,9 +64,9 @@ class BaseLevel:
         bg_music.play()
         self.cls["pause"].bg_music = bg_music
 
-    def init_game(self):
+    def init_game(self, players):
         """initialise le jeu"""
-        self.cls["game"] = Jeu(["goku", "kim"], self.pkg, self.prop)
+        self.cls["game"] = Jeu(players, self.pkg, self.prop)
 
     def init_events(self):
         """initialise les évènements"""
