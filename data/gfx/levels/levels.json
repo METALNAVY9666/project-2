@@ -53,17 +53,29 @@
         "ground_level": 25
     },
     "laboratory": {
-      "scale": [
-          1000,
-          563
-      ],
-      "bg": "laboratory",
-      "music": "data/sfx/music/laboratory.mp3",
-      "animated": false,
-      "music_folder": false,
-      "events": [
-      ],
-      "drop": 14,
-      "ground_level": 25
-  }
+        "scale": [
+            1000,
+            563
+        ],
+        "bg": "laboratory",
+        "music": "data/sfx/music/laboratory.mp3",
+        "animated": false,
+        "music_folder": false,
+        "events": [],
+        "drop": 14,
+        "ground_level": 25
+    },
+    "minecraft": {
+        "scale": [
+            1920,
+            1057
+        ],
+        "bg": "neo_tokyo",
+        "music": "data/sfx/music/neo_tokyo.mp3",
+        "animated": false,
+        "music_folder": false,
+        "drop": 5,
+        "events": [],
+        "ground_level": 25
+    }
 }

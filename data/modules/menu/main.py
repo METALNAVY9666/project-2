@@ -61,6 +61,6 @@ def debut():
     print(tabinfo)
     manager(tabinfo)
     print(tabinfo)
-    return tabinfo
+    return tabinfo[0], [tabinfo[1], tabinfo[2]]
     
 

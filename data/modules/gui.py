@@ -125,7 +125,8 @@ class SettingsMenu:
         }
         dims = pkg["dimensions"]
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
-        self.value = None
+        self.asks = {}
+        self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"])
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""
@@ -410,3 +411,40 @@ class SettingsMenu:
             self.check_click(rect)
             rects.append(rect)
         return rects
+
+class IntInput:
+    """flemme"""
+    def __init__(self, pkg, settings, types, extremums):
+        self.pkg = pkg
+        self.settings = settings
+        self.active = False
+        self.string = ""
+        self.types = types
+        self.extremums = extremums
+
+    def switch_active(self):
+        """active ou désactive l'entrée"""
+        if self.active:
+            self.active = False
+        else:
+            self.active = True
+
+    def return_int(self):
+        """renvoie la valeur en int"""
+        return int(self.string)
+
+    def update(self):
+        """met à jour"""
+        events = self.pkg["events"]()
+        pg = self.pkg["pygame"]
+        keydown = pg.KEYDOWN
+        backspace = pg.K_BACKSPACE
+        if self.active:
+            for event in events:
+                if event.type == keydown:
+                    if event.key == backspace:
+                        if len(self.string) > 0:
+                            self.string = self.string[:-1]
+                    else:
+                        self.string += event.unicode
+

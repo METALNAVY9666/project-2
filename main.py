@@ -33,7 +33,8 @@ pack_pygame = {
     "rect": pygame.Rect,
     "key": pygame.key,
     "transform": pygame.transform,
-    "dimensions": dimensions
+    "dimensions": dimensions,
+    "events": pygame.event.get
 }
 
 icon = pygame.image.load("data/gfx/icon.png")
@@ -44,11 +45,7 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-menu_vals = menu()
-
-level_name = menu_vals[0]
-players = [menu_vals[1], menu_vals[2]]
-
+level_name, players = menu()
 
 level = read_levels()[level_name]
 
