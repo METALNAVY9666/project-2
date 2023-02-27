@@ -13,6 +13,14 @@ class Special(pg.sprite.Sprite):
         self.animate = Animate(self)
         print('la spé de', self.game.name, 'est chargée.')
         # self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
+        self.init_dict()
+
+    def init_dict(self):
+        self.can_spe = {}
+        self.can_spe["goku"] = True
+        self.can_spe["itachi"] = True
+        self.can_spe["luffy"] = True
+        self.can_spe["vegeta"] = True
 
     def spe_manager(self, screen, choice):
         "Gestion des attaque spéciales"
@@ -28,7 +36,8 @@ class Special(pg.sprite.Sprite):
             if element.game.name[element.number] == "luffy":
                 if element.vals["percent_ult"] >= 130:
                     SFX["luffy"]["spe"].play()
-                    self.animate.fade(screen.get_width(), screen.get_height(), screen)
+                    self.animate.fade(screen.get_width(),
+                                      screen.get_height(), screen)
                     self.game.name[element.number] = 'gear4'
                     element.vals['nbr_sprite'] = 0
                     self.game.elms['side'][element.number] = 'ult'
@@ -44,10 +53,12 @@ class Special(pg.sprite.Sprite):
                 if 0 < element.vals["health"] < element.vals["max_health"] // 3:
                     if element.vals["percent_ult"] >= 130:
                         SFX["itachi"]["spe"].play()
+                        print("ici aussi")
                         element.vals["percent_ult"] = 0
                         self.animate.fade(screen.get_width(),
                                           screen.get_height(), screen)
                         victime = self.who_is_victime(element)
+                        self.can_spe["itachi"] = False
                         if victime.game.name[victime.number] == "kim":
                             victime.player["hp"] = victime.pkg["dimensions"][0] / 1920 * 3
                         else:
@@ -84,6 +95,7 @@ class Special(pg.sprite.Sprite):
             if element.game.name[element.number] == "goku":
                 element.vals["percent_ult"] = 130
                 if element.vals["health"] <= 0:
+                    self.can_spe["goku"] = False
                     SFX["goku"]["damage"].stop()
                     SFX["goku"]["spe"].play()
                     self.game.name[element.number] = "revive"

@@ -37,10 +37,6 @@ class Animate():
         width = screen.get_width() - (self.vals["image"].get_width() * 2)
         height = screen.get_height() // 2
         self.rect_update.append(screen.blit(fade, (0, 0)))
-        """self.rect_update.append(screen.blit(
-            self.vals["image"], (width, height)))
-        self.rect_update.append(screen.blit(
-            self.vals["face"], (width+50, height+40)))"""
         self.rect_update.append(self.txt_blit(screen, width, height))
         pg.display.update(self.rect_update)
         return []
@@ -63,7 +59,8 @@ class Animate():
                     0, (244, 49, 14))   
                 txt_width = screen.get_width() - (txt.get_width()) * 2
                 return screen.blit(txt, (txt_width, height))
-            if element.game.name[element.number] == "itachi":
+            if element.game.name[element.number] == "itachi" and(
+                self.spe.can_spe["itachi"]):
                 txt = self.vals["font"].render(
                     quotes[element.game.name[element.number]],
                     0, (244, 49, 14))
