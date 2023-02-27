@@ -52,7 +52,7 @@ class Fighter(pg.sprite.Sprite):
         self.vals["pkg"] = pkg
         self.vals["prop"] = prop
         self.vals["tab"] = []
-        self.vals["percent_ult"] = 130
+        self.vals["percent_ult"] = 0
         self.vals["sp_tab"] = []
         self.vals["jumping"] = True
         self.vals["dashing"] = [False, False]
@@ -499,7 +499,7 @@ class Fighter(pg.sprite.Sprite):
 
     def charge(self):
         """Charge l'énergie"""
-        if self.game.name[self.number] in ["goku", "revive"]:
+        if self.game.name[self.number] in ["goku", "vegeta"]:
             if self.vals["percent_ult"] < 130:
                 self.vals["jumping"] = False
                 self.vals["percent_ult"] += 0.1

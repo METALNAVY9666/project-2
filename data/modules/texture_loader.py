@@ -42,12 +42,12 @@ def convert_alpha_dict(dicti, size):
 
 def sprites_images(name):
     '''Cette fonction récupère les chemins des images des persos.'''
-    sprites_dict = {'right': pg.image.load(f'test_olivier/gfx/{name}/right.png'),
-                    'left': pg.image.load(f'test_olivier/gfx/{name}/left.png'),
-                    'jump': pg.image.load(f'test_olivier/gfx/{name}/jump_left.png'),
-                    'jump_right': pg.image.load(f'test_olivier/gfx/{name}/jump_right.png'),
-                    'shield': pg.image.load(f'test_olivier/gfx/{name}/block.png'),
-                    'shield_right': pg.image.load(f'test_olivier/gfx/{name}/block_right.png')}
+    sprites_dict = {'right': pg.image.load(GFX_PATH + f'{name}/right.png'),
+                    'left': pg.image.load(GFX_PATH + f'{name}/left.png'),
+                    'jump': pg.image.load(GFX_PATH + f'{name}/jump_left.png'),
+                    'jump_right': pg.image.load(GFX_PATH + f'{name}/jump_right.png'),
+                    'shield': pg.image.load(GFX_PATH + f'{name}/block.png'),
+                    'shield_right': pg.image.load(GFX_PATH +f'{name}/block_right.png')}
     dict_size = {"itachi": (X // 9, Y // 8),
                  "goku": (X // 7,  Y // 8),
                  "luffy": (X // 9, Y // 10),
@@ -74,7 +74,7 @@ def sprite_tab(name, position):
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):
-        string = f'test_olivier/gfx/{name}/base_{position}{ind}'
+        string = GFX_PATH +f'{name}/base_{position}{ind}'
         tab[ind] = load_image(string, scale)
         tab[ind].convert_alpha()
     return tab
@@ -96,6 +96,9 @@ EVENTS_PATH = "data/gfx/events/"
 BG_PATH = "data/gfx/images/"
 EFFECTS_PATH = "data/gfx/effects/"
 BUTTONS_PATH = UI_PATH + "buttons/"
+# A vovo
+BOX_PATH = "test_olivier/gfx/box/"
+GFX_PATH = "test_olivier/gfx/"
 
 # convert permet de blit les images plus rapidement
 # et convert_alpha fait la même chose pour les images transparentes
@@ -109,7 +112,7 @@ pg.display.update(loading_rect)
 
 # charge la police
 pg.font.init()
-GFX["font"] = pg.font.Font('test_olivier/gfx/fonts/04B_19__.TTF', 60)
+GFX["font"] = pg.font.Font(GFX_PATH + 'fonts/04B_19__.TTF', 60)
 GFX["paladins"] = pg.font.Font('data/gfx/fonts/paladins.ttf', 60)
 
 # chargement des boutons et du menu pause.
@@ -154,9 +157,9 @@ GFX["platform"] = load_image(TEMP, (X // 1.5, Y // 1.5)).convert_alpha()
 
 # Images pour le menu
 GFX['stats_box'] = load_image(
-    "test_olivier/gfx/box/" + "stats_box", (X // 3, X // 8)).convert_alpha()
+    BOX_PATH + "stats_box", (X // 3, X // 8)).convert_alpha()
 GFX["skill_box"] = load_image(
-    "test_olivier/gfx/box/" + "stats_box", (X // 2, X // 9)).convert_alpha()
+    BOX_PATH + "stats_box", (X // 2, X // 9)).convert_alpha()
 
 bro_tab = ["C'est quoi la blague ?",
            "C'est un peu bêbête",
@@ -169,20 +172,20 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter l'exponentielle", ]
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 8, Y // 8))
-GFX["kim_face"] = load_image("test_olivier/gfx/box/"+"kim", (X//15, X//15)).convert_alpha()
-GFX["luffy"] = load_image("test_olivier/gfx/box/" +
+GFX["kim_face"] = load_image(BOX_PATH+"kim", (X//15, X//15)).convert_alpha()
+GFX["luffy"] = load_image(BOX_PATH +
                           "luffy", (X // 15, X // 15)).convert_alpha()
-GFX["itachi"] = load_image("test_olivier/gfx/box/" +
+GFX["itachi"] = load_image(BOX_PATH +
                            "itachi", (X // 15, X // 15)).convert_alpha()
-GFX["goku"] = load_image("test_olivier/gfx/box/" +
+GFX["goku"] = load_image(BOX_PATH +
                          "goku", (X // 15, X // 15)).convert_alpha()
-GFX["vegeta"] = load_image("test_olivier/gfx/box/" +
+GFX["vegeta"] = load_image(BOX_PATH +
                            "vegeta", (X // 15, X // 15)).convert_alpha()
-GFX["gear4"] = load_image("test_olivier/gfx/box/" +
+GFX["gear4"] = load_image(BOX_PATH +
                           "gear4", (X // 15, X // 15)).convert_alpha()
-GFX["revive"] = load_image("test_olivier/gfx/box/" +
+GFX["revive"] = load_image(BOX_PATH +
                            "revive", (X // 15, X // 15)).convert_alpha()
-GFX["itachi_spe"] = load_image("test_olivier/gfx/itachi/itachi_spe",
+GFX["itachi_spe"] = load_image(GFX_PATH + "itachi/itachi_spe",
                             (X // 1, X //2)).convert_alpha()
 TEMP = EVENTS_PATH+"kim_ult/"
 GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y)) for filename in listdir(TEMP)]
