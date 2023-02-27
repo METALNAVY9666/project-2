@@ -220,7 +220,7 @@ class Jeu:
                         element.vals["fall"] = True
                         element.attack(event, choice)
                         element.move_manager(event)
-                        element.vanish(event)
+                        element.vanish(choice)
                         element.is_dashing(choice, event)
                         element.dash_attack_up(choice, event)
                     if event.type == pg.KEYUP and (
@@ -268,11 +268,9 @@ class Jeu:
             if "kim" not in self.name:
                 for element in self.collision():
                     if self.players[ennemy.number] == self.player_0:
-                        self.player_0.vals["health"] -= 10
-                        self.elms["side"][0] = "hit"
+                        self.player_0.damages(ennemy)
                     elif self.players[element.number] == self.player_1:
-                        self.player_1.vals["health"] -= 10
-                        self.elms["side"][1] = "hit"
+                        self.player_1.damages(ennemy)
             else:
                 if self.name[ennemy.number] == "kim":
                     ennemy.player["hp"] -= 10

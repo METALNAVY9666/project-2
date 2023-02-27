@@ -283,8 +283,9 @@ class Fighter(pg.sprite.Sprite):
         ennemy = self.game.player_0
         if self.number == 0:
             ennemy = self.game.player_1
-        self.single_tap(event, choice, ennemy)
-        self.combo(ennemy)
+        if not self.vals["attacked"]:
+            self.single_tap(event, choice, ennemy)
+            self.combo(ennemy)
 
     def attack_controller(self, choice, contro):
         '''
@@ -303,9 +304,17 @@ class Fighter(pg.sprite.Sprite):
         Tant qu'il y a moins de 10 éléments dans le tableau on en rajoute.
         """
         if self.game.collision():
-            if len(self.vals['tab']) < 4:
+            if len(self.vals['tab']) < 8:
                 self.vals['tab'].append(event.key)
-                print(self.vals['tab'])
+                print(event.key, [self.convert_key("l_attack"),
+                                  self.convert_key("l_attack"),
+                                  self.convert_key("l_attack"),
+                                  self.convert_key("l_attack"),
+                                  self.convert_key("h_attack"),
+                                  self.convert_key("h_attack"),
+                                  self.convert_key("h_attack"),
+                                  self.convert_key("h_attack")])
+                # print(self.vals['tab'])
             else:
                 self.vals['tab'] = []
         else:
@@ -327,14 +336,16 @@ class Fighter(pg.sprite.Sprite):
         # Le joueur fait une action
         if event.key in dict_keys:
             if self.game.elms["right"][self.number]:
-                self.rect.x += 10
+                if not ennemy.vals["attacked"]:
+                    self.rect.x += 10
             else:
-                self.rect.x -= 10
+                if not ennemy.vals["attacked"]:
+                    self.rect.x -= 10
             self.game.strike_collision(ennemy)
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
-            if event.key == l_attack or h_attack:
+            if event.key == l_attack :
                 self.attack_up(choice, ennemy)
                 self.attack_down(choice, ennemy)
 
@@ -412,12 +423,21 @@ class Fighter(pg.sprite.Sprite):
         """
         Dégats du combo final
         """
+        """print([self.convert_key("l_attack"),
+               self.convert_key("l_attack"),
+               self.convert_key("h_attack"),
+               self.convert_key("h_attack")])"""
         if self.vals['tab'] == ([self.convert_key("l_attack"),
                                  self.convert_key("l_attack"),
+                                 self.convert_key("l_attack"),
+                                 self.convert_key("l_attack"),
+                                 self.convert_key("h_attack"),
+                                 self.convert_key("h_attack"),
                                  self.convert_key("h_attack"),
                                  self.convert_key("h_attack")]):
             self.game.elms["side"][self.number] = 'spe'
             if self.game.name[ennemy.number] != "kim":
+                ennemy.vals["nbr_sprite"] = 0
                 self.game.elms["side"][ennemy.number] = "back"
                 if self.game.elms["right"][self.number]:
                     ennemy.rect.x += 200
@@ -463,39 +483,51 @@ class Fighter(pg.sprite.Sprite):
             while ennemy.rect.y <= self.settings['size_max']:
                 ennemy.rect.y += 1
 
-    def damages(self):
+    def damages(self, ennemy):
         '''Fonction qui gère les dommages'''
-        if self.game.collision():
-            if not self.vals['attacked']:
-                self.vals['health'] -= 1
+        ennemy_side = self.game.elms["right"][ennemy.number]
+        if not self.vals['attacked']:
+            self.vals['health'] -= 10
+            if ennemy_side:
+                self.rect.x += 10
+            else:
+                self.rect.x -= 10
+            self.game.elms["side"][self.number] = "hit"
 
     # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
     def block(self):
         '''Fonction qui empêche de se prendre des dégats durant une attaque'''
-        self.vals['attacked'] = True
-        self.change_animation('shield')
-        if self.game.elms["right"][self.number]:
-            self.change_animation('shield_right')
+        if self.vals["nbr_vanish"] > 0:
+            self.vals['attacked'] = True
+            self.change_animation('shield')
+            if self.game.elms["right"][self.number]:
+                self.change_animation('shield_right')
+            if self.game.collision():
+                self.vals["nbr_vanish"] -= 0.01
 
-    def vanish(self, event):
+    def vanish(self, choice):
         '''Fonction qui actionne une esquive,
         le personnage peut esquiver une attaque 4 fois'''
         # L'esquve se fait que si le joueur se prend des dégats
         if self.game.collision():
             # On vérifie le nombre de tentatives autorisées
-            if self.vals['nbr_vanish'] > 0 and event.key == self.convert_key("block"):
-                # Relance l'animation à zéro
-                self.vals['nbr_sprite'] = 0
-                # Change l'animation
-                self.game.elms["side"][self.number] = 'vanish'
-                # on diminue le nombre de tentative
-                self.vals['nbr_vanish'] -= 1
-                # Effectue l'esquive en fonction de la position du perso
-                if self.game.elms["right"][self.number] and self.rect.x > 5:
-                    self.rect.x -= 100
-                elif not self.game.elms["right"][self.number] and self.rect.x < 950:
-                    self.rect.x += 100
+            if self.vals['nbr_vanish'] > 0:
+                if choice[self.convert_key("right")] and (
+                        choice[self.convert_key("left")]):
+                    # Relance l'animation à zéro
+                    self.vals['nbr_sprite'] = 0
+                    # Change l'animation
+                    self.game.elms["side"][self.number] = 'vanish'
+                    # on diminue le nombre de tentative
+                    self.vals['nbr_vanish'] -= 1
+                    # Effectue l'esquive en fonction de la position du perso
+                    if self.game.elms["right"][self.number] and (
+                            self.rect.x > 5):
+                        self.rect.x -= 100
+                    elif not self.game.elms["right"][self.number] and (
+                            self.rect.x < 950):
+                        self.rect.x += 100
 
     def charge(self):
         """Charge l'énergie"""

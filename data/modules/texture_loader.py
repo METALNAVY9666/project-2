@@ -52,7 +52,7 @@ def sprites_images(name):
                  "goku": (X // 7,  Y // 8),
                  "luffy": (X // 9, Y // 10),
                  "gear4": (X // 9, Y // 10),
-                 "vegeta": (X // 9, Y // 10),
+                 "vegeta": (X // 8, Y // 8),
                  "revive": (X // 14, Y // 8),
                  "kim": (X // 12, Y // 12)}
     size = dict_size[name]
