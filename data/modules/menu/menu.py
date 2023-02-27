@@ -5,26 +5,28 @@
 import pygame
 from data.modules.menu.textures import *
 
+
 class Bouton:
     """ L'objet bouton permet de créer des boutons pour que le joueur
         puisse choisir ses choix du programme. """
+
     def __init__(self, text, large, haut, pos):
         """ Initialisation de l'objet bouton """
         # attribut de base
-        self.presse = False   
+        self.presse = False
         # création du rectangle suppérieur
         self.top_rect = pygame.Rect(pos, (large, haut))
         # Couleur de ce rectangle
         self.top_color = (117, 45, 254)
         # texte
         self.text_surf = police.render(text, True, (255, 255, 255))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+        self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     # Fonction qui va dessiner le rectangle suppérieur et le texte
     def dessin(self):
         """ Cette fonction permet de dessiner le bouton sur la fenetre
             pygame. """
-    
+
         pygame.draw.rect(aff_surface, self.top_color, self.top_rect)
         aff_surface.blit(self.text_surf, self.text_rect)
         return self.check_click()
@@ -57,9 +59,9 @@ class Bouton:
             self.top_color = (117, 45, 254)
 
 
-
 class Bouton_quit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """
+
     def __init__(self, text, large, haut, pos):
         """ Initialisation de l'objet bouton """
         # attribut de base
@@ -70,7 +72,7 @@ class Bouton_quit:
         self.top_color = (255, 0, 0)
         # texte
         self.text_surf = police.render(text, True, (255, 255, 255))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+        self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     # Fonction qui va dessiner le rectangle suppérieur et le texte
     def dessin(self):
@@ -101,6 +103,7 @@ class Bouton_quit:
 class Bouton_credit:
     """ L'objet bouton permet de créer des boutons pour que le joueur
         puisse choisir ses choix du programme. """
+
     def __init__(self, text, large, haut, pos):
         """ Initialisation de l'objet bouton """
         # attribut de base
@@ -111,7 +114,7 @@ class Bouton_credit:
         self.top_color = (31, 151, 193)
         # texte
         self.text_surf = police.render(text, True, (255, 255, 255))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+        self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     # Fonction qui va dessiner le rectangle suppérieur et le texte
     def dessin(self):
@@ -185,28 +188,23 @@ def main():
 
         Bouton2.dessin()
 
-        
         jouer = Bouton3.dessin()
 
         if jouer == "choix_perso":
             return "choix_perso"
-        
-        
+
         quitter = Bouton4.dessin()
 
-        if quitter: 
+        if quitter:
             return "quitter"
-        
-        
+
         Bouton5.dessin()
 
         if test is True:
-            
+
             pygame.display.update()
             # boucle pour quitter ou pas la console du menu
             for event in pygame.event.get():
-                
+
                 if event.type == pygame.display.quit:
                     return "suivant"
-                    
-            

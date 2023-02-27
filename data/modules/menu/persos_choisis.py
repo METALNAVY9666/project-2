@@ -11,4 +11,3 @@ choix_j_1 = 0
 
 # Valeur du choix du personnage du joeur 2:
 choix_j_2 = 0
-

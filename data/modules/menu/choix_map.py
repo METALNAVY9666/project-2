@@ -4,8 +4,10 @@ import pygame
 from data.modules.menu.textures import *
 from data.modules.menu.persos_choisis import *
 
+
 class Bouton_quit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """
+
     def __init__(self, text, large, haut, pos):
         """ Initialisation de l'objet bouton """
         # attribut de base
@@ -16,7 +18,7 @@ class Bouton_quit:
         self.top_color = (255, 0, 0)
         # texte
         self.text_surf = police.render(text, True, (255, 255, 255))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+        self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     # Fonction qui va dessiner le rectangle suppérieur et le texte
     def dessin(self):
@@ -39,10 +41,10 @@ class Bouton_quit:
                 if self.presse is True:
                     self.presse = False
                     return True
-                    
+
         else:
             self.top_color = (255, 0, 0)
-                    
+
 
 pygame.init()
 
@@ -64,38 +66,32 @@ police = pygame.font.Font(None, 30)
 Bouton = Bouton_quit("QUITTER", 100, 50, (0, 670))
 
 
-
-
-
-
 def main():
     """ Cette fonction créée une boucle d'affichage du menu pygame, et
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
     print("Entrée dans le menu choix")
-    
+
     y = 7687
     z = 6787
 
     xa = (36, 126)
     xb = (698, 143)
-    
+
     list_pos1 = [(37, 126), (275, 126), (513, 126), (751, 126)]
-    
+
     tabmap = [map1bis, map2bis, map3bis, map4bis]
-    
+
     mapchoisi = ["highway", "laboratory", "neo_tokyo", "tenkaichi_budokai"]
-    
+
     map = tabmap[0]
-    
+
     i = 0
-    j = 0  
-    
+    j = 0
+
     x = 0
-    z = 0  
-    
-    
-    
+    z = 0
+
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
 
@@ -103,33 +99,32 @@ def main():
 
     test = True
     while test:
-        
+
         aff_surface.blit(fond3, (0, 0))
-        
+
         aff_surface.blit(cadre3, xa)
-        
+
         aff_surface.blit(map1, (47, 134))
-        
+
         aff_surface.blit(map2, (287, 134))
-        
+
         aff_surface.blit(map3, (526, 134))
-        
+
         aff_surface.blit(map4, (764, 134))
-        
+
         aff_surface.blit(titre, (280, 0))
-        
+
         aff_surface.blit(map, (240, 370))
-        
 
         retour = Bouton.dessin()
-        
+
         if retour:
             return "retour"
-        # boucle permettant de détecter les touchent pressées : 
+        # boucle permettant de détecter les touchent pressées :
         for event in pygame.event.get():
-            
+
             if event.type == pygame.KEYDOWN:
-                    
+
                 if event.key == pygame.K_d:
                     print("d")
                     i += 1
@@ -137,7 +132,7 @@ def main():
                         i = 4 - 1
                     xa = list_pos1[i]
                     map = tabmap[i]
-                    
+
                 if event.key == pygame.K_q:
                     print("q")
                     i -= 1
@@ -145,15 +140,10 @@ def main():
                         i = 0
                     xa = list_pos1[i]
                     map = tabmap[i]
-                    
+
                 if event.key == pygame.K_SPACE:
                     print("espace")
                     print(mapchoisi[i])
                     return (mapchoisi[i], "fini")
-                    
-                    
 
             pygame.display.update()
-
-
-

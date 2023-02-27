@@ -20,14 +20,14 @@ fond_map = pygame.transform.scale(fond_map, (1280, 720))
 # Import des cadres pour le choix des personnages à jouer
 cadre1 = pygame.image.load(IMG_PATH + "/cadre3.png").convert_alpha()
 cadre2 = pygame.image.load(IMG_PATH + "/cadre3.png").convert_alpha()
-cadre3 = pygame.transform.scale(cadre1, (223,130))
+cadre3 = pygame.transform.scale(cadre1, (223, 130))
 
 # Import des image des perso sélectionnés
 goku = pygame.image.load(IMG_PATH + "/goku.png").convert_alpha()
-goku = pygame.transform.scale(goku, (131,215))
+goku = pygame.transform.scale(goku, (131, 215))
 
 vegeta = pygame.image.load(IMG_PATH + "/vegeta.png").convert_alpha()
-vegeta = pygame.transform.scale(vegeta, (131,215))
+vegeta = pygame.transform.scale(vegeta, (131, 215))
 
 # Import des logo des personnages
 gokubleu = pygame.image.load(IMG_PATH + "/gokuBleu.png").convert_alpha()
@@ -41,7 +41,6 @@ kimred = pygame.image.load(IMG_PATH + "/kimred.png").convert_alpha()
 
 luffybleu = pygame.image.load(IMG_PATH + "/luffybleu.png").convert_alpha()
 luffyred = pygame.image.load(IMG_PATH + "/luffyred.png").convert_alpha()
-
 
 
 itachired = pygame.image.load(IMG_PATH + "/itachirouge.png").convert_alpha()
@@ -59,7 +58,8 @@ map3 = pygame.image.load(IMG_PATH + "/neo_tokyo.png").convert_alpha()
 map3bis = pygame.image.load(IMG_PATH + "/neo_tokyo2.png").convert_alpha()
 
 map4 = pygame.image.load(IMG_PATH + "/tenkaichi_budokai.png").convert_alpha()
-map4bis = pygame.image.load(IMG_PATH + "/tenkaichi_budokai2.png").convert_alpha()
+map4bis = pygame.image.load(
+    IMG_PATH + "/tenkaichi_budokai2.png").convert_alpha()
 
 map1bis = pygame.transform.scale(map1bis, (800, 300))
 map2bis = pygame.transform.scale(map2bis, (800, 300))
@@ -81,16 +81,23 @@ ok = pygame.image.load(IMG_PATH + "/ok.png").convert_alpha()
 # Import des grandes images des personnages
 
 goku_grand_r = pygame.image.load(IMG_PATH + "/goku_grand.png").convert_alpha()
-goku_grand_b = pygame.image.load(IMG_PATH + "/goku_grand_b.png").convert_alpha()
+goku_grand_b = pygame.image.load(
+    IMG_PATH + "/goku_grand_b.png").convert_alpha()
 
-vegeta_grand_r = pygame.image.load(IMG_PATH + "/vegeta_grand.png").convert_alpha()
-vegeta_grand_b = pygame.image.load(IMG_PATH + "/vegeta_grand_b.png").convert_alpha()
+vegeta_grand_r = pygame.image.load(
+    IMG_PATH + "/vegeta_grand.png").convert_alpha()
+vegeta_grand_b = pygame.image.load(
+    IMG_PATH + "/vegeta_grand_b.png").convert_alpha()
 
 kim_grand_r = pygame.image.load(IMG_PATH + "/kim_grand.png").convert_alpha()
 kim_grand_b = pygame.image.load(IMG_PATH + "/kim_grand_b.png").convert_alpha()
 
-luffy_grand_r = pygame.image.load(IMG_PATH + "/luffy_grand.png").convert_alpha()
-luffy_grand_b = pygame.image.load(IMG_PATH + "/luffy_grand_b.png").convert_alpha()
+luffy_grand_r = pygame.image.load(
+    IMG_PATH + "/luffy_grand.png").convert_alpha()
+luffy_grand_b = pygame.image.load(
+    IMG_PATH + "/luffy_grand_b.png").convert_alpha()
 
-itachi_grand_r = pygame.image.load(IMG_PATH + "/itachi_grand.png").convert_alpha()
-itachi_grand_b = pygame.image.load(IMG_PATH + "/itachi_grand_b.png").convert_alpha()
+itachi_grand_r = pygame.image.load(
+    IMG_PATH + "/itachi_grand.png").convert_alpha()
+itachi_grand_b = pygame.image.load(
+    IMG_PATH + "/itachi_grand_b.png").convert_alpha()
