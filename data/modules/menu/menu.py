@@ -3,7 +3,7 @@
 """ Ce module est le menu de démarage du jeu. """
 
 import pygame
-from data.modules.menu.textures import *
+from data.modules.menu.textures import fond1
 
 
 class Bouton:
@@ -48,7 +48,7 @@ class Bouton:
                     if pos_souri[1] < 335:
                         return "choix_perso"
                     # Bouton règle du jeu
-                    elif 340 < pos_souri[1] < 430:
+                    if 340 < pos_souri[1] < 430:
                         pass
                     # Bouton Test perso
                     elif pos_souri[1] > 430:
@@ -57,9 +57,10 @@ class Bouton:
                 self.presse = False
         else:
             self.top_color = (117, 45, 254)
+        return None
 
 
-class Bouton_quit:
+class BoutonQuit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """
 
     def __init__(self, text, large, haut, pos):
@@ -98,9 +99,10 @@ class Bouton_quit:
                 self.presse = False
         else:
             self.top_color = (255, 0, 0)
+        return None
 
 
-class Bouton_credit:
+class BoutonCredit:
     """ L'objet bouton permet de créer des boutons pour que le joueur
         puisse choisir ses choix du programme. """
 
@@ -164,9 +166,9 @@ Bouton2 = Bouton("TUTORIEL", 350, 70, (860, 340))
 
 Bouton3 = Bouton("JOUER", 350, 70, (860, 250))
 
-Bouton4 = Bouton_quit("QUITTER", 100, 50, (1120, 50))
+Bouton4 = BoutonQuit("QUITTER", 100, 50, (1120, 50))
 
-Bouton5 = Bouton_credit("CREDITS", 150, 50, (965, 600))
+Bouton5 = BoutonCredit("CREDITS", 150, 50, (965, 600))
 
 
 def main():
@@ -176,7 +178,6 @@ def main():
     test = True
 
     while test:
-
         # On applique la surface de la console ainsi que sa couleur
         aff_surface.fill(color)
 
@@ -200,7 +201,7 @@ def main():
 
         Bouton5.dessin()
 
-        if test is True:
+        if test:
 
             pygame.display.update()
             # boucle pour quitter ou pas la console du menu

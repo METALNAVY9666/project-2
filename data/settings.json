@@ -1,7 +1,7 @@
 {
     "audio": {
-        "music": 0,
-        "effects": 21
+        "music": 10,
+        "effects": 10
     },
     "display": {
         "horizontal": 1280,

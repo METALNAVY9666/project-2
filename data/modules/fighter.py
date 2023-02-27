@@ -481,11 +481,12 @@ class Fighter(pg.sprite.Sprite):
 
     def attack_up_controller(self, ennemy):
         if self.game.collision():
-                self.game.elms["side"][self.number] = 'up'
-                if self.game.name[ennemy.number] == "kim":
-                    print("kim va voler")
-                else:
-                    ennemy.rect.y = 250
+            self.game.elms["side"][self.number] = 'up'
+            if self.game.name[ennemy.number] == "kim":
+                print("kim va voler")
+            else:
+                ennemy.rect.y = 250
+                
         if self.game.collision():
             self.vals['fall'] = False
             if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:

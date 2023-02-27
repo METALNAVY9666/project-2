@@ -1,11 +1,18 @@
-# Créé par Alexis, le 29/11/2022 en Python 3.7
-
+""" Ce module permet aux utilisateurs de choisir les personnages avec
+lesquelles ils veulent effectuer ca partie."""
 import pygame
-from data.modules.menu.textures import *
-from data.modules.menu.persos_choisis import *
+from data.modules.menu.textures import (ok, itachibleu, itachired, luffybleu,
+                                        luffyred, kimbleu, kimred, vegetableu,
+                                        vegetared, gokubleu, gokured,
+                                        goku_grand_r, vegeta_grand_r,
+                                        kim_grand_r, luffy_grand_r,
+                                        itachi_grand_r, goku_grand_b,
+                                        vegeta_grand_b, kim_grand_b,
+                                        luffy_grand_b, itachi_grand_b,
+                                        fond2, cadre2)
 
 
-class Bouton_quit:
+class BoutonQuit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """
 
     def __init__(self, text, large, haut, pos):
@@ -45,6 +52,7 @@ class Bouton_quit:
         else:
             self.top_color = (255, 0, 0)
 
+        return None
 
 pygame.init()
 
@@ -63,7 +71,7 @@ pygame.display.set_caption('Choix du perso')
 
 police = pygame.font.Font(None, 30)
 
-Bouton = Bouton_quit("QUITTER", 100, 50, (0, 670))
+Bouton = BoutonQuit("QUITTER", 100, 50, (0, 670))
 
 
 def main():
@@ -72,11 +80,8 @@ def main():
         le programme. """
     print("Entrée dans le menu choix")
 
-    y = 7687
-    z = 6787
-
-    xa = (67, 143)
-    xb = (698, 143)
+    coo_a = (67, 143)
+    coo_b = (698, 143)
 
     posok = (3000, 3000)
 
@@ -105,11 +110,11 @@ def main():
     grand_perso1 = tab1_grand_perso[0][0]
     grand_perso2 = tab2_grand_perso[0][0]
 
-    i = 0
-    j = 0
+    ind_i = 0
+    ind_j = 0
 
-    x = 0
-    z = 0
+    ind_x = 0
+    ind_z = 0
 
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
@@ -121,8 +126,8 @@ def main():
 
         aff_surface.blit(fond2, (0, 0))
 
-        aff_surface.blit(cadre2, xa)
-        aff_surface.blit(cadre2, xb)
+        aff_surface.blit(cadre2, coo_a)
+        aff_surface.blit(cadre2, coo_b)
 
         aff_surface.blit(gokured, (77, 154))
         aff_surface.blit(gokubleu, (708, 154))
@@ -150,78 +155,80 @@ def main():
             return "retour"
         # boucle permettant de détecter les touchent pressées :
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_RIGHT:
                     print("droit")
-                    j += 1
-                    if j == 4:
-                        j = 4 - 1
-                    xb = list_pos2[z][j]
-                    grand_perso2 = tab2_grand_perso[z][j]
+                    ind_j += 1
+                    if ind_j == 4:
+                        ind_j = 4 - 1
+                    coo_b = list_pos2[ind_z][ind_j]
+                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
 
                 if event.key == pygame.K_LEFT:
                     print("gauche")
-                    j -= 1
-                    if j == -1:
-                        j = 0
-                    xb = list_pos2[z][j]
-                    grand_perso2 = tab2_grand_perso[z][j]
+                    ind_j -= 1
+                    if ind_j == -1:
+                        ind_j = 0
+                    coo_b = list_pos2[ind_z][ind_j]
+                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
 
                 if event.key == pygame.K_d:
                     print("d")
-                    i += 1
-                    if i == 4:
-                        i = 4 - 1
-                    xa = list_pos1[x][i]
-                    grand_perso1 = tab1_grand_perso[x][i]
+                    ind_i += 1
+                    if ind_i == 4:
+                        ind_i = 4 - 1
+                    coo_a = list_pos1[ind_x][ind_i]
+                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
 
                 if event.key == pygame.K_q:
                     print("q")
-                    i -= 1
-                    if i == -1:
-                        i = 0
-                    xa = list_pos1[x][i]
-                    grand_perso1 = tab1_grand_perso[x][i]
+                    ind_i -= 1
+                    if ind_i == -1:
+                        ind_i = 0
+                    coo_a = list_pos1[ind_x][ind_i]
+                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
 
                 if event.key == pygame.K_SPACE:
                     print("espace")
-                    if perso1[x][i] != perso2[z][j]:
-                        print(perso1[x][i], perso2[z][j])
+                    if perso1[ind_x][ind_i] != perso2[ind_z][ind_j]:
+                        print(perso1[ind_x][ind_i], perso2[ind_z][ind_j])
                         posok = (200, 200)
-                        return (perso1[x][i], perso2[z][j], "suivant")
+                        return (perso1[ind_x][ind_i], perso2[ind_z][ind_j], "suivant")
 
                 if event.key == pygame.K_DOWN:
                     print("bas")
-                    z = z + 1
-                    if z == len(list_pos2):
-                        z = z - 1
-                    xb = list_pos2[z][j]
-                    grand_perso2 = tab2_grand_perso[z][j]
+                    ind_z = ind_z + 1
+                    if ind_z == len(list_pos2):
+                        ind_z = ind_z - 1
+                    coo_b = list_pos2[ind_z][ind_j]
+                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
 
                 if event.key == pygame.K_s:
                     print("s")
-                    x = x + 1
-                    if x == len(list_pos1):
-                        x = x - 1
-                    xa = list_pos1[x][i]
-                    grand_perso1 = tab1_grand_perso[x][i]
+                    ind_x = ind_x + 1
+                    if ind_x == len(list_pos1):
+                        ind_x = ind_x - 1
+                    coo_a = list_pos1[ind_x][ind_i]
+                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
 
                 if event.key == pygame.K_UP:
                     print("haut")
-                    z = z - 1
-                    if z == -1:
-                        z = 0
-                    xb = list_pos2[z][j]
-                    grand_perso2 = tab2_grand_perso[z][j]
+                    ind_z = ind_z - 1
+                    if ind_z == -1:
+                        ind_z = 0
+                    coo_b = list_pos2[ind_z][ind_j]
+                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
 
                 if event.key == pygame.K_z:
                     print("z")
-                    x = x - 1
-                    if x == -1:
-                        x = 0
-                    xa = list_pos1[x][i]
-                    grand_perso1 = tab1_grand_perso[x][i]
+                    ind_x = ind_x - 1
+                    if ind_x == -1:
+                        ind_x = 0
+                    coo_a = list_pos1[ind_x][ind_i]
+                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
 
             pygame.display.update()

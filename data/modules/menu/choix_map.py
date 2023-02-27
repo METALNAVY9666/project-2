@@ -1,11 +1,12 @@
-# Créé par Alexis, le 15/02/2023 en Python 3.7
-
+""" Ce module permet à l'utilisateur de choisir la carte dans laquelle il veut
+effectuer ca partie."""
 import pygame
-from data.modules.menu.textures import *
-from data.modules.menu.persos_choisis import *
+from data.modules.menu.textures import (titre, map4, map3, map2, map1, cadre3,
+                                        fond3, map1bis, map2bis, map3bis,
+                                        map4bis)
 
 
-class Bouton_quit:
+class BoutonQuit:
     """ L'objet bouton permet de créer un bouton pour quitter le jeu. """
 
     def __init__(self, text, large, haut, pos):
@@ -44,6 +45,7 @@ class Bouton_quit:
 
         else:
             self.top_color = (255, 0, 0)
+        return None
 
 
 pygame.init()
@@ -63,7 +65,7 @@ pygame.display.set_caption('Choix du perso')
 
 police = pygame.font.Font(None, 30)
 
-Bouton = Bouton_quit("QUITTER", 100, 50, (0, 670))
+Bouton = BoutonQuit("QUITTER", 100, 50, (0, 670))
 
 
 def main():
@@ -72,11 +74,7 @@ def main():
         le programme. """
     print("Entrée dans le menu choix")
 
-    y = 7687
-    z = 6787
-
-    xa = (36, 126)
-    xb = (698, 143)
+    coo = (36, 126)
 
     list_pos1 = [(37, 126), (275, 126), (513, 126), (751, 126)]
 
@@ -84,13 +82,9 @@ def main():
 
     mapchoisi = ["highway", "laboratory", "neo_tokyo", "tenkaichi_budokai"]
 
-    map = tabmap[0]
+    carte = tabmap[0]
 
     i = 0
-    j = 0
-
-    x = 0
-    z = 0
 
     # On applique la surface de la console ainsi que sa couleur
     aff_surface.fill(color)
@@ -102,7 +96,7 @@ def main():
 
         aff_surface.blit(fond3, (0, 0))
 
-        aff_surface.blit(cadre3, xa)
+        aff_surface.blit(cadre3, coo)
 
         aff_surface.blit(map1, (47, 134))
 
@@ -114,7 +108,7 @@ def main():
 
         aff_surface.blit(titre, (280, 0))
 
-        aff_surface.blit(map, (240, 370))
+        aff_surface.blit(carte, (240, 370))
 
         retour = Bouton.dessin()
 
@@ -122,6 +116,8 @@ def main():
             return "retour"
         # boucle permettant de détecter les touchent pressées :
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
             if event.type == pygame.KEYDOWN:
 
@@ -130,16 +126,16 @@ def main():
                     i += 1
                     if i == 4:
                         i = 4 - 1
-                    xa = list_pos1[i]
-                    map = tabmap[i]
+                    coo = list_pos1[i]
+                    carte = tabmap[i]
 
                 if event.key == pygame.K_q:
                     print("q")
                     i -= 1
                     if i == -1:
                         i = 0
-                    xa = list_pos1[i]
-                    map = tabmap[i]
+                    coo = list_pos1[i]
+                    carte = tabmap[i]
 
                 if event.key == pygame.K_SPACE:
                     print("espace")
