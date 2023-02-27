@@ -351,12 +351,22 @@ class Fighter(pg.sprite.Sprite):
 
     # Docstrings a ajouter
     def single_tap_controller(self, choice, contro, ennemy):
-        if contro.get_button(1):
+        """
+        Attaques de base à la manette selon les paramètres du joueur
+        """
+        if choice == "Sol":
+            self.attack_down_controller(ennemy)
+
+        if choice == "Air":
+            self.attack_up_controller(ennemy)
+
+        elif contro.get_button(1):
             self.game.strike_collision(ennemy)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'attack'
             if self.game.collision():
-                if len(self.vals['tab']) < 4:
+                if len(self.vals['tab']) < 8:
+                    self.vals['tab'].append(117)
                     self.vals['tab'].append(117)
                     print(self.vals['tab'])
                 else:
@@ -367,11 +377,11 @@ class Fighter(pg.sprite.Sprite):
 
         elif contro.get_button(2):
             self.game.strike_collision(ennemy)
-            # self.combo_tab(choice)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = 'impact'
             if self.game.collision():
-                if len(self.vals['tab']) < 4:
+                if len(self.vals['tab']) < 8:
+                    self.vals['tab'].append(121)
                     self.vals['tab'].append(121)
                     print(self.vals['tab'])
                 else:
@@ -379,6 +389,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.vals["tab"] = []
             return self.vals['tab']
+
 
     def move_manager(self, event):
         """
@@ -464,6 +475,24 @@ class Fighter(pg.sprite.Sprite):
                 else:
                     ennemy.rect.x -= 100
 
+    def attack_up_controller(self, ennemy):
+        if self.game.collision():
+                self.game.elms["side"][self.number] = 'up'
+                if self.game.name[ennemy.number] == "kim":
+                    print("kim va voler")
+                else:
+                    ennemy.rect.y = 250
+        if self.game.collision():
+            self.vals['fall'] = False
+            if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
+                self.game.elms["side"][self.number] = 'impact'
+                self.vals['fall'] = False
+                if self.game.name[ennemy.number] == "kim":
+                    print("OH KIM PTN")
+                else:
+                    print('air')
+                    ennemy.rect.x -= 100
+
     def attack_down(self, choice, ennemy):
         """
         Attaque vers le bas
@@ -479,6 +508,7 @@ class Fighter(pg.sprite.Sprite):
 
     def attack_down_controller(self, ennemy):
         if self.game.collision():
+            print("sol")
             self.game.elms["side"][self.number] = 'down'
             while ennemy.rect.y <= self.settings['size_max']:
                 ennemy.rect.y += 1
@@ -563,7 +593,8 @@ class Fighter(pg.sprite.Sprite):
         Autorise le dash avant
         """
         if self.number == 0:
-            if choice[self.convert_key("left")] or choice[self.convert_key("right")]:
+            if (choice[self.convert_key("left")] or 
+            choice[self.convert_key("right")]):
                 if event.key == self.convert_key("block"):
                     self.vals["dashing"][self.number] = True
         elif self.number == 1:
@@ -571,6 +602,12 @@ class Fighter(pg.sprite.Sprite):
                     choice[self.convert_key("right")]):
                 if choice[self.convert_key("block")]:
                     self.vals["dashing"][self.number] = True
+
+    def is_dashing_controller(self):
+        if self.number == 0:
+            self.vals["dashing"][self.number] = True
+        elif self.number == 1:
+            self.vals["dashing"][self.number] = True
 
     def dash(self):
         """
