@@ -1,5 +1,6 @@
 
-""" Module qui est chargé d'importer les images qui serviront pour le module Menu et Choix_Perso """
+""" Module qui est chargé d'importer les images qui serviront pour le module 
+    Menu et Choix_Perso """
 
 import pygame
 
