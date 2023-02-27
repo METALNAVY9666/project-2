@@ -126,7 +126,7 @@ class SettingsMenu:
         dims = pkg["dimensions"]
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
         self.asks = {}
-        self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"])
+        self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"], "extremum")
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""

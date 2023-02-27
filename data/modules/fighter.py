@@ -65,6 +65,7 @@ class Fighter(pg.sprite.Sprite):
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
         self.vals["keymap"] = read_settings()["keys"][self.number]
+        print(self.vals["keymap"])
 
     def init_perso(self):
         self.tab = sprite_tab(
