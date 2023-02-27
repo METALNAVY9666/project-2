@@ -47,7 +47,6 @@ class Music:
 
         self.loader.set_volume(settings["audio"]["music"]/100)
 
-
     def get_segment(self, segment):
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
@@ -67,12 +66,12 @@ class Music:
             self.loader.play()
             self.loader.queue(self.get_segment("loop"), loops=-1)
 
-
     def pause(self, condition):
         if condition:
             self.loader.pause()
         else:
             self.loader.unpause()
+
 
 pygame.mixer.init()
 
@@ -80,11 +79,13 @@ SFX = {}
 
 volume = read_settings()["audio"]["effects"]
 
+
 def load_sound(filepath):
     """charge un son"""
     sound = pygame.mixer.Sound(filepath)
     sound.set_volume(volume / 100)
     return sound
+
 
 def load_dir(dirpath):
     """charge des sons dans un dossier"""
@@ -95,6 +96,7 @@ def load_dir(dirpath):
         sounds[filename] = load_sound(filepath)
     return sounds
 
+
 SFX_PATH = "data/sfx/"
 EFFECTS_PATH = SFX_PATH + "effects/"
 
@@ -103,6 +105,6 @@ folders = ("kim", "level", "events", "ui", "goku")
 
 for folder in folders:
     SFX[folder] = load_dir(SFX_PATH + folder + "/")
-    print(SFX[folder])
+
 
 SFX["explosion"] = load_sound(EFFECTS_PATH + "explosion.mp3")

@@ -45,11 +45,9 @@ pygame.display.set_icon(icon)
 
 WIN = True
 
-"""level_name, players = menu()
+level_name, players = menu()
 
-level = read_levels()[level_name]"""
-level = read_levels()["highway"]
-players = ["goku", "luffy"]
+level = read_levels()[level_name]
 
 current_map = BaseLevel(pack_pygame, level, game_settings, players)
 fps = FPS(pack_pygame)

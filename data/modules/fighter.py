@@ -65,7 +65,6 @@ class Fighter(pg.sprite.Sprite):
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
         self.vals["keymap"] = read_settings()["keys"][self.number]
-        print(self.vals["keymap"])
 
     def init_perso(self):
         self.tab = sprite_tab(
@@ -317,7 +316,7 @@ class Fighter(pg.sprite.Sprite):
         """renvoie la classe pygame de la clé"""
         keymap = self.vals["keymap"]
         return pg.key.key_code(azerty_to_qwerty(keymap[key]))
-    
+
     def single_tap(self, event, choice, ennemy):
         """
         Attaque normale de base selon les paramètres du joueur
@@ -414,9 +413,9 @@ class Fighter(pg.sprite.Sprite):
         Dégats du combo final
         """
         if self.vals['tab'] == ([self.convert_key("l_attack"),
-                                  self.convert_key("l_attack"),
-                                  self.convert_key("h_attack"),
-                                    self.convert_key("h_attack")]):
+                                 self.convert_key("l_attack"),
+                                 self.convert_key("h_attack"),
+                                 self.convert_key("h_attack")]):
             self.game.elms["side"][self.number] = 'spe'
             if self.game.name[ennemy.number] != "kim":
                 self.game.elms["side"][ennemy.number] = "back"

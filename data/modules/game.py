@@ -54,7 +54,6 @@ class Jeu:
                 print(self.elms["keymap"])
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
-                print(self.elms["keymap"])
         self.ulti = Special(self)
         # self.object = PunchingBall(self)
 
@@ -73,7 +72,6 @@ class Jeu:
         """renvoie la classe pygame de la clé"""
         if self.name[element.number] != "kim":
             keymap = self.elms["keymap"][element.number]
-            print(keymap)
         return pg.key.key_code(azerty_to_qwerty(keymap[key]))
 
     def handle_input(self, actions, pause, busy, screen):
