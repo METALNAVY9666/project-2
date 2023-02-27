@@ -4,6 +4,7 @@ import pygame as pg
 from data.modules.fighter import Fighter
 from data.modules.gunner import Gunner
 from data.modules.texture_loader import GFX
+from data.modules.audio import SFX
 from data.modules.spe import Special
 from data.modules.settings import read_settings
 from data.modules.keyboard import azerty_to_qwerty
@@ -48,7 +49,7 @@ class Jeu:
         self.players = [self.player_0, self.player_1]
         for player in self.players:
             if type(player).__name__ == "Fighter":
-                print(self.elms["keymap"])
+                SFX[self.name[player.number]]["start"].play()
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
         self.ulti = Special(self)
@@ -96,12 +97,14 @@ class Jeu:
                     if self.name in ['goku', 'vegeta']:
                         self.elms["side"][element.number] = 'left'
                 # Gère les sauts
-                elif choice[self.convert_key("jump", element)] and not choice[self.convert_key("l_attack", element)]:
+                elif choice[self.convert_key("jump", element)] and (
+                    not choice[self.convert_key("l_attack", element)]):
                     element.jump()
                 # Gère le bloquage
                 elif choice[self.convert_key("block", element)]:
                     element.block()
-                if choice[self.convert_key("jump", element)] and choice[self.convert_key("block", element)]:
+                if choice[self.convert_key("jump", element)] and (
+                    choice[self.convert_key("block", element)]):
                     element.charge()
                 self.ulti.spe_manager(screen, choice)
                 # Actions qui nécessitent une boucle 'for'

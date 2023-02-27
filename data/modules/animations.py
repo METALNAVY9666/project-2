@@ -71,7 +71,7 @@ class Animate():
                 self.animation_itachi(screen)
                 height = screen.get_height() - (screen.get_height() // 5)
                 return screen.blit(txt, (txt_width, height))
-            elif element.game.name[element.number] == "luffy":
+            if element.game.name[element.number] == "luffy":
                 txt = self.vals["font"].render(
                     quotes[element.game.name[element.number]],
                     0, ( 244, 49, 14))

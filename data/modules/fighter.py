@@ -5,7 +5,7 @@ from data.modules.texture_loader import sprites_images, sprite_tab
 from data.modules.controllers import manage_controller
 from data.modules.settings import read_settings
 from data.modules.keyboard import azerty_to_qwerty
-
+from data.modules.audio import SFX
 
 class Fighter(pg.sprite.Sprite):
     '''Cette classe permet de gérer les actions du joueur,
@@ -52,7 +52,7 @@ class Fighter(pg.sprite.Sprite):
         self.vals["pkg"] = pkg
         self.vals["prop"] = prop
         self.vals["tab"] = []
-        self.vals["percent_ult"] = 0
+        self.vals["percent_ult"] = 130
         self.vals["sp_tab"] = []
         self.vals["jumping"] = True
         self.vals["dashing"] = [False, False]
@@ -345,7 +345,11 @@ class Fighter(pg.sprite.Sprite):
             self.combo_tab(event)
             self.vals['nbr_sprite'] = 0
             self.game.elms["side"][self.number] = dict_keys[event.key]
-            if event.key == l_attack :
+            if self.game.elms["side"][self.number] == "attack":
+                SFX[self.vals["name"]]["l_attack"].play()
+            elif self.game.elms["side"][self.number] == "impact":
+                SFX[self.vals["name"]]["h_attack"].play()
+            if event.key == l_attack:
                 self.attack_up(choice, ennemy)
                 self.attack_down(choice, ennemy)
 
@@ -523,6 +527,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.rect.x -= 10
             self.game.elms["side"][self.number] = "hit"
+            SFX[self.vals["name"]]["damage"].play()
 
     # Gestion des mouvements spéciaux comme le bloquage, l'esquive etc...
 
