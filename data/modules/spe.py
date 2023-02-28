@@ -37,7 +37,7 @@ class Special(pg.sprite.Sprite):
             if element.vals["percent_ult"] >= 130:
                 SFX["luffy"]["spe"].play()
                 self.animate.fade(screen.get_width(),
-                                    screen.get_height(), screen)
+                                  screen.get_height(), screen)
                 self.game.name[element.number] = 'gear4'
                 element.vals['nbr_sprite'] = 0
                 self.game.elms['side'][element.number] = 'ult'

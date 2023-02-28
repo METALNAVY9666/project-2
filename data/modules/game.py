@@ -112,20 +112,25 @@ class Jeu:
                     self.elms['right'][element.number] = False
                     if self.name in ['goku', 'vegeta']:
                         self.elms["side"][element.number] = 'left'
-                # Gère les sauts
-                elif choice[self.convert_key("jump", element)] and (
-                        not choice[self.convert_key("l_attack", element)]):
-                    element.jump()
-                # Gère le bloquage
-                elif choice[self.convert_key("block", element)]:
-                    element.block()
-                if choice[self.convert_key("jump", element)] and (
-                        choice[self.convert_key("block", element)]):
-                    element.charge()
-                self.ulti.spe_manager(screen, choice)
-                # Actions qui nécessitent une boucle 'for'
-                self.loop_input(actions)
-        # self.handle_input_player2(choice, pause, busy)
+                self.handle_input_part2(choice, element, actions, screen)
+
+    def handle_input_part2(self, choice, element, actions, screen):
+        """
+        Gère les actions du joueur
+        """
+        # Gère les sauts
+        if choice[self.convert_key("jump", element)] and (
+                not choice[self.convert_key("l_attack", element)]):
+            element.jump()
+        # Gère le bloquage
+        elif choice[self.convert_key("block", element)]:
+            element.block()
+        if choice[self.convert_key("jump", element)] and (
+                choice[self.convert_key("block", element)]):
+            element.charge()
+        self.ulti.spe_manager(screen, choice)
+        # Actions qui nécessitent une boucle 'for'
+        self.loop_input(actions)
 
     def handle_input_contro_part1(self, contro, choice, num):
         """
@@ -365,29 +370,30 @@ class Jeu:
 
     def strike_collision(self, ennemy):
         '''Actionne l'attaque du personnage'''
-        limit = self.elms["pkg"]["surface"].get_height()
-        if self.collision():
-            if "kim" not in self.name:
-                for element in self.collision():
-                    if self.players[ennemy.number] == self.player_0:
-                        self.player_0.damages(ennemy)
-                    elif self.players[element.number] == self.player_1:
-                        self.player_1.damages(ennemy)
-            else:
-                if self.name[ennemy.number] == "kim":
-                    if self.name[0] == "kim":
-                        striker = self.players[1]
-                    if self.name[1] == "kim":
-                        striker = self.players[0]
-                    ennemy.player["hp"] -= 10
-                    if 0 < ennemy.physics["pos"][0] < limit:
-                        if self.elms["right"][striker.number]:
-                            ennemy.physics["pos"][0] += 10
-                        else:
-                            ennemy.physics["pos"][0] -= 10
+        if "kim" not in self.name:
+            for element in self.collision():
+                if self.players[ennemy.number] == self.player_0:
+                    self.player_0.damages(ennemy)
+                elif self.players[element.number] == self.player_1:
+                    self.player_1.damages(ennemy)
+        self.strike_kim(ennemy)
 
-                # Change l'animation en cas d'attaque
-                # self.object.image = GFX['hit']
+    def strike_kim(self, ennemy):
+        """
+        Degats contre kim
+        """
+        limit = self.elms["pkg"]["surface"].get_height()
+        if self.name[ennemy.number] == "kim":
+            if self.name[0] == "kim":
+                striker = self.players[1]
+            if self.name[1] == "kim":
+                striker = self.players[0]
+            ennemy.player["hp"] -= 10
+            if 0 < ennemy.physics["pos"][0] < limit:
+                if self.elms["right"][striker.number]:
+                    ennemy.physics["pos"][0] += 10
+                else:
+                    ennemy.physics["pos"][0] -= 10
 
     def update_stats(self):
         """
@@ -395,20 +401,20 @@ class Jeu:
         les attaques spéciales, et les stats.
         """
         for element in self.players:
-            if self.name[element.number] == "luffy":
-                if element.vals["percent_ult"] <= 130:
-                    element.vals["percent_ult"] += 0.1
-            elif self.name[element.number] == "gear4":
-                if element.vals["percent_ult"] > 0:
-                    element.vals["percent_ult"] -= 0.1
-                else:
+            if self.name[element.number] == "luffy" and (
+                    element.vals["percent_ult"] <= 130):
+                element.vals["percent_ult"] += 0.1
+            elif self.name[element.number] == "gear4" and (
+                    element.vals["percent_ult"] > 0):
+                element.vals["percent_ult"] -= 0.1
+                if element.vals["percent_ult"] <= 0:
                     self.name[element.number] = "luffy"
                     element.reset_stats()
-            elif self.name[element.number] == "itachi" and self.ulti.can_spe["itachi"]:
-                if element.vals["percent_ult"] <= 130:
-                    element.vals["percent_ult"] += 0.1
             elif self.name[element.number] == "itachi":
-                if not self.ulti.can_spe["itachi"]:
+                if self.ulti.can_spe["itachi"] and (
+                        element.vals["percent_ult"] <= 130):
+                    element.vals["percent_ult"] += 0.1
+                else:
                     if self.players[0] == "itachi":
                         self.players[1].reset_stats()
                     elif self.players[1] == "itachi":

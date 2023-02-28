@@ -416,7 +416,7 @@ class Fighter(pg.sprite.Sprite):
         if len(self.vals['sp_tab']) < 9:
             self.vals['sp_tab'].append(event.key)
         else:
-            temp = self.vals['sp_tab'][len(self.vals['tab'])-1]
+            temp = self.vals['sp_tab'][len(self.vals['tab']) - 1]
             self.vals['sp_tab'] = []
             self.vals['sp_tab'].append(temp)
         # print(self.vals['sp_tab'])
@@ -665,7 +665,7 @@ class Fighter(pg.sprite.Sprite):
     def update_pv(self):
         '''renvoi les pvs'''
         return [[self.game.name[self.number], self.vals['health']]]
-    
+
     def upgrade_stats(self):
         """
         Augmentation des stats
@@ -674,7 +674,7 @@ class Fighter(pg.sprite.Sprite):
         self.vals["strike"] += 10
         self.vals["speed"] += 5
         self.vals["nbr_vanish"] = 4
-    
+
     def degrade_stats(self):
         """
         Stats baissée

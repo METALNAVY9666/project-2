@@ -57,12 +57,12 @@ class Animate():
                     dead = element
                     txt = self.vals["font"].render(
                         quotes[self.spe.game.name[dead.number]],
-                        0, (244, 49, 14))   
+                        0, (244, 49, 14))
                     txt_width = screen.get_width() - (txt.get_width()) * 2
                     return screen.blit(txt, (txt_width, height))
-                if element.game.name[element.number] == "itachi" and(
-                    self.spe.can_spe["itachi"] and 
-                    element.vals["health"] < element.vals["max_health"] // 3):
+                if element.game.name[element.number] == "itachi" and (
+                        self.spe.can_spe["itachi"] and
+                        element.vals["health"] < element.vals["max_health"] // 3):
                     txt = self.vals["font"].render(
                         quotes[element.game.name[element.number]],
                         0, (244, 49, 14))
@@ -73,10 +73,9 @@ class Animate():
                 if element.game.name[element.number] == "luffy":
                     txt = self.vals["font"].render(
                         quotes[element.game.name[element.number]],
-                        0, ( 244, 49, 14))
-                    txt_width = screen.get_width() - (txt.get_width() * 1.5) 
+                        0, (244, 49, 14))
+                    txt_width = screen.get_width() - (txt.get_width() * 1.5)
                     return screen.blit(txt, (txt_width, height))
-
 
     def animation_itachi(self, screen):
         """
