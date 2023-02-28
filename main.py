@@ -67,6 +67,9 @@ while WIN:
             # vérifie si la touche F11 est enfoncée et met en plein écran
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
+        if event.type in [pygame.JOYDEVICEADDED, pygame.JOYDEVICEREMOVED]:
+            joysticks = manage_joysticks()
+            contro = manage_controller([])
     # actualise la map, si elle renvoie "quit", alors quitter
     next_action = current_map.update(dlt, actions, contro)
     if next_action == "exit":

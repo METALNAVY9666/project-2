@@ -1,9 +1,9 @@
-""" Ce module permet à l'utilisateur de choisir la carte dans laquelle il veut
-effectuer ca partie."""
+""" Ce module permet à l'utilisateur de lire un tutoriel
+    pour pouvoir avoir toutes les information pour jouer
+    au jeu. """
+
 import pygame
-from data.modules.menu.textures import (titre, map4, map3, map2, map1, cadre3,
-                                        fond3, map1bis, map2bis, map3bis,
-                                        map4bis)
+from data.modules.menu.textures import (tuto1, tuto2, tuto3, tuto4)
 
 
 class BoutonQuit:
@@ -61,7 +61,7 @@ Y = 720
 aff_surface = pygame.display.set_mode((X, Y))
 
 # On nomme notre console
-pygame.display.set_caption('Choix du perso')
+pygame.display.set_caption('Tutoriel')
 
 police = pygame.font.Font(None, 30)
 
@@ -72,17 +72,10 @@ def main():
     """ Cette fonction créée une boucle d'affichage du menu pygame, et
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
-    print("Entrée dans le menu choix")
 
-    coo = (36, 126)
+    tab_tuto = [tuto1, tuto2, tuto3, tuto4]
 
-    list_pos1 = [(37, 126), (275, 126), (513, 126), (751, 126)]
-
-    tabmap = [map1bis, map2bis, map3bis, map4bis]
-
-    mapchoisi = ["highway", "laboratory", "neo_tokyo", "tenkaichi_budokai"]
-
-    carte = tabmap[0]
+    tuto = tab_tuto[0]
 
     i = 0
 
@@ -94,21 +87,7 @@ def main():
     test = True
     while test:
 
-        aff_surface.blit(fond3, (0, 0))
-
-        aff_surface.blit(cadre3, coo)
-
-        aff_surface.blit(map1, (47, 134))
-
-        aff_surface.blit(map2, (287, 134))
-
-        aff_surface.blit(map3, (526, 134))
-
-        aff_surface.blit(map4, (764, 134))
-
-        aff_surface.blit(titre, (280, 0))
-
-        aff_surface.blit(carte, (240, 370))
+        aff_surface.blit(tuto, (0, 0))
 
         retour = Bouton.dessin()
 
@@ -121,25 +100,18 @@ def main():
 
             if event.type == pygame.KEYDOWN:
 
-                if event.key == pygame.K_d:
+                if event.key == pygame.K_RIGHT:
                     print("d")
                     i += 1
                     if i == 4:
-                        i = 4 - 1
-                    coo = list_pos1[i]
-                    carte = tabmap[i]
+                        i = 0
+                    tuto = tab_tuto[i]
 
-                if event.key == pygame.K_q:
+                if event.key == pygame.K_LEFT:
                     print("q")
                     i -= 1
                     if i == -1:
                         i = 0
-                    coo = list_pos1[i]
-                    carte = tabmap[i]
-
-                if event.key == pygame.K_SPACE:
-                    print("espace")
-                    print(mapchoisi[i])
-                    return (mapchoisi[i], "fini")
+                    tuto = tab_tuto[i]
 
             pygame.display.update()

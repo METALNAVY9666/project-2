@@ -11,10 +11,10 @@
     },
     "keys": [
         {
-            "jump": "z",
-            "block": "s",
-            "left": "q",
-            "right": "d",
+            "jump": "e",
+            "block": "d",
+            "left": "s",
+            "right": "f",
             "l_attack": "y",
             "h_attack": "u"
         },

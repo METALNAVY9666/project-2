@@ -3,14 +3,12 @@ les différents événements dans le jeu.'''
 import pygame as pg
 from data.modules.fighter import Fighter
 from data.modules.gunner import Gunner
-# from data.modules.thing import PunchingBall
 from data.modules.texture_loader import GFX
+from data.modules.audio import SFX
 from data.modules.spe import Special
 from data.modules.settings import read_settings
 from data.modules.keyboard import azerty_to_qwerty
-from data.modules.controllers import manage_controller, manage_joysticks
-from pygame._sdl2.controller import Controller
-from pygame.locals import *
+from pygame.locals import JOYBUTTONDOWN
 pg._sdl2.controller.init()
 pg.init()
 
@@ -49,10 +47,24 @@ class Jeu:
             self.player_1 = Fighter(self, pkg, prop, 1)
         self.init_keys()
         self.ulti = Special(self)
+        self.start_audio()
         # self.object = PunchingBall(self)
 
+    def start_audio(self):
+        """
+        Audio des personnages à l'entrée en scène
+        """
+        if self.name[0] != "kim":
+            SFX[self.name[0]]["start"].play()
+            pg.time.wait(1000)
+        if self.name[1] != "kim":
+            pg.time.wait(1000)
+            SFX[self.name[1]]["start"].play()
+
     def init_group(self):
-        """Initialisation des personnages dans leur groupes"""
+        """
+        Initialisation des personnages dans leur groupes
+        """
         # self.all_objects = pg.sprite.Group()
         self.all_players_0 = pg.sprite.Group()
         self.all_players_1 = pg.sprite.Group()
@@ -74,9 +86,12 @@ class Jeu:
 
     def convert_key(self, key, element):
         """renvoie la classe pygame de la clé"""
+        if "kim" in self.name:
+            keymap = self.elms["keymap"][0]
+            return pg.key.key_code(azerty_to_qwerty(keymap[key]))
         if self.name[element.number] != "kim":
             keymap = self.elms["keymap"][element.number]
-        return pg.key.key_code(azerty_to_qwerty(keymap[key]))
+            return pg.key.key_code(azerty_to_qwerty(keymap[key]))
 
     def handle_input(self, actions, pause, busy, screen):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -102,110 +117,208 @@ class Jeu:
                     self.elms['right'][element.number] = False
                     if self.name in ['goku', 'vegeta']:
                         self.elms["side"][element.number] = 'left'
-                # Gère les sauts
-                elif choice[self.convert_key("jump", element)] and not choice[self.convert_key("l_attack", element)]:
-                    element.jump()
-                # Gère le bloquage
-                elif choice[self.convert_key("block", element)]:
-                    element.block()
-                if choice[self.convert_key("jump", element)] and choice[self.convert_key("block", element)]:
-                    element.charge()
-                self.ulti.spe_manager(screen, choice)
-                # Actions qui nécessitent une boucle 'for'
-                self.loop_input(actions)
-        # self.handle_input_player2(choice, pause, busy)
+                self.handle_input_part2(choice, element, actions, screen)
 
-    def handle_input_controller(self, actions, pause, busy, contro, num):
+    def handle_input_part2(self, choice, element, actions, screen):
+        """
+        Gère les actions du joueur
+        """
+        # Gère les sauts
+        if choice[self.convert_key("jump", element)] and (
+                not choice[self.convert_key("l_attack", element)]):
+            element.jump()
+        elif choice[self.convert_key("l_attack", element)] and (
+                choice[self.convert_key("jump", element)]):
+            element.attack_up()
+        elif choice[self.convert_key("l_attack", element)] and (
+                choice[self.convert_key("block", element)]):
+            element.attack_down()
+        # Gère le bloquage
+        elif choice[self.convert_key("block", element)]:
+            element.block()
+        if choice[self.convert_key("jump", element)] and (
+                choice[self.convert_key("block", element)]):
+            element.charge()
+        self.ulti.spe_manager(screen, choice)
+        # Actions qui nécessitent une boucle 'for'
+        self.loop_input(actions)
+
+    def handle_input_contro_part1(self, contro, choice, num):
+        """
+        Gère une partie des actions à la manette. (Blocage, mouvement,
+        sauts, dash)
+        """
+        # Gère le blocage
+        if (contro[num].get_button(3) and
+                self.player_0.vals['current_height'] == 0):
+            self.player_0.block()
+
+        # Gère les mouvements à la manette
+        elif contro[num].get_axis(0) // 3500 < -5 or (
+                contro[num].get_axis(0) // 3500 > 5):
+            # Droite
+            if contro[num].get_axis(0) > 0:
+                choice[self.convert_key("right", self.players[0])]
+                self.player_0.move()
+                self.elms['right'][self.player_0.number] = True
+            # Gauche
+            else:
+                choice[self.convert_key("left", self.players[0])]
+                self.player_0.move()
+                self.elms['right'][self.player_0.number] = False
+
+        # Gère les sauts
+        if (contro[num].get_button(0) and
+                self.player_0.vals['current_height'] < 400):
+            self.player_0.jump_controller(8)
+
+        # Gère les dash
+        # Dash droit
+        if contro[num].get_axis(2) // 3500 > 5:
+            self.player_0.vals["dashing"][self.player_0.number] = True
+            self.player_0.game.elms["right"][self.player_0.number] = True
+            self.player_0.dash()
+        # Dash gauche
+        if contro[num].get_axis(2) // 3500 < -5:
+            self.player_0.vals["dashing"][self.player_0.number] = True
+            self.player_0.game.elms["right"][self.player_0.number] = False
+            self.player_0.dash()
+
+    def handle_input_contro_attacks(self, actions, contro, num):
+        """
+        Gère une partie des actions à la manette. (Attaques)
+        """
+        # Gère les attaques
+        for event in actions:
+            if self.player_0.vals['current_height'] > 40 and (
+                    event.type == JOYBUTTONDOWN and event.button == 1):
+                self.player_0.dash_attack_up_controller()
+            # Attaque au sol
+            elif (contro[num].get_axis(1) / 3500 > 5 and
+                  event.type == JOYBUTTONDOWN and event.button == 2):
+                choice = "Sol"
+                self.player_0.attack_controller(choice, contro[num])
+            # Attaque en haut
+            elif (contro[num].get_axis(1) / 3500 < -5 and
+                  event.type == JOYBUTTONDOWN and event.button == 1):
+                choice = "Air"
+                self.player_0.attack_controller(choice, contro[num])
+            # Attaques normales
+            elif event.type == JOYBUTTONDOWN and event.button == 1:
+                self.player_0.attack_controller(
+                    contro[num].get_button(1), contro[num])
+            elif event.type == JOYBUTTONDOWN and event.button == 2:
+                self.player_0.attack_controller(
+                    contro[num].get_button(2), contro[num])
+
+    def handle_input_controller(self, actions, pause, busy, contro, screen,
+                                num):
         """
         Cette fonction récupère les actions effectuées à la manette et
-        effectue des opérations spécifiques correspondantes. La fonction
-        get.button(n) avec n un nombre entier permet de savoir si la touche
-        correspondante au nombre n est pressé
+        effectue des opérations spécifiques correspondantes pour le joueur 1.
+        La fonction get.button(n) avec n un nombre entier permet de savoir
+        si la touche correspondante au nombre n est pressé
         """
         choice = pg.key.get_pressed()
         if not pause and not busy and self.name[0] != "kim":
-            # Modifie les animations en fonction de l'input
-            # Gère le blocage
-            if (contro[num].get_button(3) and
-                    self.player_0.vals['current_height'] == 0):
-                self.player_0.block()
-            # Gère les mouvements à la manette
-            elif contro[num].get_axis(0) // 3500 < -5 or (
-                    contro[num].get_axis(0) // 3500 > 5):
-                if contro[num].get_axis(0) > 0:
-                    choice[self.convert_key("right", self.players[0])]
-                    self.player_0.move()
-                    self.elms['right'][self.player_0.number] = True
-                else:
-                    choice[self.convert_key("left", self.players[0])]
-                    self.player_0.move()
-                    self.elms['right'][self.player_0.number] = False
-            # Gère les sauts
-            if (contro[num].get_button(0) and
-                    self.player_0.vals['current_height'] < 400):
-                self.player_0.jump_controller(8)
-            # Gère les attaques
-            for event in actions:
-                if self.player_0.vals['current_height'] > 40 and (
-                        event.type == JOYBUTTONDOWN and event.button == 1):
-                    self.player_0.dash_attack_up_controller()
-                elif (contro[num].get_axis(1) / 3500 > 5 and
-                      event.type == JOYBUTTONDOWN and event.button == 1):
-                    print('sol')
-                    self.player_0.attack_down_controller()
-                elif event.type == JOYBUTTONDOWN and event.button == 1:
-                    self.player_0.attack_controller(
-                        contro[num].get_button(1), contro[num])
-                elif event.type == JOYBUTTONDOWN and event.button == 2:
-                    self.player_0.attack_controller(
-                        contro[num].get_button(2), contro[num])
-
-                elif event.type == JOYBUTTONDOWN and event.button == 7:
-                    self.player_0.charge()
+            self.handle_input_contro_part1(contro, choice, num)
+            self.handle_input_contro_attacks(actions, contro, num)
+            # Recharge l'énergie
+            if contro[num].get_button(7):
+                self.player_0.charge()
+            # Gère l'esquive
             if contro[num].get_button(10):
                 self.player_0.vanish_controller()
+
         if len(contro) == 2:
             self.handle_input_controller_player2(pause, choice, actions,
-                                                 busy, contro, num=0)
+                                                 busy, contro, screen,
+                                                 num=0)
+
+    def handle_input_contro_player1_part1(self, contro, choice, num):
+        """
+        Gère une partie des actions à la manette pour le joueur 2.
+        (Blocage, mouvement, sauts, dash)
+        """
+        # Gère le blocage
+        if (contro[num].get_button(3) and
+                self.player_1.vals['current_height'] == 0):
+            self.player_1.block()
+
+        # Gère les mouvements à la manette
+        elif contro[num].get_axis(0) // 3500 < -5 or (
+                contro[num].get_axis(0) // 3500 > 5):
+            if contro[num].get_axis(0) > 0:
+                choice[self.convert_key("right", self.players[1])]
+                self.player_1.move()
+                self.elms['right'][self.player_1.number] = True
+            else:
+                choice[self.convert_key("left", self.players[1])]
+                self.player_1.move()
+                self.elms['right'][self.player_1.number] = False
+
+        # Gère les sauts
+        if (contro[num].get_button(0) and
+                self.player_1.vals['current_height'] < 400):
+            self.player_1.jump_controller(8)
+
+        # Gère les dash
+        # Dash droit
+        if contro[num].get_axis(2) // 3500 > 5:
+            self.player_1.vals["dashing"][self.player_1.number] = True
+            self.player_1.game.elms["right"][self.player_1.number] = True
+            self.player_1.dash()
+        # Dash gauche
+        if contro[num].get_axis(2) // 3500 < -5:
+            self.player_1.vals["dashing"][self.player_1.number] = True
+            self.player_1.game.elms["right"][self.player_1.number] = False
+            self.player_1.dash()
+
+    def handle_input_contro_player1_attacks(self, actions, contro, num):
+        """
+        Gère une partie des actions à la manette pour le joueur 2. (Attaques)
+        """
+        # Gère les attaques
+        for event in actions:
+            # Dash en l'air
+            if self.player_1.vals['current_height'] > 40 and (
+                    event.type == JOYBUTTONDOWN and event.button == 1):
+                self.player_1.dash_attack_up_controller()
+            # Attaque au sol
+            elif (contro[num].get_axis(1) / 3500 > 5 and
+                  contro[num].get_button(2)):
+                choice = "Sol"
+                self.player_1.attack_controller(choice, contro[num])
+            # Attaque en haut
+            elif (contro[num].get_axis(1) / 3500 < -5 and
+                  event.type == JOYBUTTONDOWN and event.button == 1):
+                choice = "Air"
+                self.player_1.attack_controller(choice, contro[num])
+            # Attaques normales
+            elif event.type == JOYBUTTONDOWN and event.button == 1:
+                self.player_1.attack_controller(
+                    contro[num].get_button(1), contro[num])
+            elif event.type == JOYBUTTONDOWN and event.button == 2:
+                self.player_1.attack_controller(
+                    contro[num].get_button(2), contro[num])
 
     def handle_input_controller_player2(self, pause, choice, actions,
-                                        busy, contro, num):
+                                        busy, contro, screen, num):
+        """
+        Cette fonction récupère les actions effectuées à la manette et
+        effectue des opérations spécifiques correspondantes pour le joueur 2.
+        La fonction get.button(n) avec n un nombre entier permet de savoir
+        si la touche correspondante au nombre n est pressé
+        """
         if not pause and not busy and self.name[1] != "kim":
-            if (contro[num].get_button(3) and
-                    self.player_1.vals['current_height'] == 0):
-                self.player_1.block()
-            # Gère les mouvements à la manette
-            elif contro[num].get_axis(0) // 3500 < -5 or (
-                    contro[num].get_axis(0) // 3500 > 5):
-                if contro[num].get_axis(0) > 0:
-                    choice[self.convert_key("right", self.players[1])]
-                    self.player_1.move()
-                    self.elms['right'][self.player_1.number] = True
-                else:
-                    choice[self.convert_key("left", self.players[1])]
-                    self.player_1.move()
-                    self.elms['right'][self.player_1.number] = False
-            # Gère les sauts
-            if (contro[num].get_button(0) and
-                    self.player_1.vals['current_height'] < 400):
-                self.player_1.jump_controller(8)
-            # Gère les attaques
-            for event in actions:
-                if self.player_1.vals['current_height'] > 40 and (
-                        event.type == JOYBUTTONDOWN and event.button == 1):
-                    self.player_1.dash_attack_up_controller()
-                elif (contro[num].get_axis(1) / 3500 > 5 and
-                      event.type == JOYBUTTONDOWN and event.button == 1):
-                    print('sol')
-                    self.player_1.attack_down_controller()
-                elif event.type == JOYBUTTONDOWN and event.button == 1:
-                    self.player_1.attack_controller(
-                        contro[num].get_button(1), contro[num])
-                elif event.type == JOYBUTTONDOWN and event.button == 2:
-                    self.player_1.attack_controller(
-                        contro[num].get_button(2), contro[num])
-                elif event.type == JOYBUTTONDOWN and event.button == 7:
-                    self.player_1.charge()
+            self.handle_input_contro_player1_part1(contro, choice, num)
+            self.handle_input_contro_player1_attacks(actions, contro, num)
+
+            # Charge l'énergie
+            if contro[num].get_button(7):
+                self.player_1.charge()
+
+            # Esquive du joueur
             if contro[num].get_button(10):
                 self.player_1.vanish_controller()
 
@@ -268,19 +381,30 @@ class Jeu:
 
     def strike_collision(self, ennemy):
         '''Actionne l'attaque du personnage'''
-        if self.collision():
-            if "kim" not in self.name:
-                for element in self.collision():
-                    if self.players[ennemy.number] == self.player_0:
-                        self.player_0.damages(ennemy)
-                    elif self.players[element.number] == self.player_1:
-                        self.player_1.damages(ennemy)
-            else:
-                if self.name[ennemy.number] == "kim":
-                    ennemy.player["hp"] -= 10
+        if "kim" not in self.name:
+            for element in self.collision():
+                if self.players[ennemy.number] == self.player_0:
+                    self.player_0.damages(ennemy)
+                elif self.players[element.number] == self.player_1:
+                    self.player_1.damages(ennemy)
+        self.strike_kim(ennemy)
 
-                # Change l'animation en cas d'attaque
-                # self.object.image = GFX['hit']
+    def strike_kim(self, ennemy):
+        """
+        Degats contre kim
+        """
+        limit = self.elms["pkg"]["surface"].get_height()
+        if self.name[ennemy.number] == "kim":
+            if self.name[0] == "kim":
+                striker = self.players[1]
+            if self.name[1] == "kim":
+                striker = self.players[0]
+            ennemy.player["hp"] -= 10
+            if 0 < ennemy.physics["pos"][0] < limit:
+                if self.elms["right"][striker.number]:
+                    ennemy.physics["pos"][0] += 10
+                else:
+                    ennemy.physics["pos"][0] -= 10
 
     def update_stats(self):
         """
@@ -288,14 +412,24 @@ class Jeu:
         les attaques spéciales, et les stats.
         """
         for element in self.players:
-            if self.name[element.number] == "luffy":
-                if element.vals["percent_ult"] <= 130:
-                    element.vals["percent_ult"] += 0.1
-            elif self.name[element.number] == "gear4":
-                if element.vals["percent_ult"] > 0:
-                    element.vals["percent_ult"] -= 0.1
-                else:
+            if self.name[element.number] == "luffy" and (
+                    element.vals["percent_ult"] <= 130):
+                element.vals["percent_ult"] += 0.1
+            elif self.name[element.number] == "gear4" and (
+                    element.vals["percent_ult"] > 0):
+                element.vals["percent_ult"] -= 0.1
+                if element.vals["percent_ult"] <= 0:
                     self.name[element.number] = "luffy"
+                    element.reset_stats()
+            elif self.name[element.number] == "itachi":
+                if self.ulti.can_spe["itachi"] and (
+                        element.vals["percent_ult"] <= 130):
+                    element.vals["percent_ult"] += 0.1
+                else:
+                    if self.players[0] == "itachi":
+                        self.players[1].reset_stats()
+                    elif self.players[1] == "itachi":
+                        self.players[0].reset_stats()
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
@@ -317,6 +451,9 @@ class Jeu:
             self.update_hp_player_1(surface, width, height)
 
     def update_hp_player_0(self, surface, width, height):
+        """
+        Fonction qui met à jour les points de vie du joueur 1
+        """
         if self.name[0] != "kim":
             pg.draw.rect(surface, (25, 70, 17), [
                 width // 8, height // 15,
@@ -347,6 +484,9 @@ class Jeu:
                 self.player_0.player['ult']["power"], 15])
 
     def update_hp_player_1(self, surface, width, height):
+        """
+        Fonction qui met à jour les points de vie du joueur 2
+        """
         if self.name[1] != 'kim':
             # Barre de vie du perso 2
             pg.draw.rect(surface, (25, 70, 17), [
@@ -406,7 +546,7 @@ class Jeu:
         # Visage
         if self.name[0] == "kim":
             self.face = {
-                "image": GFX[self.name[self.player_0.number]+"_face"]}
+                "image": GFX[self.name[self.player_0.number] + "_face"]}
         else:
             self.face = {"image": GFX[self.name[self.player_0.number]]}
         self.face["rect"] = self.face["image"].get_rect()
@@ -417,7 +557,7 @@ class Jeu:
         # Visage
         if self.name[1] == "kim":
             self.face2 = {
-                "image": GFX[self.name[self.player_1.number]+"_face"]}
+                "image": GFX[self.name[self.player_1.number] + "_face"]}
         else:
             self.face2 = {"image": GFX[self.name[self.player_1.number]]}
         self.face2["rect"] = self.face2["image"].get_rect()
@@ -479,10 +619,12 @@ class Jeu:
         self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
-        if contro != None and len(contro) == 2:
-            self.handle_input_controller(actions, pause, busy, contro, 1)
-        elif contro != None and len(contro) == 1:
-            self.handle_input_controller(actions, pause, busy, contro, 0)
+        if contro is not None and len(contro) == 2:
+            self.handle_input_controller(actions, pause, busy, contro, screen,
+                                         1)
+        elif contro is not None and len(contro) == 1:
+            self.handle_input_controller(actions, pause, busy, contro, screen,
+                                         0)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players

@@ -1,5 +1,5 @@
 
-""" Module qui est chargé d'importer les images qui serviront pour le module 
+""" Module qui est chargé d'importer les images qui serviront pour le module
     Menu et Choix_Perso """
 
 import pygame
@@ -102,3 +102,10 @@ itachi_grand_r = pygame.image.load(
     IMG_PATH + "/itachi_grand.png").convert_alpha()
 itachi_grand_b = pygame.image.load(
     IMG_PATH + "/itachi_grand_b.png").convert_alpha()
+
+# Import des images du tutoriel
+
+tuto1 = pygame.image.load(IMG_PATH + "/tuto1.png").convert_alpha()
+tuto2 = pygame.image.load(IMG_PATH + "/tuto2.png").convert_alpha()
+tuto3 = pygame.image.load(IMG_PATH + "/tuto3.png").convert_alpha()
+tuto4 = pygame.image.load(IMG_PATH + "/tuto4.png").convert_alpha()
