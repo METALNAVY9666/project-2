@@ -22,39 +22,41 @@ class Special(pg.sprite.Sprite):
         self.can_spe["luffy"] = True
         self.can_spe["vegeta"] = True
 
-    def spe_manager(self, screen, choice):
+    def spe_manager(self, screen, element):
         "Gestion des attaque spéciales"
-        if choice[self.game.get_code("r")]:
-            for element in self.game.players:
+        name = element.game.name[element.number]
+        print(name)
+        match name:
+            case "itachi":
                 self.spe_itachi(screen, element)
+            case "luffy":
                 self.spe_luffy(screen, element)
 
     def spe_luffy(self, screen, element):
         """
         Attaque spéciale de luffy
         """
-        if element.game.name[element.number] == "luffy":
-            if element.vals["percent_ult"] >= 130:
-                SFX["luffy"]["spe"].play()
-                self.animate.fade(screen.get_width(),
-                                  screen.get_height(), screen)
-                self.game.name[element.number] = 'gear4'
-                element.vals['nbr_sprite'] = 0
-                self.game.elms['side'][element.number] = 'ult'
-                element.upgrade_stats()
+        if element.vals["percent_ult"] >= 130:
+            SFX["luffy"]["spe"].play()
+            self.animate.fade(screen.get_width(),
+                              screen.get_height(), screen, element)
+            self.game.name[element.number] = 'gear4'
+            element.vals['nbr_sprite'] = 0
+            self.game.elms['side'][element.number] = 'ult'
+            element.upgrade_stats()
 
     def spe_itachi(self, screen, element):
         """
         Attaque spéciale d'itachi
         """
-        if self.game.name[element.number] == 'itachi' and self.can_spe["itachi"]:
+        if self.can_spe["itachi"]:
             self.game.elms['side'][element.number] = "ult"
             if 0 < element.vals["health"] < element.vals["max_health"] // 3:
                 if element.vals["percent_ult"] >= 130:
                     SFX["itachi"]["spe"].play()
                     element.vals["percent_ult"] = 0
                     self.animate.fade(screen.get_width(),
-                                      screen.get_height(), screen)
+                                      screen.get_height(), screen, element)
                     victime = self.who_is_victime(element)
                     self.can_spe["itachi"] = False
                     if victime.game.name[victime.number] == "kim":
@@ -77,13 +79,12 @@ class Special(pg.sprite.Sprite):
         """
         Attaque spéciale de vegeta
         """
-        if self.game.name == 'vegeta':
-            SFX["vegeta"]["spe"].play()
-            """On passe un boulééen sur True."""
-            """On charge une variable random."""
-            """A chaque attaque, si le bouléen est sur True"""
-            """ Si les attaque touches et que le random est sur 2."""
-            """lE joueur Adverse ne peut pas bouger."""
+        SFX["vegeta"]["spe"].play()
+        """On passe un boulééen sur True."""
+        """On charge une variable random."""
+        """A chaque attaque, si le bouléen est sur True"""
+        """ Si les attaque touches et que le random est sur 2."""
+        """lE joueur Adverse ne peut pas bouger."""
 
     def spe_goku(self, screen):
         """

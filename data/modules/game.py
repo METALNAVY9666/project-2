@@ -140,7 +140,9 @@ class Jeu:
         if choice[self.convert_key("jump", element)] and (
                 choice[self.convert_key("block", element)]):
             element.charge()
-        self.ulti.spe_manager(screen, choice)
+        if choice[self.convert_key("block", element)] and (
+                choice[self.convert_key("h_attack", element)]):
+            self.ulti.spe_manager(screen, element)
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
@@ -480,6 +482,9 @@ class Jeu:
             pg.draw.rect(surface, (75, 198, 9), [
                 width // 8, height // 15,
                 self.players[0].player['hp'], 15])
+            pg.draw.rect(surface, (64, 2, 97), [
+                width // 8, height // 7,
+                130, 15])
             pg.draw.rect(surface, (168, 30, 241), [
                 width // 8, height // 7,
                 self.player_0.player['ult']["power"], 15])
@@ -515,6 +520,12 @@ class Jeu:
             pg.draw.rect(surface, (75, 198, 9), [
                 width - 400, height // 15,
                 self.players[1].player['hp'], 15])
+            pg.draw.rect(surface, (64, 2, 97), [
+                width - 400, height // 7,
+                130, 15])
+            pg.draw.rect(surface, (168, 30, 241), [
+                width - 400, height // 7,
+                self.player_1.player['ult']["power"], 15])
 
     def update_header(self, screen, busy):
         """
@@ -574,7 +585,6 @@ class Jeu:
         for element in self.players:
             if self.name[element.number] != "kim":
                 element.gravity()
-                # element.damages()
                 element.dash()
                 self.ulti.spe_goku(screen)
                 self.update_stats()

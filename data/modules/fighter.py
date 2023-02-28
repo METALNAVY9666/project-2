@@ -333,22 +333,38 @@ class Fighter(pg.sprite.Sprite):
         h_attack = self.convert_key("h_attack")
         dict_keys = {l_attack: "attack", h_attack: "impact"}
         # Le joueur fait une action
-        ennemy_type = type(ennemy).__name__
-        if ennemy_type == "Fighter":
-            if event.key in dict_keys:
+        if event.key in dict_keys:
+            self.move_back(ennemy)
+            self.game.strike_collision(ennemy)
+            self.combo_tab(event)
+            self.vals['nbr_sprite'] = 0
+            self.game.elms["side"][self.number] = dict_keys[event.key]
+            if self.game.elms["side"][self.number] == "attack":
+                SFX[self.vals["name"]]["l_attack"].play()
+            elif self.game.elms["side"][self.number] == "impact":
+                SFX[self.vals["name"]]["h_attack"].play()
+
+    def move_back(self, ennemy):
+        """
+        Fait bouger le personnage en foncction de l'autre après une attaque
+        """
+        limit = self.vals["surface_height"]
+        if_limit = 0 < self.rect.x < limit
+        if ennemy.game.name[ennemy.number] != "kim" and if_limit:
+            if self.game.elms["right"][self.number]:
+                if not ennemy.vals["attacked"]:
+                    self.rect.x += 10
+            else:
+                if not ennemy.vals["attacked"]:
+                    self.rect.x -= 10
+        else:
+            if if_limit:
                 if self.game.elms["right"][self.number]:
-                    if not ennemy.vals["attacked"]:
+                    if not ennemy.player["block"]:
                         self.rect.x += 10
                 else:
-                    if not ennemy.vals["attacked"]:
+                    if not ennemy.player["block"]:
                         self.rect.x -= 10
-                self.game.strike_collision(ennemy)
-                self.combo_tab(event)
-                self.vals['nbr_sprite'] = 0
-                self.game.elms["side"][self.number] = dict_keys[event.key]
-                if event.key == l_attack:
-                    self.attack_up(choice, ennemy)
-                    self.attack_down(choice, ennemy)
 
     # Docstrings a ajouter
     def single_tap_controller(self, choice, contro, ennemy):
@@ -356,9 +372,11 @@ class Fighter(pg.sprite.Sprite):
         Attaques de base à la manette selon les paramètres du joueur
         """
         if choice == "Sol":
+            SFX[self.vals["name"]]["l_attack"].play()
             self.attack_down_controller(ennemy)
 
         if choice == "Air":
+            SFX[self.vals["name"]]["h_attack"].play()
             self.attack_up_controller(ennemy)
 
         elif contro.get_button(1):
@@ -399,11 +417,11 @@ class Fighter(pg.sprite.Sprite):
         """
         if len(self.vals['sp_tab']) < 9:
             self.vals['sp_tab'].append(event.key)
+            print(event.key)
         else:
             temp = self.vals['sp_tab'][len(self.vals['tab']) - 1]
             self.vals['sp_tab'] = []
             self.vals['sp_tab'].append(temp)
-        # print(self.vals['sp_tab'])
 
     def dash_attack_up(self, choice, event):
         """
@@ -477,7 +495,6 @@ class Fighter(pg.sprite.Sprite):
             if self.game.name[ennemy.number] == "kim":
                 ennemy.physics["pos"][1] -= 200
             else:
-                print("OOOH")
                 self.game.elms["side"][ennemy.number] = "hit"
                 SFX[self.game.name[ennemy.number]]["damage"].play()
                 ennemy.rect.y -= 250
@@ -489,6 +506,7 @@ class Fighter(pg.sprite.Sprite):
                 ennemy.physics["pos"][1] -= 200
             else:
                 ennemy.rect.y = 250
+                SFX[self.game.name[ennemy.number]]["damage"].play()
 
     def attack_down(self):
         """
@@ -511,6 +529,7 @@ class Fighter(pg.sprite.Sprite):
         if self.game.collision():
             print("sol")
             self.game.elms["side"][self.number] = 'down'
+            SFX[self.vals["name"]]["h_attack"].play()
             while ennemy.rect.y <= self.settings['size_max']:
                 ennemy.rect.y += 1
 
@@ -634,6 +653,7 @@ class Fighter(pg.sprite.Sprite):
                 SFX[self.game.name[self.number]]["dash"].play()
             else:
                 self.vals["dashing"][self.number] = False
+
     # Autres
 
     def update_pv(self):
