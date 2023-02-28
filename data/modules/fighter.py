@@ -340,9 +340,6 @@ class Fighter(pg.sprite.Sprite):
                 SFX[self.vals["name"]]["l_attack"].play()
             elif self.game.elms["side"][self.number] == "impact":
                 SFX[self.vals["name"]]["h_attack"].play()
-            if event.key == l_attack:
-                self.attack_up(choice, ennemy)
-                self.attack_down(choice, ennemy)
 
     def move_back(self, ennemy):
         """
@@ -482,54 +479,44 @@ class Fighter(pg.sprite.Sprite):
                     ennemy.physics["pos"][0] -= 200
             self.vals['tab'] = []
 
-    def attack_up(self, choice, ennemy):
+    def attack_up(self):
         '''Attaque en l'air'''
-        if choice[self.convert_key("jump")]:
-            if self.game.collision():
-                self.game.elms["side"][self.number] = 'up'
-                if self.game.name[ennemy.number] == "kim":
-                    print("kim va voler")
-                else:
-                    ennemy.rect.y = 250
+        ennemy = self.game.player_0
+        if self.number == 0:
+            ennemy = self.game.player_1
         if self.game.collision():
-            self.vals['fall'] = False
-            if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
-                self.game.elms["side"][self.number] = 'impact'
-                self.vals['fall'] = False
-                if self.game.name[ennemy.number] == "kim":
-                    print("OH KIM PTN")
-                else:
-                    ennemy.rect.x -= 100
+            self.game.elms["side"][self.number] = 'up'
+            SFX[self.vals["name"]]["h_attack"].play()
+            if self.game.name[ennemy.number] == "kim":
+                ennemy.physics["pos"][1] -= 200
+            else:
+                print("OOOH")
+                self.game.elms["side"][ennemy.number] = "hit"
+                SFX[self.game.name[ennemy.number]]["damage"].play()
+                ennemy.rect.y -= 250
 
     def attack_up_controller(self, ennemy):
         if self.game.collision():
             self.game.elms["side"][self.number] = 'up'
             if self.game.name[ennemy.number] == "kim":
-                print("kim va voler")
+                ennemy.physics["pos"][1] -= 200
             else:
                 ennemy.rect.y = 250
 
-        if self.game.collision():
-            self.vals['fall'] = False
-            if self.vals['nbr_combo_q'] > 1 and self.rect.y <= 400:
-                self.game.elms["side"][self.number] = 'impact'
-                self.vals['fall'] = False
-                if self.game.name[ennemy.number] == "kim":
-                    print("OH KIM PTN")
-                else:
-                    print('air')
-                    ennemy.rect.x -= 100
-
-    def attack_down(self, choice, ennemy):
+    def attack_down(self):
         """
         Attaque vers le bas
         """
-        if choice[self.convert_key("block")] and (
-                self.game.collision()):
+        ennemy = self.game.player_0
+        if self.number == 0:
+            ennemy = self.game.player_1
+        if self.game.collision():
             self.game.elms["side"][self.number] = 'down'
+            SFX[self.vals["name"]]["h_attack"].play()
             if self.game.name[ennemy.number] == "kim":
-                print("ALLO")
+                ennemy.physics["pos"][1] -= 200
             else:
+                SFX[self.game.name[ennemy.number]]["damage"].play()
                 while ennemy.rect.y <= self.settings['size_max']:
                     ennemy.rect.y += 1
 

@@ -122,6 +122,12 @@ class Jeu:
         if choice[self.convert_key("jump", element)] and (
                 not choice[self.convert_key("l_attack", element)]):
             element.jump()
+        elif choice[self.convert_key("l_attack", element)] and (
+                choice[self.convert_key("jump", element)]):
+            element.attack_up()
+        elif choice[self.convert_key("l_attack", element)] and (
+                choice[self.convert_key("block", element)]):
+            element.attack_down()
         # Gère le bloquage
         elif choice[self.convert_key("block", element)]:
             element.block()
