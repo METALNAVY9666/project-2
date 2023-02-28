@@ -45,35 +45,37 @@ class Animate():
         """Fonction qui permet d'afficher le texte"""
         quotes = {"vegeta": "blabla",
                   "goku": "Ce n'est pas encore terminé...",
-                  "luffy": "Tu ne peux plus rien contre moi... GEAR 4 !",
+                  "luffy": "Le prochain roi des pirates...Ce sera moi !",
                   "itachi": "Toute technique est inutile devant mes yeux.",
                   "revive": "Ce n'est toujours pas fini...",
                   "kim": "Mouais mouais"}
         self.vals["font"] = pg.font.Font(
             'test_olivier/gfx/fonts/04B_19__.TTF', 30)
         for element in self.spe.game.players:
-            if element.vals["health"] <= 0:
-                dead = element
-                txt = self.vals["font"].render(
-                    quotes[self.spe.game.name[dead.number]],
-                    0, (244, 49, 14))   
-                txt_width = screen.get_width() - (txt.get_width()) * 2
-                return screen.blit(txt, (txt_width, height))
-            if element.game.name[element.number] == "itachi" and(
-                self.spe.can_spe["itachi"]):
-                txt = self.vals["font"].render(
-                    quotes[element.game.name[element.number]],
-                    0, (244, 49, 14))
-                txt_width = screen.get_width() - (txt.get_width()) * 1.5
-                self.animation_itachi(screen)
-                height = screen.get_height() - (screen.get_height() // 5)
-                return screen.blit(txt, (txt_width, height))
-            if element.game.name[element.number] == "luffy":
-                txt = self.vals["font"].render(
-                    quotes[element.game.name[element.number]],
-                    0, ( 244, 49, 14))
-                txt_width = screen.get_width() - (txt.get_width() * 1.5) 
-                return screen.blit(txt, (txt_width, height))
+            if element.game.name[element.number] != "kim":
+                if element.vals["health"] <= 0:
+                    dead = element
+                    txt = self.vals["font"].render(
+                        quotes[self.spe.game.name[dead.number]],
+                        0, (244, 49, 14))   
+                    txt_width = screen.get_width() - (txt.get_width()) * 2
+                    return screen.blit(txt, (txt_width, height))
+                if element.game.name[element.number] == "itachi" and(
+                    self.spe.can_spe["itachi"] and 
+                    element.vals["health"] < element.vals["max_health"] // 3):
+                    txt = self.vals["font"].render(
+                        quotes[element.game.name[element.number]],
+                        0, (244, 49, 14))
+                    txt_width = screen.get_width() - (txt.get_width()) * 1.5
+                    self.animation_itachi(screen)
+                    height = screen.get_height() - (screen.get_height() // 5)
+                    return screen.blit(txt, (txt_width, height))
+                if element.game.name[element.number] == "luffy":
+                    txt = self.vals["font"].render(
+                        quotes[element.game.name[element.number]],
+                        0, ( 244, 49, 14))
+                    txt_width = screen.get_width() - (txt.get_width() * 1.5) 
+                    return screen.blit(txt, (txt_width, height))
 
 
     def animation_itachi(self, screen):

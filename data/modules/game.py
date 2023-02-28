@@ -49,14 +49,27 @@ class Jeu:
         self.players = [self.player_0, self.player_1]
         for player in self.players:
             if type(player).__name__ == "Fighter":
-                SFX[self.name[player.number]]["start"].play()
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
         self.ulti = Special(self)
+        self.start_audio()
         # self.object = PunchingBall(self)
 
+    def start_audio(self):
+        """
+        Audio des personnages à l'entrée en scène
+        """
+        if self.name[0] != "kim":
+            SFX[self.name[0]]["start"].play()
+            pg.time.wait(1000)
+        if self.name[1] != "kim":
+            pg.time.wait(1000)
+            SFX[self.name[1]]["start"].play()
+
     def init_group(self):
-        """Initialisation des personnages dans leur groupes"""
+        """
+        Initialisation des personnages dans leur groupes
+        """
         # self.all_objects = pg.sprite.Group()
         self.all_players_0 = pg.sprite.Group()
         self.all_players_1 = pg.sprite.Group()
@@ -68,9 +81,12 @@ class Jeu:
 
     def convert_key(self, key, element):
         """renvoie la classe pygame de la clé"""
+        if "kim" in self.name:
+            keymap = self.elms["keymap"][0] 
+            return pg.key.key_code(azerty_to_qwerty(keymap[key]))
         if self.name[element.number] != "kim":
             keymap = self.elms["keymap"][element.number]
-        return pg.key.key_code(azerty_to_qwerty(keymap[key]))
+            return pg.key.key_code(azerty_to_qwerty(keymap[key]))
 
     def handle_input(self, actions, pause, busy, screen):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -98,13 +114,13 @@ class Jeu:
                         self.elms["side"][element.number] = 'left'
                 # Gère les sauts
                 elif choice[self.convert_key("jump", element)] and (
-                    not choice[self.convert_key("l_attack", element)]):
+                        not choice[self.convert_key("l_attack", element)]):
                     element.jump()
                 # Gère le bloquage
                 elif choice[self.convert_key("block", element)]:
                     element.block()
                 if choice[self.convert_key("jump", element)] and (
-                    choice[self.convert_key("block", element)]):
+                        choice[self.convert_key("block", element)]):
                     element.charge()
                 self.ulti.spe_manager(screen, choice)
                 # Actions qui nécessitent une boucle 'for'
@@ -165,13 +181,13 @@ class Jeu:
                     self.player_0.dash_attack_up_controller()
 
                 # Attaque au sol
-                elif (contro[num].get_axis(1) / 3500 > 5 and 
+                elif (contro[num].get_axis(1) / 3500 > 5 and
                       event.type == JOYBUTTONDOWN and event.button == 2):
                     choice = "Sol"
                     self.player_0.attack_controller(choice, contro[num])
 
                 # Attaque en haut
-                elif (contro[num].get_axis(1) / 3500 < -5 and 
+                elif (contro[num].get_axis(1) / 3500 < -5 and
                       event.type == JOYBUTTONDOWN and event.button == 1):
                     choice = "Air"
                     self.player_0.attack_controller(choice, contro[num])
@@ -252,13 +268,13 @@ class Jeu:
                     self.player_1.dash_attack_up_controller()
 
                 # Attaque au sol
-                elif (contro[num].get_axis(1) / 3500 > 5 and 
+                elif (contro[num].get_axis(1) / 3500 > 5 and
                       contro[num].get_button(2)):
                     choice = "Sol"
                     self.player_1.attack_controller(choice, contro[num])
-                    
+
                 # Attaque en haut
-                elif (contro[num].get_axis(1) / 3500 < -5 and 
+                elif (contro[num].get_axis(1) / 3500 < -5 and
                       event.type == JOYBUTTONDOWN and event.button == 1):
                     choice = "Air"
                     self.player_1.attack_controller(choice, contro[num])
@@ -270,7 +286,7 @@ class Jeu:
                 elif event.type == JOYBUTTONDOWN and event.button == 2:
                     self.player_1.attack_controller(
                         contro[num].get_button(2), contro[num])
-                
+
                 # Charge l'énergie
                 elif event.type == JOYBUTTONDOWN and event.button == 7:
                     self.player_1.charge()
@@ -344,6 +360,7 @@ class Jeu:
 
     def strike_collision(self, ennemy):
         '''Actionne l'attaque du personnage'''
+        limit = self.elms["pkg"]["surface"].get_height()
         if self.collision():
             if "kim" not in self.name:
                 for element in self.collision():
@@ -353,7 +370,16 @@ class Jeu:
                         self.player_1.damages(ennemy)
             else:
                 if self.name[ennemy.number] == "kim":
+                    if self.name[0] == "kim":
+                        striker = self.players[1]
+                    if self.name[1] == "kim":
+                        striker = self.players[0]
                     ennemy.player["hp"] -= 10
+                    if 0 < ennemy.physics["pos"][0] < limit:
+                        if self.elms["right"][striker.number]:
+                            ennemy.physics["pos"][0] += 10
+                        else:
+                            ennemy.physics["pos"][0] -= 10
 
                 # Change l'animation en cas d'attaque
                 # self.object.image = GFX['hit']
@@ -372,6 +398,16 @@ class Jeu:
                     element.vals["percent_ult"] -= 0.1
                 else:
                     self.name[element.number] = "luffy"
+                    element.reset_stats()
+            elif self.name[element.number] == "itachi" and self.ulti.can_spe["itachi"]:
+                if element.vals["percent_ult"] <= 130:
+                    element.vals["percent_ult"] += 0.1
+            elif self.name[element.number] == "itachi":
+                if not self.ulti.can_spe["itachi"]:
+                    if self.players[0] == "itachi":
+                        self.players[1].reset_stats()
+                    elif self.players[1] == "itachi":
+                        self.players[0].reset_stats()
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
