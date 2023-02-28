@@ -4,7 +4,6 @@ import pygame as pg
 from data.modules.settings import read_settings, read_levels
 
 
-
 def load_image(filepath=str, dimensions=None):
     """charge l'image et modifie les dimensions de cette dernière"""
     image = pg.image.load(filepath + ".png")
@@ -30,6 +29,7 @@ def load_dir(filepath=str, dimensions=tuple):
         sprites[name] = image
     return sprites
 
+
 def convert_alpha_dict(dicti, size):
     """renvoie le dictionnaire de sprites convertis"""
     keys = list(dicti.keys())
@@ -47,7 +47,7 @@ def sprites_images(name):
                     'jump': pg.image.load(GFX_PATH + f'{name}/jump_left.png'),
                     'jump_right': pg.image.load(GFX_PATH + f'{name}/jump_right.png'),
                     'shield': pg.image.load(GFX_PATH + f'{name}/block.png'),
-                    'shield_right': pg.image.load(GFX_PATH +f'{name}/block_right.png')}
+                    'shield_right': pg.image.load(GFX_PATH + f'{name}/block_right.png')}
     dict_size = {"itachi": (X // 9, Y // 8),
                  "goku": (X // 7,  Y // 8),
                  "luffy": (X // 9, Y // 10),
@@ -74,10 +74,11 @@ def sprite_tab(name, position):
     tab = [None] * 6
     scale = dict_size[name]
     for ind in range(6):
-        string = GFX_PATH +f'{name}/base_{position}{ind}'
+        string = GFX_PATH + f'{name}/base_{position}{ind}'
         tab[ind] = load_image(string, scale)
         tab[ind].convert_alpha()
     return tab
+
 
 levels = read_levels()
 prop = read_settings()
@@ -172,20 +173,14 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter l'exponentielle", ]
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 8, Y // 8))
-GFX["kim_face"] = load_image(BOX_PATH+"kim", (X//15, X//15)).convert_alpha()
-GFX["luffy"] = load_image(BOX_PATH +
-                          "luffy", (X // 15, X // 15)).convert_alpha()
-GFX["itachi"] = load_image(BOX_PATH +
-                           "itachi", (X // 15, X // 15)).convert_alpha()
-GFX["goku"] = load_image(BOX_PATH +
-                         "goku", (X // 15, X // 15)).convert_alpha()
-GFX["vegeta"] = load_image(BOX_PATH +
-                           "vegeta", (X // 15, X // 15)).convert_alpha()
-GFX["gear4"] = load_image(BOX_PATH +
-                          "gear4", (X // 15, X // 15)).convert_alpha()
-GFX["revive"] = load_image(BOX_PATH +
-                           "revive", (X // 15, X // 15)).convert_alpha()
-GFX["itachi_spe"] = load_image(GFX_PATH + "itachi/itachi_spe",
-                            (X // 1, X //2)).convert_alpha()
-TEMP = EVENTS_PATH+"kim_ult/"
+GFX["kim_face"] = load_image(BOX_PATH + "kim", (X // 15, X // 15)).convert_alpha()
+
+GFX["luffy"] = load_image(BOX_PATH + "luffy", (X // 15, X // 15)).convert_alpha()
+GFX["itachi"] = load_image(BOX_PATH + "itachi", (X // 15, X // 15)).convert_alpha()
+GFX["goku"] = load_image(BOX_PATH + "goku", (X // 15, X // 15)).convert_alpha()
+GFX["vegeta"] = load_image(BOX_PATH + "vegeta", (X // 15, X // 15)).convert_alpha()
+GFX["gear4"] = load_image(BOX_PATH + "gear4", (X // 15, X // 15)).convert_alpha()
+GFX["revive"] = load_image(BOX_PATH + "revive", (X // 15, X // 15)).convert_alpha()
+GFX["itachi_spe"] = load_image(GFX_PATH + "itachi/itachi_spe", (X // 1, X // 2)).convert_alpha()
+TEMP = EVENTS_PATH + "kim_ult/"
 GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y)) for filename in listdir(TEMP)]

@@ -1,12 +1,10 @@
 """ce module contient les différents niveaux"""
 from data.modules.texture_loader import GFX
-from data.modules.audio import SFX
 from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
 from data.modules import events
 from data.modules.game import Jeu
-from copy import copy
 
 
 class Background:
@@ -126,9 +124,9 @@ class BaseLevel:
                     if self.is_list_or_tuple(subrect):
                         for subsubrect in subrect:
                             rects.append(subsubrect)
-                    elif not subrect is None:
+                    elif subrect is not None:
                         rects.append(subrect)
-            elif not rect is None:
+            elif rect is not None:
                 rects.append(rect)
         self.update_list = rects
 
@@ -156,7 +154,7 @@ class BaseLevel:
         self.update_list.append(self.update_obstacles())
 
         # met à jour les évènements
-        
+
         self.update_list += self.update_events(self.cls["pause"].bool,
                                                self.cls["busy"])
 
@@ -166,7 +164,7 @@ class BaseLevel:
         # màj l'état des personnages
         end = self.cls["end"]
         end_response = end.update(game[1], music, delta)
-        
+
         plus = None
         if end_response is None:
             self.update_list.append(end_response)
@@ -174,13 +172,12 @@ class BaseLevel:
             plus = end_response[1]
             self.update_list.append(end_response[0])
 
-
         # met à jour le menu pause
         next_op, pause_rects = self.cls["pause"].update()
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)
-        
+
         self.clear_rect_list()
         self.pkg["display"].update(self.update_list)
         self.update_list = []

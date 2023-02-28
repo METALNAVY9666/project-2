@@ -1,6 +1,6 @@
 """permet de lire des options"""
 import json
-import pygame
+
 
 def read_settings():
     """lis le fichier options"""
@@ -16,6 +16,7 @@ def read_levels():
         data = json.load(file)
         file.close()
     return data
+
 
 def write_settings(dico):
     """écrit le json options"""
