@@ -54,6 +54,7 @@ class BoutonQuit:
 
         return None
 
+
 pygame.init()
 
 # Couleur de la console
