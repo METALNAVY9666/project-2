@@ -76,9 +76,31 @@ class Jeu:
         self.players = [self.player_0, self.player_1]
         for player in self.players:
             if type(player).__name__ == "Fighter":
-                print(self.elms["keymap"])
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
+        self.ulti = Special(self)
+        self.start_audio()
+        # self.object = PunchingBall(self)
+
+    def start_audio(self):
+        """
+        Audio des personnages à l'entrée en scène
+        """
+        if self.name[0] != "kim":
+            SFX[self.name[0]]["start"].play()
+            pg.time.wait(1000)
+        if self.name[1] != "kim":
+            pg.time.wait(1000)
+            SFX[self.name[1]]["start"].play()
+
+    def init_group(self):
+        """
+        Initialisation des personnages dans leur groupes
+        """
+        # self.all_objects = pg.sprite.Group()
+        self.all_players_0 = pg.sprite.Group()
+        self.all_players_1 = pg.sprite.Group()
+        self.add_groups()
 
     def get_code(self, key):
         "renvoie la valeur de la touche"
