@@ -41,7 +41,7 @@ class Gunner(pg.sprite.Sprite):
         dims = self.pkg["dimensions"]
         self.physics["ground"] = (level * dims[1]) // 100
 
-    def init_player(self, id):
+    def init_player(self, iden):
         """initialise les propriétés du joueur"""
         width, height = self.pkg["dimensions"]
         self.player = {}
@@ -51,8 +51,8 @@ class Gunner(pg.sprite.Sprite):
         self.player["size"] = [width // 8, height // 6]
         self.player["weapon"] = "fist"
         self.player["block"] = False
-        self.player["id"] = id
-        self.player["keys"] = read_settings()["keys"][id]
+        self.player["id"] = iden
+        self.init_keymap()
         self.player["cooldown"] = {
             "barrett": 0,
             "kick": 0,
@@ -83,6 +83,10 @@ class Gunner(pg.sprite.Sprite):
         self.gfx["animations"] = {}
         self.gfx["animations"]["kick"] = 166
         # current est [nom_sprite, temps_animation]
+
+    def init_keymap(self):
+        """initialise les touches du gunner"""
+        self.player["keys"] = read_settings()["keys"][self.player["id"]]
 
     def init_weapons(self):
         """initialise l'arsenal"""

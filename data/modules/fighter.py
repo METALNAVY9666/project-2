@@ -64,7 +64,7 @@ class Fighter(pg.sprite.Sprite):
                                self.settings['dims'][1]) // 100
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
-        self.vals["keymap"] = read_settings()["keys"][self.number]
+        self.init_keymap()
 
     def init_perso(self):
         self.tab = sprite_tab(
@@ -79,6 +79,10 @@ class Fighter(pg.sprite.Sprite):
         # Images complémentaires
         self.images_dict = sprites_images(self.game.name[self.number])
     # Déplacement horizontal du joueur
+
+    def init_keymap(self):
+        """initialise les touches du personnage"""
+        self.vals["keymap"] = read_settings()["keys"][self.number]
 
     def is_gunner(self):
         """
@@ -334,20 +338,22 @@ class Fighter(pg.sprite.Sprite):
         h_attack = self.convert_key("h_attack")
         dict_keys = {l_attack: "attack", h_attack: "impact"}
         # Le joueur fait une action
-        if event.key in dict_keys:
-            if self.game.elms["right"][self.number]:
-                if not ennemy.vals["attacked"]:
-                    self.rect.x += 10
-            else:
-                if not ennemy.vals["attacked"]:
-                    self.rect.x -= 10
-            self.game.strike_collision(ennemy)
-            self.combo_tab(event)
-            self.vals['nbr_sprite'] = 0
-            self.game.elms["side"][self.number] = dict_keys[event.key]
-            if event.key == l_attack :
-                self.attack_up(choice, ennemy)
-                self.attack_down(choice, ennemy)
+        ennemy_type = type(ennemy).__name__
+        if ennemy_type == "Fighter":
+            if event.key in dict_keys:
+                if self.game.elms["right"][self.number]:
+                    if not ennemy.vals["attacked"]:
+                        self.rect.x += 10
+                else:
+                    if not ennemy.vals["attacked"]:
+                        self.rect.x -= 10
+                self.game.strike_collision(ennemy)
+                self.combo_tab(event)
+                self.vals['nbr_sprite'] = 0
+                self.game.elms["side"][self.number] = dict_keys[event.key]
+                if event.key == l_attack :
+                    self.attack_up(choice, ennemy)
+                    self.attack_down(choice, ennemy)
 
     # Docstrings a ajouter
     def single_tap_controller(self, choice, contro, ennemy):

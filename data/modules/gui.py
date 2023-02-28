@@ -40,6 +40,7 @@ class PauseMenu:
         self.settings = SettingsMenu(pkg)
         dims = pkg["dimensions"]
         self.pos = (dims[0] // 64, dims[1] // 64)
+        self.classes = []
 
     def switch(self):
         """active ou désactive le menu pause"""
@@ -53,6 +54,32 @@ class PauseMenu:
             self.pkg["mixer"].unpause()
             self.settings.in_menu = False
             self.settings.sub_menu = None
+            self.init_settings()
+
+    def reset_mixer(self, volume, dico=dict):
+        """change le volume de chaque Sound d'un dictionnaire récursivement"""
+        name = type(dico).__name__
+        if name == "dict":
+            keys = list(dico.keys())
+            for key in keys:
+                if type(dico[key]).__name__ == "dict":
+                    self.reset_mixer(volume, dico[key])
+                else:
+                    dico[key].set_volume(volume)
+        else:
+            dico[key].set_volume(volume)
+
+    def init_settings(self):
+        """réinitialise les paramètres du jeu"""
+        effects_volume = read_settings()["audio"]["effects"] / 100
+        self.reset_mixer(effects_volume, SFX)
+        for classe in self.classes:
+            class_name = type(classe).__name__
+            match class_name:
+                case "Jeu":
+                    classe.reset_player_settings()
+                case "PauseMenu":
+                    classe.bg_music.reset_volume()
 
     def update(self):
         """met à jour le menu pause"""
@@ -127,6 +154,9 @@ class SettingsMenu:
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
         self.asks = {}
         self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"], "extremum")
+
+    def reset(self, classe):
+        """réinitialise une classe"""
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""

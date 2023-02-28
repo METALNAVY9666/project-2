@@ -6,6 +6,7 @@ from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
 from data.modules import events
 from data.modules.game import Jeu
+from copy import copy
 
 
 class Background:
@@ -42,6 +43,8 @@ class BaseLevel:
         self.init_audio()
         self.init_game(players)
         self.init_events()
+        for key in self.cls.keys():
+            self.cls["pause"].classes.append(self.cls[key])
 
     def init_prop(self, pygame_pack, prop, game_settings):
         """initlialise les variables et propriétés de la classe BaseLevel"""
@@ -56,11 +59,12 @@ class BaseLevel:
         self.cls["bg"] = Background(self.pkg, self.prop)
         self.cls["pause"] = PauseMenu(self.pkg)
         self.cls["key"] = KeyChecker(self.pkg, self.cls["pause"])
+        self.cls["mixer"] = self.pkg["mixer"]
         self.cls["busy"] = True
 
     def init_audio(self):
         """initialise l'audio du niveau"""
-        bg_music = Music(self.pkg, self.prop, self.settings)
+        bg_music = Music(self.pkg, self.prop)
         bg_music.play()
         self.cls["pause"].bg_music = bg_music
 

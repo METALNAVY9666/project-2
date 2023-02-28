@@ -68,7 +68,8 @@ while WIN:
             if event.key == pygame.K_F11:
                 current_map.pkg["display"].toggle_fullscreen()
     # actualise la map, si elle renvoie "quit", alors quitter
-    if current_map.update(dlt, actions, contro) == "exit":
+    next_action = current_map.update(dlt, actions, contro)
+    if next_action == "exit":
         WIN = False
     fps.record_fps()
 

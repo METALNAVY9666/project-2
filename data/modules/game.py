@@ -31,11 +31,10 @@ class Jeu:
         Initialisation des dictionnaires"""
         self.elms = {}
         self.elms["right"] = [False, True]
-        self.elms["fps"] = 60
+        self.elms["fps"] = pkg["FPS"]
         self.elms["side"] = ["left", "left"]
         self.elms["pkg"] = pkg
         self.elms["prop"] = prop
-        self.elms["keymap"] = []
 
     def init_players(self, pkg, prop):
         """Initialisation des personnages"""
@@ -48,12 +47,7 @@ class Jeu:
         elif "kim" not in self.name:
             self.player_0 = Fighter(self, pkg, prop, 0)
             self.player_1 = Fighter(self, pkg, prop, 1)
-        self.players = [self.player_0, self.player_1]
-        for player in self.players:
-            if type(player).__name__ == "Fighter":
-                print(self.elms["keymap"])
-                self.elms["keymap"].append(
-                    read_settings()["keys"][player.number])
+        self.init_keys()
         self.ulti = Special(self)
         # self.object = PunchingBall(self)
 
@@ -63,6 +57,16 @@ class Jeu:
         self.all_players_0 = pg.sprite.Group()
         self.all_players_1 = pg.sprite.Group()
         self.add_groups()
+
+    def init_keys(self):
+        """initialise les touches des personngaes"""
+        self.elms["keymap"] = []
+        self.players = [self.player_0, self.player_1]
+        for player in self.players:
+            if type(player).__name__ == "Fighter":
+                print(self.elms["keymap"])
+                self.elms["keymap"].append(
+                    read_settings()["keys"][player.number])
 
     def get_code(self, key):
         "renvoie la valeur de la touche"
@@ -338,6 +342,9 @@ class Jeu:
             pg.draw.rect(surface, (75, 198, 9), [
                 width // 8, height // 15,
                 self.players[0].player['hp'], 15])
+            pg.draw.rect(surface, (168, 30, 241), [
+                width // 8, height // 7,
+                self.player_0.player['ult']["power"], 15])
 
     def update_hp_player_1(self, surface, width, height):
         if self.name[1] != 'kim':
@@ -451,6 +458,13 @@ class Jeu:
             rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         if self.name[1] != "kim":
             rects.append(self.player_1.blit_sprite(screen, dlt, pause))
+
+    def reset_player_settings(self):
+        """réinitialise les paramètres des joueurs"""
+        players = [self.player_0, self.player_1]
+        for player in players:
+            player.init_keymap()
+        self.init_keys()
 
     def update(self, screen, dlt, actions, pause, busy, contro, music):
         '''Cette fonction permet de mettre à jour les événements

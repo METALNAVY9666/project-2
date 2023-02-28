@@ -32,7 +32,7 @@ from data.modules.settings import read_settings
 class Music:
     """joue de la musique en fonction du type de musique"""
 
-    def __init__(self, pkg, prop, settings):
+    def __init__(self, pkg, prop):
         self.pkg = pkg
         self.loader = self.pkg["mixer"].music
 
@@ -45,11 +45,16 @@ class Music:
         else:
             self.loader.load(self.get_segment("intro"))
 
-        self.loader.set_volume(settings["audio"]["music"]/100)
+        self.reset_volume()
 
     def get_segment(self, segment):
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
+    
+    def reset_volume(self):
+        """change le volume de la musique en fonction des paramètres"""
+        settings = read_settings()
+        self.loader.set_volume(settings["audio"]["music"]/100)
 
     def end(self):
         """joue l'outro"""
