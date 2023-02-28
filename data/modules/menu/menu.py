@@ -4,6 +4,7 @@
 
 import pygame
 from data.modules.menu.textures import fond1
+from data.modules.menu.tutoriel import main as tuto
 
 
 class Bouton:
@@ -49,7 +50,7 @@ class Bouton:
                         return "choix_perso"
                     # Bouton règle du jeu
                     if 340 < pos_souri[1] < 430:
-                        pass
+                        tuto()
                     # Bouton Test perso
                     elif pos_souri[1] > 430:
                         pass
