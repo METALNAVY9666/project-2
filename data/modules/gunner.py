@@ -1,6 +1,6 @@
 """contient la classe d'un joueur"""
 import pygame as pg
-from copy import copy
+from copy import deepcopy
 from random import randint
 from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
@@ -48,7 +48,8 @@ class Gunner(pg.sprite.Sprite):
         self.player = {}
         self.player["name"] = "Kim"
         self.player["hp"] = 100
-        self.player["old_hp"] = 100
+        self.player["max_hp"] = deepcopy(self.player["hp"])
+        self.player["hp_list"] = [deepcopy(self.player["hp"])]
         self.player["size"] = [width // 8, height // 6]
         self.player["weapon"] = "fist"
         self.player["block"] = False
@@ -156,9 +157,10 @@ class Gunner(pg.sprite.Sprite):
 
     def damage_self(self, dmg):
         '''permet de s'infliger des dégtas'''
-        dmg = copy(dmg)
+        dmg = deepcopy(dmg)
         if self.player["block"]:
             dmg // 2
+        self.update_health()
         self.player["hp"] -= dmg
 
     # ------ Attaques ------
@@ -301,7 +303,6 @@ class Gunner(pg.sprite.Sprite):
     def update_ulti(self, pause, music, busy):
         """met à jour l'ultime de kim"""
         if not pause:
-
             if self.player["ult"]["status"]:
                 if self.player["ult"]["load"] == 0:
                     self.player["ult"]["time"] -= 1
@@ -322,13 +323,18 @@ class Gunner(pg.sprite.Sprite):
                 else:
                     return self.ult_animation(music, busy)
             else:
-                if self.player["old_hp"] != self.player["hp"]:
-                    delta = self.player["old_hp"] - self.player["hp"]
-                    self.player["ult"]["power"] += randint(delta, 20 * delta)
+                if self.player["hp_list"][-1] != self.player["hp"]:
+                    delta = self.player["hp_list"][-1] - self.player["hp"]
+                    self.player["ult"]["power"] += randint(delta, int(2.5 * delta))
 
     def update_health(self):
         """met à jour la vie"""
-        self.player["old_hp"] = copy(self.player["hp"])
+        hp = deepcopy(self.player["hp"])
+        if len(self.player["hp_list"]) > 32:
+            self.player["hp_list"].pop(0)
+        if self.player["hp_list"][-1] != hp:
+            self.player["hp_list"].append(hp)
+            print(self.player["hp_list"])
 
     def get_pressed(self):
         """renvoie les boutons pressés"""
@@ -455,19 +461,27 @@ class Gunner(pg.sprite.Sprite):
         rect.x, rect.y = self.physics["pos"]
         return rect
 
+    def kim_ko(self):
+        """renvoie un rect de kim ko"""
+        rect = self.blit_sprite(GFX["kim"]["lost"], self.physics["pos"])
+        return rect
+
     def update(self, dlt, pause, busy, other, music):
         """met à jour le sprite du joueur"""
-        self.update_health()
         self.check_ground()
         self.gravity()
-        self.update_jump()
-        self.update_cooldowns(dlt)
-        buttons = self.physics["controller"].update()
-        self.check_combos(pause, busy, buttons)
         rects = []
-        rects.append(self.update_keys(dlt, pause, busy, other, buttons))
-        rects += self.update_bullets(pause, other)
-        rects.append(self.update_ulti(pause, music, busy))
+        if self.player["hp"] > 0:
+            self.update_jump()
+            self.update_cooldowns(dlt)
+            buttons = self.physics["controller"].update()
+            self.check_combos(pause, busy, buttons)
+            rects.append(self.update_keys(dlt, pause, busy, other, buttons))
+            rects += self.update_bullets(pause, other)
+            rects.append(self.update_ulti(pause, music, busy))
+        else:
+            rects.append(self.kim_ko())
+        self.update_health()
         return rects
 
 

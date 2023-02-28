@@ -402,7 +402,7 @@ class Jeu:
                 striker = self.players[1]
             if self.name[1] == "kim":
                 striker = self.players[0]
-            ennemy.player["hp"] -= 10
+            ennemy.damage_self(10)
             if 0 < ennemy.physics["pos"][0] < limit:
                 if self.elms["right"][striker.number]:
                     ennemy.physics["pos"][0] += 10
@@ -484,7 +484,7 @@ class Jeu:
                 self.players[0].player['hp'], 15])
             pg.draw.rect(surface, (64, 2, 97), [
                 width // 8, height // 7,
-                130, 15])
+                100, 15])
             pg.draw.rect(surface, (168, 30, 241), [
                 width // 8, height // 7,
                 self.player_0.player['ult']["power"], 15])
@@ -522,7 +522,7 @@ class Jeu:
                 self.players[1].player['hp'], 15])
             pg.draw.rect(surface, (64, 2, 97), [
                 width - 400, height // 7,
-                130, 15])
+                100, 15])
             pg.draw.rect(surface, (168, 30, 241), [
                 width - 400, height // 7,
                 self.player_1.player['ult']["power"], 15])
