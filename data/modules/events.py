@@ -1,7 +1,7 @@
 """contient la classe permettant de créer des évènements aléatoires"""
 from random import randint
 from data.modules.audio import SFX
-from data.modules.settings import read_levels
+
 
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
@@ -14,7 +14,7 @@ class AE86:
         self.lock = False
         self.timer = 0
         dims = self.pkg["dimensions"]
-        self.pos = [dims[0]//2, dims[1]//2]
+        self.pos = [dims[0] // 2, dims[1] // 2]
 
     def check_event(self, n):
         """vérifie si l'évènement se réalise avec 1/n proba par seconde"""
@@ -67,11 +67,11 @@ class Countdown:
             [fps * drop, "go"],
             [fps * (drop + 1), "end of countdown"]
         ]
-        for ind in range(len(counts)-1):
+        for ind in range(len(counts) - 1):
             if counts[ind][0] == clock:
                 sound = counts[ind][1]
                 SFX["level"][sound].play()
-            if counts[ind][0] < clock < counts[ind+1][0]:
+            if counts[ind][0] < clock < counts[ind + 1][0]:
                 return "ctn", counts[ind][1]
         if clock > counts[-1][0]:
             return "end", None
@@ -99,11 +99,11 @@ class End:
                 name = player.vals["name"]
             elif player_name == "Gunner":
                 name = player.player["name"]
-            
+
             txt = self.font.render(name + " wins", True, (0, 0, 0))
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
-            pos = (width//2, height//2)
+            pos = (width // 2, height // 2)
             pos = txt.get_rect(center=pos)
             self.delta_sum += dt
             if self.lock:
@@ -123,4 +123,4 @@ class End:
             elif player_name == "Gunner":
                 hp = self.players[ind].player["hp"]
             if hp <= 0:
-               return self.death(self.players[1-ind], music, dt)
+                return self.death(self.players[1 - ind], music, dt)

@@ -1,22 +1,19 @@
 """ Modules qui gère les manettes. """
 import pygame as pg
-import pygame._sdl2
 from pygame._sdl2.controller import Controller
-from pygame.locals import *
 from data.modules.settings import read_settings
-from data.modules.keyboard import azerty_to_qwerty
 pg._sdl2.controller.init()
 pg.joystick.init()
 pg.init()
+
 
 def manage_joysticks():
     """renvoie les manettes utilisés"""
     return [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
 
+
 def manage_controller(contro):
-    """
-    Permet de savoir combien et quelles manettes sont utilisées.
-    """
+    """Permet de savoir combien et quelles manettes sont utilisées."""
     joysticks = [pg.joystick.Joystick(i)
                  for i in range(pg.joystick.get_count())]
     # Permet de savoir le nombre de manettes utilisés
@@ -29,6 +26,7 @@ def manage_controller(contro):
 
 class SimpleController:
     """permet de simuler des pressions de touches avec la manette"""
+
     def __init__(self, number):
         self.buttons = {
             "B": "l_attack",
@@ -54,9 +52,9 @@ class SimpleController:
             "Lstick_x": round(controller.get_axis(0), 3),
             "Lstick_y": round(-controller.get_axis(1), 3),
             "Rstick_x": round(controller.get_axis(2), 3),
-            "Rstick_y": round(-controller.get_axis(3), 3),
-                }
-        return pressed       
+            "Rstick_y": round(-controller.get_axis(3), 3)
+        }
+        return pressed
 
     def check_buttons(self, pressed):
         """fait les actions et agit en conséquence"""
@@ -82,19 +80,19 @@ class SimpleController:
             return self.buttons[button]
         except KeyError:
             return None
-        
+
     def clean_nones(self, old_list):
         """supprime tout les Nones d'une liste"""
         new_list = []
         for element in old_list:
-            if not element is None:
+            if element is not None:
                 new_list.append(element)
         return new_list
 
     def update(self):
         """met presses les touches des boutons de la manette pressés"""
         contro = manage_controller([])
-        plugged = not contro is None
+        plugged = contro is not None
         buttons = []
         if plugged:
             controller = contro[0]

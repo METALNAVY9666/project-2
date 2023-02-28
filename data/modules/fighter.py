@@ -2,7 +2,6 @@
 '''Ce module permet de gérer le joueur, ses déplacements etc'''
 import pygame as pg
 from data.modules.texture_loader import sprites_images, sprite_tab
-from data.modules.controllers import manage_controller
 from data.modules.settings import read_settings
 from data.modules.keyboard import azerty_to_qwerty
 from data.modules.audio import SFX
@@ -347,7 +346,7 @@ class Fighter(pg.sprite.Sprite):
                 self.combo_tab(event)
                 self.vals['nbr_sprite'] = 0
                 self.game.elms["side"][self.number] = dict_keys[event.key]
-                if event.key == l_attack :
+                if event.key == l_attack:
                     self.attack_up(choice, ennemy)
                     self.attack_down(choice, ennemy)
 

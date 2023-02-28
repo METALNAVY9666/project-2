@@ -8,6 +8,7 @@ from data.modules.keyboard import azerty_to_qwerty, NUMPAD
 from data.modules.settings import read_settings
 from data.modules.controllers import SimpleController
 
+
 class Gunner(pg.sprite.Sprite):
     """créee un objet joueur"""
 
@@ -252,13 +253,13 @@ class Gunner(pg.sprite.Sprite):
         if not grounded:
             delta = pos[1] - jump_height
             if jump_state:
-                pos[1] -= (gravity + delta**(1/2))
+                pos[1] -= (gravity + delta ** (0.5))
                 if pos[1] <= jump_height:
                     self.physics["jump_state"] = False
                     self.physics["falling"] = True
             else:
                 if self.physics["falling"]:
-                    pos[1] -= ((jump_height-delta)**(1/2))*0.9
+                    pos[1] -= ((jump_height - delta) ** (0.5)) * 0.9
         else:
             self.physics["falling"] = False
 
@@ -326,8 +327,8 @@ class Gunner(pg.sprite.Sprite):
         """met à jour la vie"""
         self.player["old_hp"] = copy(self.player["hp"])
 
-    def update_keys(self, dlt, pause, busy, other, buttons):
-        """met à jour les mouvements du joueur"""
+    def get_pressed(self):
+        """renvoie les boutons pressés"""
         choice = self.pkg["key"].get_pressed()
         keys = self.player["keys"]
 
@@ -350,46 +351,65 @@ class Gunner(pg.sprite.Sprite):
                     pressed.append([key, choice[NUMPAD[keys[key]]]])
                 except KeyError:
                     print(f"Problème de touche ({keys[key]})")
+        return pressed
 
-        if pause is busy is False:
-            sprite = GFX["kim"]["wait"]
-            pack = []
-            # verifie les touches du clavier
-            for couple in pressed:
-                if couple[1]:
-                    pack.append(couple[0])
-                    self.player["combos"].append(pressed)
-                    if couple[0] == "jump":
-                        self.jump()
-                    elif couple[0] == "block":
-                        sprite = self.block()
-                    elif couple[0] == "right":
-                        self.physics["side"] = 1
-                        sprite = self.move(dlt)
-                    elif couple[0] == "left":
-                        self.physics["side"] = -1
-                        sprite = self.move(dlt)
-                    elif couple[0] == "l_attack":
-                        sprite = self.kick(other)
-                    elif couple[0] == "h_attack":
-                        sprite = self.barrett_shoot(dlt)
-            # verifie les touches de la manette
-            for button in buttons:
-                if button == "jump":
+    def check_keyboard(self, dlt, other):
+        """vérifie les touches du clavier"""
+        pressed = self.get_pressed()
+        sprite = GFX["kim"]["wait"]
+        pack = []
+        # verifie les touches du clavier
+        for couple in pressed:
+            if couple[1]:
+                pack.append(couple[0])
+                self.player["combos"].append(pressed)
+                if couple[0] == "jump":
                     self.jump()
-                if button == "left":
-                    self.physics["side"] = -1
-                    sprite = self.move(dlt)
-                elif button == "right":
+                elif couple[0] == "block":
+                    sprite = self.block()
+                elif couple[0] == "right":
                     self.physics["side"] = 1
                     sprite = self.move(dlt)
-                elif button == "l_attack":
+                elif couple[0] == "left":
+                    self.physics["side"] = -1
+                    sprite = self.move(dlt)
+                elif couple[0] == "l_attack":
                     sprite = self.kick(other)
-                elif button == "h_attack":
+                elif couple[0] == "h_attack":
                     sprite = self.barrett_shoot(dlt)
-                elif button == "block":
-                    sprite = self.block()
-            print("---")
+        return sprite, pack
+
+    def check_controller(self, dlt, other, buttons):
+        """vérifie les boutons de la manette"""
+        pack = []
+        sprite = None
+        for button in buttons:
+            pack.append(button)
+            if button == "jump":
+                self.jump()
+            if button == "left":
+                self.physics["side"] = -1
+                sprite = self.move(dlt)
+            elif button == "right":
+                self.physics["side"] = 1
+                sprite = self.move(dlt)
+            elif button == "l_attack":
+                sprite = self.kick(other)
+            elif button == "h_attack":
+                sprite = self.barrett_shoot(dlt)
+            elif button == "block":
+                sprite = self.block()
+        return sprite, pack
+
+    def update_keys(self, dlt, pause, busy, other, buttons):
+        """met à jour les mouvements du joueur"""
+
+        if pause is busy is False:
+            sprite, pack = self.check_keyboard(dlt, other)
+            vals = self.check_controller(dlt, other, buttons)
+            if vals[0] is not None:
+                sprite = vals[0]
+            pack += vals[1]
             self.gfx["sprite"] = sprite
             self.player["combos"] = pack
 
@@ -488,7 +508,7 @@ class Bullet:
 
     def check_player(self, bullet_rect, player):
         """vérifie si le rect entre en collision avec la balle"""
-        if not None in (bullet_rect, player):
+        if None not in (bullet_rect, player):
             colliderect = self.pkg["Rect"].colliderect
             damage = self.specs["damage"]
             rect = None
@@ -518,7 +538,7 @@ class Bullet:
             self.specs["life"] += 1
             dims = self.pkg["dimensions"]
             pos = self.specs["origin"] * 1
-            pos[1] += dims[1]//36
+            pos[1] += dims[1] // 36
             if self.specs["life"] <= 15:
                 return self.blit(self.textures[1], pos)
 

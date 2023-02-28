@@ -41,7 +41,7 @@ class Music:
 
         if self.folder:
             self.playlist = listdir(self.music)
-            self.loader.load(self.music+self.playlist[0])
+            self.loader.load(self.music + self.playlist[0])
         else:
             self.loader.load(self.get_segment("intro"))
 
@@ -50,11 +50,11 @@ class Music:
     def get_segment(self, segment):
         """renvoie le segment d'une musique (intro, outro, loop)"""
         return self.music.split(".")[0] + f"_{segment}.mp3"
-    
+
     def reset_volume(self):
         """change le volume de la musique en fonction des paramètres"""
         settings = read_settings()
-        self.loader.set_volume(settings["audio"]["music"]/100)
+        self.loader.set_volume(settings["audio"]["music"] / 100)
 
     def end(self):
         """joue l'outro"""
@@ -64,8 +64,8 @@ class Music:
     def play(self):
         if self.folder:
             for elt in range(1, len(self.playlist)):
-                print(self.music+self.playlist[elt])
-                self.loader.queue(self.music+self.playlist[elt])
+                print(self.music + self.playlist[elt])
+                self.loader.queue(self.music + self.playlist[elt])
             self.loader.play()
         else:
             self.loader.play()

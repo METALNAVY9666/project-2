@@ -6,13 +6,14 @@ from tkinter import Tk, Button, Entry, Label
 import keyboard
 
 traductions = {
-            "jump": "Sauter",
+    "jump": "Sauter",
             "block": "Bloquer",
             "left": "Reculer",
             "right": "Avancer",
             "l_attack": "Attaque Legere",
             "h_attack": "Attaque Lourde"
-        }
+}
+
 
 def check(pkg, rect, old_click, onclick, args):
     """vérifie si le bouton est préssé"""
@@ -29,6 +30,7 @@ def check(pkg, rect, old_click, onclick, args):
         if old_click:
             old_click = False
     return old_click
+
 
 class PauseMenu:
     """menu pause"""
@@ -114,47 +116,50 @@ class PauseMenu:
                 return rect[0]
         return None
 
+
 class SettingsMenu:
     """paramètres"""
+
     def __init__(self, pkg):
         self.pkg = pkg
         self.in_menu = False
         self.sub_menu = None
         self.old_pressed = False
         self.old_pressed_buttons = {
-            "audio" : False,
+            "audio": False,
             "screen": False,
             "keyboard": False,
-            "cancel" : False,
-            "return" : False,
-            "music" : False,
+            "cancel": False,
+            "return": False,
+            "music": False,
             "effects": False,
-            "horizontal" : False,
+            "horizontal": False,
             "vertical": False,
-            "FPS" : False,
-            "fullscreen" : False,
-            "keys":[
+            "FPS": False,
+            "fullscreen": False,
+            "keys": [
                 {
-            "jump": False,
-            "block": False,
-            "left": False,
-            "right": False,
-            "l_attack": False,
-            "h_attack": False
-        },
-        {
-            "jump": False,
-            "block": False,
-            "left": False,
-            "right": False,
-            "l_attack": False,
-            "h_attack": False
-        }]
+                    "jump": False,
+                    "block": False,
+                    "left": False,
+                    "right": False,
+                    "l_attack": False,
+                    "h_attack": False
+                },
+                {
+                    "jump": False,
+                    "block": False,
+                    "left": False,
+                    "right": False,
+                    "l_attack": False,
+                    "h_attack": False
+                }]
         }
         dims = pkg["dimensions"]
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
         self.asks = {}
-        self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"], "extremum")
+        self.asks["effects"] = IntInput(
+            pkg, read_settings(), ["audio", "effects"], "extremum")
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""
@@ -204,7 +209,7 @@ class SettingsMenu:
     def blit(self, image, pos):
         """blite (si si jte jure)"""
         return self.pkg["surface"].blit(image, pos)
-    
+
     def goback(self):
         """retroune au menu principal"""
         SFX["ui"]["click"].play()
@@ -223,11 +228,13 @@ class SettingsMenu:
             pos[1] += space
             args = ["audio", button, 0, 100]
             old = self.old_pressed_buttons[button]
-            self.old_pressed_buttons[button] = check(self.pkg, rect, old, self.askint, args)
+            self.old_pressed_buttons[button] = check(
+                self.pkg, rect, old, self.askint, args)
 
         rect = self.blit(GFX["btn"]["return"], pos)
         old = self.old_pressed_buttons["return"]
-        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
+        self.old_pressed_buttons["return"] = check(
+            self.pkg, rect, old, self.goback, [])
 
         return rects
 
@@ -254,12 +261,14 @@ class SettingsMenu:
                     args = ["display", button]
                     func = self.askbool
             old = self.old_pressed_buttons[button]
-            self.old_pressed_buttons[button] = check(self.pkg, rect, old, func, args)
-        
+            self.old_pressed_buttons[button] = check(
+                self.pkg, rect, old, func, args)
+
         rect = self.blit(GFX["btn"]["return"], pos)
         old = self.old_pressed_buttons["return"]
-        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
-    
+        self.old_pressed_buttons["return"] = check(
+            self.pkg, rect, old, self.goback, [])
+
         return rects
 
     def resize(self, img, size):
@@ -270,7 +279,8 @@ class SettingsMenu:
         """change la touche appuyée"""
         SFX["ui"]["click"].play()
         dims = self.pkg["dimensions"] * 1
-        texture = GFX["paladins"].render("Appuyez sur une touche", True, (0, 0, 0))
+        texture = GFX["paladins"].render(
+            "Appuyez sur une touche", True, (0, 0, 0))
         size = [dims[0] // 2, dims[1] // 5]
         texture = self.resize(texture, size)
         rect = texture.get_rect()
@@ -301,13 +311,13 @@ class SettingsMenu:
         space = dims[1] // 64 + dims[1] // 10
         pos = [dims[0] // 64, dims[1] // 64]
         size = (dims[0] // 10, dims[1] // 32)
-        cancel_placed = False
 
         settings = read_settings()
 
         player_ind = 0
         for player in settings["keys"]:
-            texture = GFX["paladins"].render(f"Joueur {player_ind+1}", True, (37, 150, 190))
+            texture = GFX["paladins"].render(
+                f"Joueur {player_ind+1}", True, (37, 150, 190))
             texture = self.resize(texture, (dims[0] // 5, dims[1] // 10))
             temp_pos = pos * 1
             rects.append(self.blit(texture, temp_pos))
@@ -339,8 +349,8 @@ class SettingsMenu:
         pos[0] += dims[0] // 4
         rect = self.blit(GFX["btn"]["return"], pos)
         old = self.old_pressed_buttons["return"]
-        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
-
+        self.old_pressed_buttons["return"] = check(
+            self.pkg, rect, old, self.goback, [])
 
         return rects
 
@@ -357,7 +367,8 @@ class SettingsMenu:
                     write_settings(settings)
                     root.destroy()
                 else:
-                    label.config(text=f"La valeur n'est pas comprise entre {mini} et {maxi}")
+                    label.config(
+                        text=f"La valeur n'est pas comprise entre {mini} et {maxi}")
             except ValueError:
                 label.config(text="La valeur entrée n'est pas bonne")
 
@@ -371,16 +382,18 @@ class SettingsMenu:
         root.config(bg="white")
         root.title(setting)
 
-        actual = Label(root, text=f"{setting} : {read_settings()[category][setting]}")
+        actual = Label(
+            root, text=f"{setting} : {read_settings()[category][setting]}")
         actual.pack()
 
-        label = Label(root, text=f"Entrer une valeur entre {mini} et {maxi} (inclus)")
+        label = Label(
+            root, text=f"Entrer une valeur entre {mini} et {maxi} (inclus)")
         label.pack()
 
         entry = Entry(root)
         entry.pack()
 
-        yes_btn = Button(root, text="Modifier" ,command=yes)
+        yes_btn = Button(root, text="Modifier", command=yes)
         yes_btn.pack()
 
         cancel_btn = Button(root, text="Annuler", command=cancel)
@@ -422,7 +435,7 @@ class SettingsMenu:
         switch = Button(root, text=temp, command=switch_value)
         switch.pack()
 
-        yes_btn = Button(root, text="Sauvegarder" ,command=save)
+        yes_btn = Button(root, text="Sauvegarder", command=save)
         yes_btn.pack()
 
         root.mainloop()
@@ -462,8 +475,10 @@ class SettingsMenu:
             rects.append(rect)
         return rects
 
+
 class IntInput:
     """flemme"""
+
     def __init__(self, pkg, settings, types, extremums):
         self.pkg = pkg
         self.settings = settings
@@ -497,4 +512,3 @@ class IntInput:
                             self.string = self.string[:-1]
                     else:
                         self.string += event.unicode
-

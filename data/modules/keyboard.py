@@ -40,14 +40,15 @@ def azerty_to_qwerty(key, reverse=False):
     azerty = 'azqwAZQW&é"\'(-è_çà)^$Mù,?;:!§1234567890'
     qwerty = 'qwazQWAZ1234567890-[]:\'mM,./?!@#$%^&*()'
     if reverse:
-        if not key in qwerty:
+        if key not in qwerty:
             return key
         ind = qwerty.index(key)
         return azerty[ind]
-    if not key in azerty:
-            return key
+    if key not in azerty:
+        return key
     ind = azerty.index(key)
     return qwerty[ind]
+
 
 NUMPAD = {
     "kp_0": pygame.K_KP0,
