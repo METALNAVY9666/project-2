@@ -79,7 +79,6 @@ class Jeu:
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
         self.ulti = Special(self)
-        self.start_audio()
         # self.object = PunchingBall(self)
 
     def start_audio(self):
