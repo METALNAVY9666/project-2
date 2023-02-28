@@ -270,7 +270,9 @@ class Gunner(pg.sprite.Sprite):
             ultimate = "block" in combos and "h_attack" in combos
             if not ultimate:
                 ultimate = "block" in buttons and "h_attack" in buttons
-            if ultimate and self.player["ult"]["power"] >= 100:
+            if self.player["ult"]["power"] > 100:
+                self.player["ult"]["power"] = 100
+            if ultimate and self.player["ult"]["power"] == 100:
                 self.player["ult"]["time"] = self.pkg["FPS"] * 5
                 self.player["ult"]["status"] = True
 
@@ -299,6 +301,7 @@ class Gunner(pg.sprite.Sprite):
     def update_ulti(self, pause, music, busy):
         """met à jour l'ultime de kim"""
         if not pause:
+
             if self.player["ult"]["status"]:
                 if self.player["ult"]["load"] == 0:
                     self.player["ult"]["time"] -= 1
