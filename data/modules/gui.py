@@ -126,6 +126,7 @@ class SettingsMenu:
             "screen": False,
             "keyboard": False,
             "cancel" : False,
+            "return" : False,
             "music" : False,
             "effects": False,
             "horizontal" : False,
@@ -154,9 +155,6 @@ class SettingsMenu:
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
         self.asks = {}
         self.asks["effects"] = IntInput(pkg, read_settings(), ["audio", "effects"], "extremum")
-
-    def reset(self, classe):
-        """réinitialise une classe"""
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""
@@ -206,6 +204,11 @@ class SettingsMenu:
     def blit(self, image, pos):
         """blite (si si jte jure)"""
         return self.pkg["surface"].blit(image, pos)
+    
+    def goback(self):
+        """retroune au menu principal"""
+        SFX["ui"]["click"].play()
+        self.sub_menu = None
 
     def update_audio(self):
         """met à jour le menu audio"""
@@ -221,6 +224,11 @@ class SettingsMenu:
             args = ["audio", button, 0, 100]
             old = self.old_pressed_buttons[button]
             self.old_pressed_buttons[button] = check(self.pkg, rect, old, self.askint, args)
+
+        rect = self.blit(GFX["btn"]["return"], pos)
+        old = self.old_pressed_buttons["return"]
+        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
+
         return rects
 
     def update_screen(self):
@@ -247,6 +255,11 @@ class SettingsMenu:
                     func = self.askbool
             old = self.old_pressed_buttons[button]
             self.old_pressed_buttons[button] = check(self.pkg, rect, old, func, args)
+        
+        rect = self.blit(GFX["btn"]["return"], pos)
+        old = self.old_pressed_buttons["return"]
+        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
+    
         return rects
 
     def resize(self, img, size):
@@ -288,6 +301,7 @@ class SettingsMenu:
         space = dims[1] // 64 + dims[1] // 10
         pos = [dims[0] // 64, dims[1] // 64]
         size = (dims[0] // 10, dims[1] // 32)
+        cancel_placed = False
 
         settings = read_settings()
 
@@ -322,6 +336,12 @@ class SettingsMenu:
             pos = [dims[0] // 64, dims[1] // 64]
             pos[0] += dims[0] // 4
             player_ind += 1
+        pos[0] += dims[0] // 4
+        rect = self.blit(GFX["btn"]["return"], pos)
+        old = self.old_pressed_buttons["return"]
+        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
+
+
         return rects
 
     def askint(self, category, setting, mini, maxi):

@@ -43,39 +43,36 @@ pygame.init()
 pygame.mixer.init()
 pygame.display.set_icon(icon)
 
-WIN = True
+while True:
+    WIN = True
 
-level_name, players = menu()
+    level_name, players = menu()
 
-level = read_levels()[level_name]
+    level = read_levels()[level_name]
 
-current_map = BaseLevel(pack_pygame, level, game_settings, players)
-fps = FPS(pack_pygame)
-
-while WIN:
-    # dt est le temps qui s'écoule entre chaque image,
-    # important pour que le jeu reste fluide
-    dlt = pack_pygame["clock"].tick(pack_pygame["FPS"])
-    current_map.delta = dlt
-    # Récupère les événements courants
-    actions = pygame.event.get()
-    # vérifie les évènements
-    for event in actions:
-        if event.type == pygame.QUIT:
+    current_map = BaseLevel(pack_pygame, level, game_settings, players)
+    fps = FPS(pack_pygame)
+    while WIN:
+        # dt est le temps qui s'écoule entre chaque image,
+        # important pour que le jeu reste fluide
+        dlt = pack_pygame["clock"].tick(pack_pygame["FPS"])
+        current_map.delta = dlt
+        # Récupère les événements courants
+        actions = pygame.event.get()
+        # vérifie les évènements
+        for event in actions:
+            if event.type == pygame.QUIT:
+                WIN = False
+            if event.type == pygame.KEYDOWN:
+                # vérifie si la touche F11 est enfoncée et met en plein écran
+                if event.key == pygame.K_F11:
+                    current_map.pkg["display"].toggle_fullscreen()
+            if event.type in [pygame.JOYDEVICEADDED, pygame.JOYDEVICEREMOVED]:
+                joysticks = manage_joysticks()
+                contro = manage_controller([])
+        # actualise la map, si elle renvoie "quit", alors quitter
+        next_action = current_map.update(dlt, actions, contro)
+        if next_action == "exit":
             WIN = False
-        if event.type == pygame.KEYDOWN:
-            # vérifie si la touche F11 est enfoncée et met en plein écran
-            if event.key == pygame.K_F11:
-                current_map.pkg["display"].toggle_fullscreen()
-        if event.type in [pygame.JOYDEVICEADDED, pygame.JOYDEVICEREMOVED]:
-            joysticks = manage_joysticks()
-            contro = manage_controller([])
-    # actualise la map, si elle renvoie "quit", alors quitter
-    next_action = current_map.update(dlt, actions, contro)
-    if next_action == "exit":
-        WIN = False
-    fps.record_fps()
+        fps.record_fps()
 
-print(fps.end())
-pygame.quit()
-# os.system("clear")
