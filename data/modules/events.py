@@ -40,6 +40,7 @@ class AE86:
                     print("Akina's drift !")
                     self.lock = True
                     self.timer = 0
+        return None
 
 
 class Countdown:
@@ -119,8 +120,9 @@ class End:
         for ind in range(len(self.players)):
             player_name = type(self.players[ind]).__name__
             if player_name == "Fighter":
-                hp = self.players[ind].update_pv()[0][1]
+                health_point = self.players[ind].update_pv()[0][1]
             elif player_name == "Gunner":
-                hp = self.players[ind].player["hp"]
-            if hp <= 0:
+                health_point = self.players[ind].player["hp"]
+            if health_point <= 0:
                 return self.death(self.players[1 - ind], music, dt)
+        return None

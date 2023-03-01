@@ -75,6 +75,7 @@ class Animate():
                     0, (244, 49, 14))
                 txt_width = screen.get_width() - (txt.get_width() * 1.5)
                 return screen.blit(txt, (txt_width, height))
+        return None
 
     def animation_itachi(self, screen):
         """

@@ -192,16 +192,16 @@ class Fighter(pg.sprite.Sprite):
             self.vals["jumping"] = False
             self.vals["fall"] = True
 
-    def jump_controller(self, jumpCount):
+    def jump_controller(self, jumpcount):
         """
         Fonction saut a la manette
         """
-        if jumpCount >= -8:
-            self.rect.y -= (jumpCount * abs(jumpCount)) * 0.39
-            self.vals['current_height'] += (jumpCount * abs(jumpCount)) * 0.39
-            jumpCount -= 1
+        if jumpcount >= -8:
+            self.rect.y -= (jumpcount * abs(jumpcount)) * 0.39
+            self.vals['current_height'] += (jumpcount * abs(jumpcount)) * 0.39
+            jumpcount -= 1
         else:
-            jumpCount = 8
+            jumpcount = 8
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -396,6 +396,7 @@ class Fighter(pg.sprite.Sprite):
             else:
                 self.vals["tab"] = []
             return self.vals['tab']
+        return None
 
     def move_manager(self, event):
         """
