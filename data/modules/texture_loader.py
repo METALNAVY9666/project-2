@@ -98,8 +98,8 @@ BG_PATH = "data/gfx/images/"
 EFFECTS_PATH = "data/gfx/effects/"
 BUTTONS_PATH = UI_PATH + "buttons/"
 # A vovo
-BOX_PATH = "test_olivier/gfx/box/"
-GFX_PATH = "test_olivier/gfx/"
+BOX_PATH = "data/gfx/players/box/"
+GFX_PATH = "data/gfx/players/"
 
 # convert permet de blit les images plus rapidement
 # et convert_alpha fait la même chose pour les images transparentes
@@ -123,7 +123,8 @@ GFX["btn"] = load_dir(BUTTONS_PATH, (X // 8, Y // 10))
 
 # chargement des évènements
 for number in ["one", "two", "three", "go"]:
-    GFX[number] = (load_image(UI_PATH + number, (X // 6, Y // 6)).convert_alpha())
+    GFX[number] = (load_image(UI_PATH + number,
+                   (X // 6, Y // 6)).convert_alpha())
 GFX["ae86"] = load_image(EVENTS_PATH + "trueno_drift/ae86", (X // 6, Y // 6))
 GFX["ae86"].convert_alpha()
 
@@ -138,13 +139,16 @@ GFX["explosion"] = load_image(EFFECTS_PATH + "explosion", (X // 16, Y // 8))
 GFX["explosion"].convert_alpha()
 
 GFX["bullets"] = {}
-GFX["bullets"]["makarov"] = load_image(EFFECTS_PATH + "bullet_makarov", (X // 40, Y // 40))
+GFX["bullets"]["makarov"] = load_image(
+    EFFECTS_PATH + "bullet_makarov", (X // 40, Y // 40))
 GFX["bullets"]["makarov"].convert_alpha()
 
-GFX["bullets"]["barrett"] = load_image(EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 144))
+GFX["bullets"]["barrett"] = load_image(
+    EFFECTS_PATH + "bullet_barrett", (X // 64, Y // 144))
 GFX["bullets"]["barrett"].convert_alpha()
 
-GFX["bullets"]["rocket"] = load_image(EFFECTS_PATH + "rocket", (X // 32, Y // 8))
+GFX["bullets"]["rocket"] = load_image(
+    EFFECTS_PATH + "rocket", (X // 32, Y // 8))
 GFX["bullets"]["rocket"].convert_alpha()
 
 # chargement des niveaux
@@ -174,14 +178,22 @@ bro_tab = ["C'est quoi la blague ?",
            "Je fais donc péter l'exponentielle", ]
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 8, Y // 8))
-GFX["kim_face"] = load_image(BOX_PATH + "kim", (X // 15, X // 15)).convert_alpha()
+GFX["kim_face"] = load_image(
+    BOX_PATH + "kim", (X // 15, X // 15)).convert_alpha()
 GFX["blast"] = load_image(EFFECTS_PATH + "blast", (X // 2, Y // 3))
-GFX["luffy"] = load_image(BOX_PATH + "luffy", (X // 15, X // 15)).convert_alpha()
-GFX["itachi"] = load_image(BOX_PATH + "itachi", (X // 15, X // 15)).convert_alpha()
+GFX["luffy"] = load_image(
+    BOX_PATH + "luffy", (X // 15, X // 15)).convert_alpha()
+GFX["itachi"] = load_image(
+    BOX_PATH + "itachi", (X // 15, X // 15)).convert_alpha()
 GFX["goku"] = load_image(BOX_PATH + "goku", (X // 15, X // 15)).convert_alpha()
-GFX["vegeta"] = load_image(BOX_PATH + "vegeta", (X // 15, X // 15)).convert_alpha()
-GFX["gear4"] = load_image(BOX_PATH + "gear4", (X // 15, X // 15)).convert_alpha()
-GFX["revive"] = load_image(BOX_PATH + "revive", (X // 15, X // 15)).convert_alpha()
-GFX["itachi_spe"] = load_image(GFX_PATH + "itachi/itachi_spe", (X // 1, X // 2)).convert_alpha()
+GFX["vegeta"] = load_image(
+    BOX_PATH + "vegeta", (X // 15, X // 15)).convert_alpha()
+GFX["gear4"] = load_image(
+    BOX_PATH + "gear4", (X // 15, X // 15)).convert_alpha()
+GFX["revive"] = load_image(
+    BOX_PATH + "revive", (X // 15, X // 15)).convert_alpha()
+GFX["itachi_spe"] = load_image(
+    GFX_PATH + "itachi/itachi_spe", (X // 1, X // 2)).convert_alpha()
 TEMP = EVENTS_PATH + "kim_ult/"
-GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y)) for filename in listdir(TEMP)]
+GFX["kim_dance"] = [load_image(TEMP + filename[0:-4], (X, Y))
+                    for filename in listdir(TEMP)]

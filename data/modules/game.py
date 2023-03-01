@@ -338,7 +338,7 @@ class Jeu:
                 for element in self.players:
                     if self.name[element.number] != "kim":
                         element.vals["fall"] = True
-                        element.attack(event, choice)
+                        element.attack(event)
                         element.move_manager(event)
                         element.vanish(choice)
                         element.is_dashing(choice, event)

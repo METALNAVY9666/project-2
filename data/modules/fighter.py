@@ -16,14 +16,19 @@ class Fighter(pg.sprite.Sprite):
         self.game = game
         self.number = number
         # Dictionnaire des attributs du personnage
-        print('Voici le perso:', number)
         self.init_dict(pkg, prop)
-        self.init_perso()
+        self.tab = sprite_tab(
+            self.game.name[self.number], self.game.elms["side"][self.number])
+        # Affectation de l'image
+        self.image = self.tab[self.vals['nbr_sprite']]
+        # Récupération du rectangle de l'image
+        self.rect = self.image.get_rect()
+        # Coordonées en x et y
+        self.rect.x = self.vals['surface_height'] // 9
+        self.rect.y = self.vals['surface_width'] // 3
+        # Images complémentaires
+        self.images_dict = sprites_images(self.game.name[self.number])
         # Tableau d'actions
-        self.actions_tab = ['attack', 'combo',
-                            'final', 'impact', 'spe']
-        # Axe droite-gauche
-        self.motion = [0]
         if number == 1:
             self.rect.x = 200
 
@@ -32,6 +37,7 @@ class Fighter(pg.sprite.Sprite):
         Dictionnaire
         """
         self.vals = {}
+        self.vals["motion"] = [0]
         self.vals["nbr_sprite"] = 0
         self.vals["strike"] = 10
         self.vals["max_height"] = 400
@@ -64,26 +70,10 @@ class Fighter(pg.sprite.Sprite):
                                self.settings['dims'][1]) // 100
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
-        self.init_keymap()
+        self.vals["keymap"] = read_settings()["keys"][self.number]
         self.vals["speed"] = self.settings['dims'][0] // 128
 
-    def init_perso(self):
-        self.tab = sprite_tab(
-            self.game.name[self.number], self.game.elms["side"][self.number])
-        # Affectation de l'image
-        self.image = self.tab[self.vals['nbr_sprite']]
-        # Récupération du rectangle de l'image
-        self.rect = self.image.get_rect()
-        # Coordonées en x et y
-        self.rect.x = self.vals['surface_height'] // 9
-        self.rect.y = self.vals['surface_width'] // 3
-        # Images complémentaires
-        self.images_dict = sprites_images(self.game.name[self.number])
     # Déplacement horizontal du joueur
-
-    def init_keymap(self):
-        """initialise les touches du personnage"""
-        self.vals["keymap"] = read_settings()["keys"][self.number]
 
     def is_gunner(self):
         """
@@ -160,8 +150,8 @@ class Fighter(pg.sprite.Sprite):
             if test or (not test and self.rect.y < ennemy.rect.y - 10):
                 if (not self.game.elms["right"][self.number] and
                         self.rect.x > 5):
-                    self.motion[0] = valeur / 3000
-                    self.rect.x += self.motion[0]
+                    self.vals["motion"][0] = valeur / 3000
+                    self.rect.x += self.vals["motion"][0]
                     # On change l'image du joueur
                     if self.game.name[self.number] in ['goku', 'vegeta']:
                         self.change_animation('left')
@@ -172,8 +162,8 @@ class Fighter(pg.sprite.Sprite):
                 elif self.game.elms["right"][self.number] and (
                         self.rect.x < self.vals['surface_width'] - 100):
                     # self.game.elms["right"][self.number] = True
-                    self.motion[0] = valeur / 3000
-                    self.rect.x += self.motion[0]
+                    self.vals["motion"][0] = valeur / 3000
+                    self.rect.x += self.vals["motion"][0]
                     # On change l'image du joueur
                     if self.game.name[self.number] in ['goku', 'vegeta']:
                         self.change_animation('right')
@@ -203,7 +193,9 @@ class Fighter(pg.sprite.Sprite):
             self.vals["fall"] = True
 
     def jump_controller(self, jumpCount):
-        # Fonction saut a la manette
+        """
+        Fonction saut a la manette
+        """
         if jumpCount >= -8:
             self.rect.y -= (jumpCount * abs(jumpCount)) * 0.39
             self.vals['current_height'] += (jumpCount * abs(jumpCount)) * 0.39
@@ -240,12 +232,6 @@ class Fighter(pg.sprite.Sprite):
         # On réaffecte le dictionnaire d'images
         self.images_dict = sprites_images(self.game.name[self.number])
         self.image = self.images_dict[name]
-        # On redimensionne les images d'Itachi
-        # ouais pour l'instant non :)
-        """if self.game.name[self.number] in ['itachi']:
-            self.image = pg.transform.scale(self.image, (120, 120))
-            if name in ['shield', 'shield_right']:
-                self.image = pg.transform.scale(self.image, (70, 120))"""
 
     def blit_sprite(self, screen, dlt, pause):
         '''Cette fonction sert à afficher le sprite du joueur en continu
@@ -286,13 +272,13 @@ class Fighter(pg.sprite.Sprite):
 
     # Gestion des attaques/combos
 
-    def attack(self, event, choice):
+    def attack(self, event):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
         ennemy = self.game.player_0
         if self.number == 0:
             ennemy = self.game.player_1
         if not self.vals["attacked"]:
-            self.single_tap(event, choice, ennemy)
+            self.single_tap(event, ennemy)
             self.combo(ennemy)
 
     def attack_controller(self, choice, contro):
@@ -325,7 +311,7 @@ class Fighter(pg.sprite.Sprite):
         keymap = self.vals["keymap"]
         return pg.key.key_code(azerty_to_qwerty(keymap[key]))
 
-    def single_tap(self, event, choice, ennemy):
+    def single_tap(self, event, ennemy):
         """
         Attaque normale de base selon les paramètres du joueur
         """
@@ -500,6 +486,9 @@ class Fighter(pg.sprite.Sprite):
                 ennemy.rect.y -= 250
 
     def attack_up_controller(self, ennemy):
+        """
+        Attaque en l'air à la manette
+        """
         if self.game.collision():
             self.game.elms["side"][self.number] = 'up'
             if self.game.name[ennemy.number] == "kim":
@@ -526,6 +515,9 @@ class Fighter(pg.sprite.Sprite):
                     ennemy.rect.y += 1
 
     def attack_down_controller(self, ennemy):
+        """
+        Attaque en bas à la manette
+        """
         if self.game.collision():
             print("sol")
             self.game.elms["side"][self.number] = 'down'
@@ -632,6 +624,9 @@ class Fighter(pg.sprite.Sprite):
                     self.vals["dashing"][self.number] = True
 
     def is_dashing_controller(self):
+        """
+        Vérifie le dash à la manette
+        """
         if self.number == 0:
             self.vals["dashing"][self.number] = True
         elif self.number == 1:
