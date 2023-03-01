@@ -34,13 +34,14 @@ class Animate():
 
     def append_update(self, screen, fade, element):
         """Ajout des choses à mettre à jour dans une liste"""
+        width = screen.get_width() - (self.vals["image"].get_width() * 2)
         height = screen.get_height() // 2
         self.rect_update.append(screen.blit(fade, (0, 0)))
-        self.rect_update.append(self.txt_blit(screen, height, element))
+        self.rect_update.append(self.txt_blit(screen, width, height, element))
         pg.display.update(self.rect_update)
         return []
 
-    def txt_blit(self, screen, height, element):
+    def txt_blit(self, screen, width, height, element):
         """Fonction qui permet d'afficher le texte"""
         quotes = {"vegeta": "blabla",
                   "goku": "Ce n'est pas encore terminé...",

@@ -1,7 +1,6 @@
 """ Ce module permet de racorder le menu principal, le menu de choix des
 personnages et le menu de choix de map. Ce qui permettera ensuite de récolter
 les informations des persos et de la map choisis."""
-from sys import exit
 from data.modules.menu.menu import main as starting
 from data.modules.menu.choix_perso import main as choix
 from data.modules.menu.choix_map import main as choix2
