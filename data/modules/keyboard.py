@@ -1,5 +1,6 @@
 """cotient les fonctions permettant de gérer les touches du claiver"""
 
+
 class KeyChecker:
     """contient les fonction permettant de tester les touches"""
 
