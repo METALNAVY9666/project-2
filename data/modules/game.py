@@ -214,14 +214,14 @@ class Jeu:
                 self.player_0.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller(self, actions, pause, busy, contro):
+    def handle_input_controller(self, actions, screen, busy, contro):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 1.
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        if not pause and not busy and self.name[0] != "kim" and self.name[1] != "kim":
+        if not busy and self.name[0] != "kim" and self.name[1] != "kim":
             if len(contro) < 2:
                 num = 0
             if len(contro) == 2:
@@ -229,15 +229,21 @@ class Jeu:
                 print(num)
             self.handle_input_contro_part1(contro, num)
             self.handle_input_contro_attacks(actions, contro, num)
+
             # Recharge l'énergie
             if contro[num].get_button(7):
                 self.player_0.charge()
+
+            # Gère les spés
+            if contro[num].get_button(9) and contro[num].get_button(10):
+                self.ulti.spe_manager(screen, self.player_0)
+
             # Gère l'esquive
             if contro[num].get_button(10):
                 self.player_0.vanish_controller()
 
         if len(contro) == 2:
-            self.handle_input_controller_player2(pause, actions, busy, contro)
+            self.handle_input_controller_player2(screen, actions, busy, contro)
 
     def handle_input_contro_player1_part1(self, contro, num):
         """
@@ -304,14 +310,14 @@ class Jeu:
                 self.player_1.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller_player2(self, pause, actions, busy, contro):
+    def handle_input_controller_player2(self, screen, actions, busy, contro):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 2.
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        if not pause and not busy and self.name[1] != "kim":
+        if not busy and self.name[1] != "kim":
             num = 0
             if self.name[0] == "kim":
                 num = 1
@@ -321,6 +327,10 @@ class Jeu:
             # Charge l'énergie
             if contro[num].get_button(7):
                 self.player_1.charge()
+
+            # Gère les spés
+            if contro[num].get_button(9) and contro[num].get_button(10):
+                self.ulti.spe_manager(screen, self.player_0)
 
             # Esquive du joueur
             if contro[num].get_button(10):
@@ -453,9 +463,9 @@ class Jeu:
                 element.vals["attacked"] = True
                 element.vals["percent_ult"] -= 0.1
 
-    def update_objects(self, screen):
+    """def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
-        """self.object.forward()
+        self.object.forward()
         self.object.gravity_object()
         # Met le punching ball à jour
         return screen.blit(self.object.image, (self.object.rect))"""
@@ -659,11 +669,12 @@ class Jeu:
         # Gère les inputs
         self.handle_input(actions, pause, busy, screen)
         # Gère les inputs à la manette
-        # Si il y a au moins une manette de connecté:
-        if contro is not None and len(contro) == 2:
-            self.handle_input_controller(actions, pause, busy, contro)
-        elif contro is not None and len(contro) == 1:
-            self.handle_input_controller(actions, pause, busy, contro)
+        if not pause:
+            # Si il y a au moins une manette de connecté:
+            if contro is not None and len(contro) == 2:
+                self.handle_input_controller(actions, screen, busy, contro)
+            elif contro is not None and len(contro) == 1:
+                self.handle_input_controller(actions, screen, busy, contro)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players

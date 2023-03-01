@@ -1,4 +1,4 @@
-"""contient les fonctions permettant d'affucher les menus"""
+"""contient les fonctions permettant d'afficher les menus"""
 from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
 from data.modules.settings import read_settings, write_settings
@@ -199,6 +199,7 @@ class SettingsMenu:
                 self.old_pressed_buttons[name] = False
 
     def button_action(self, name):
+        """Permet de gérer les directions du menu audio."""
         match name:
             case "cancel":
                 self.cancel()
@@ -359,92 +360,6 @@ class SettingsMenu:
             self.pkg, rect, old, self.goback, [])
 
         return rects
-
-    def askint(self, category, setting, mini, maxi):
-        """modifie le paramètre demandé"""
-        def yes():
-            """modifie les paramètres"""
-            settings = read_settings()
-            value = entry.get()
-            try:
-                value = int(value)
-                if mini <= value <= maxi:
-                    settings[category][setting] = value
-                    write_settings(settings)
-                    root.destroy()
-                else:
-                    label.config(
-                        text=f"La valeur n'est pas comprise entre {mini} et {maxi}")
-            except ValueError:
-                label.config(text="La valeur entrée n'est pas bonne")
-
-        def cancel():
-            """ne modifie pas les paramètres"""
-            root.destroy()
-
-        SFX["ui"]["click"].play()
-
-        root = Tk()
-        root.config(bg="white")
-        root.title(setting)
-
-        actual = Label(
-            root, text=f"{setting} : {read_settings()[category][setting]}")
-        actual.pack()
-
-        label = Label(
-            root, text=f"Entrer une valeur entre {mini} et {maxi} (inclus)")
-        label.pack()
-
-        entry = Entry(root)
-        entry.pack()
-
-        yes_btn = Button(root, text="Modifier", command=yes)
-        yes_btn.pack()
-
-        cancel_btn = Button(root, text="Annuler", command=cancel)
-        cancel_btn.pack()
-
-        root.mainloop()
-
-    def askbool(self, category, setting):
-        def get_text(boolean):
-            """bool vers str"""
-            if boolean:
-                return "Activé(e)"
-            return "Désactivé(e)"
-
-        def get_bool():
-            """str vers bool"""
-            if switch.cget("text") == "Activé(e)":
-                return True
-            return False
-
-        def switch_value():
-            """switche la valeur du bouton"""
-            text = get_text(not get_bool())
-            switch.config(text=text)
-
-        def save():
-            settings = read_settings()
-            settings[category][setting] = get_bool()
-            write_settings(settings)
-            root.destroy()
-
-        SFX["ui"]["click"].play()
-
-        root = Tk()
-        root.config(bg="white")
-        root.title(setting)
-
-        temp = get_text(read_settings()[category][setting])
-        switch = Button(root, text=temp, command=switch_value)
-        switch.pack()
-
-        yes_btn = Button(root, text="Sauvegarder", command=save)
-        yes_btn.pack()
-
-        root.mainloop()
 
     def update_main(self):
         """met à jour le menu principal des paramètres"""

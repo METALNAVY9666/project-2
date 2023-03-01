@@ -6,23 +6,23 @@ from data.modules.audio import SFX
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
 
-    def __init__(self, pkg, prop, GFX):
+    def __init__(self, pkg, prop, graphics):
         self.pkg = pkg
         self.prop = prop
         self.ae86 = {}
-        self.ae86["car"] = GFX["ae86"]
+        self.ae86["car"] = graphics["ae86"]
         self.lock = False
         self.timer = 0
         dims = self.pkg["dimensions"]
         self.pos = [dims[0] // 2, dims[1] // 2]
 
-    def check_event(self, n):
+    def check_event(self, natural):
         """vérifie si l'évènement se réalise avec 1/n proba par seconde"""
-        return randint(0, self.pkg["FPS"] * n) == 0
+        return randint(0, self.pkg["FPS"] * natural) == 0
 
-    def check_timer(self, n):
+    def check_timer(self, natural):
         """vérifie le timer duh"""
-        return self.timer == self.pkg["FPS"] * n
+        return self.timer == self.pkg["FPS"] * natural
 
     def update(self, pause=False, busy=False):
         """met à jour l'évènement"""
@@ -35,11 +35,11 @@ class AE86:
                     print("Wow that was really cool.")
                 surface = self.pkg["surface"]
                 return surface.blit(self.ae86["car"], self.pos)
-            else:
-                if self.check_event(20):
-                    print("Akina's drift !")
-                    self.lock = True
-                    self.timer = 0
+
+            if self.check_event(20):
+                print("Akina's drift !")
+                self.lock = True
+                self.timer = 0
         return None
 
 
@@ -53,9 +53,11 @@ class Countdown:
         self.values = []
 
     def sound(self, file):
+        """Charge le son"""
         return f"data/sfx/level/{file}.mp3"
 
     def update(self, pause=False):
+        """Met à jour le son"""
         if pause is False:
             self.timer += 1
         clock = self.timer
@@ -92,7 +94,7 @@ class End:
         self.lock = True
         self.delta_sum = 0
 
-    def death(self, player, music, dt):
+    def death(self, player, music, delta):
         """lance la fonction quand un joueur meurt"""
         if self.delta_sum <= self.prop["outro"] * 1000:
             player_name = type(player).__name__
@@ -106,7 +108,7 @@ class End:
             height = self.settings["display"]["vertical"]
             pos = (width // 2, height // 2)
             pos = txt.get_rect(center=pos)
-            self.delta_sum += dt
+            self.delta_sum += delta
             if self.lock:
                 music.end()
                 # SFX["events"][f"win_{name}"].play()
@@ -114,7 +116,7 @@ class End:
             return self.pkg["surface"].blit(txt, pos), None
         return None, "menu"
 
-    def update(self, players, music, dt):
+    def update(self, players, music, delta):
         """met à jour l'état de la partie"""
         self.players = players
         for ind in range(len(self.players)):
@@ -124,5 +126,5 @@ class End:
             elif player_name == "Gunner":
                 health_point = self.players[ind].player["hp"]
             if health_point <= 0:
-                return self.death(self.players[1 - ind], music, dt)
+                return self.death(self.players[1 - ind], music, delta)
         return None

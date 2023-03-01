@@ -62,6 +62,7 @@ class Music:
         self.loader.play()
 
     def play(self):
+        """ Joue l'audio """
         if self.folder:
             for elt in range(1, len(self.playlist)):
                 print(self.music + self.playlist[elt])
@@ -72,7 +73,7 @@ class Music:
             self.loader.queue(self.get_segment("loop"), loops=-1)
 
     def pause(self, condition):
-
+        """Pause ou relance l'audio"""
         if condition:
             self.loader.pause()
         else:

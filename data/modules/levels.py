@@ -148,7 +148,7 @@ class BaseLevel:
         music = self.cls["pause"].bg_music
         game = self.cls["game"].update(surface, delta, actions, pause, busy, contro, music)
         self.update_list += game[0]
-        self.update_list.append(self.cls["game"].update_objects(surface))
+        #self.update_list.append(self.cls["game"].update_objects(surface))
 
         # met à jour les obstacles
         self.update_list.append(self.update_obstacles())
