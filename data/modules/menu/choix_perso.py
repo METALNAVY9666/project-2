@@ -80,7 +80,7 @@ def main():
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
     print("Entrée dans le menu choix")
-    # Coordonnées des images des personnages 
+    # Coordonnées des images des personnages
     coo_a = (67, 143)
     coo_b = (698, 143)
 
@@ -110,7 +110,7 @@ def main():
 
     grand_perso1 = tab1_grand_perso[0][0]
     grand_perso2 = tab2_grand_perso[0][0]
-    
+
     ind_i = 0
     ind_j = 0
 

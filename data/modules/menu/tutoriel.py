@@ -97,9 +97,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            
+
             if event.type == pygame.KEYDOWN:
-            # Permet de changer les pages du tuto en appuyant sur des touches 
+                # Permet de changer les pages du tuto en appuyant sur
+                # des touches
                 if event.key == pygame.K_RIGHT:
                     print("d")
                     i += 1

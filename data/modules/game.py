@@ -220,10 +220,12 @@ class Jeu:
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        num = 1
-        if not pause and not busy and self.name[0] != "kim":
+        if not pause and not busy and self.name[0] != "kim" and self.name[1] != "kim":
             if len(contro) < 2:
                 num = 0
+            if len(contro) == 2:
+                num = 1
+                print(num)
             self.handle_input_contro_part1(contro, num)
             self.handle_input_contro_attacks(actions, contro, num)
             # Recharge l'énergie
@@ -308,9 +310,10 @@ class Jeu:
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        num = 0
         if not pause and not busy and self.name[1] != "kim":
-            
+            num = 0
+            if self.name[0] == "kim":
+                num = 1
             self.handle_input_contro_player1_part1(contro, num)
             self.handle_input_contro_player1_attacks(actions, contro, num)
 

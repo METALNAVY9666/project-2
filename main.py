@@ -1,11 +1,11 @@
 """ce module contient le lanceur de jeu"""
 import pygame
+import pygame._sdl2
 from data.modules.levels import BaseLevel
 from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
 from data.modules.controllers import manage_controller, manage_joysticks
 from data.modules.menu.main import debut as menu
-import pygame._sdl2
 pygame.joystick.init()
 pygame.init()
 
@@ -77,4 +77,3 @@ while True:
         if next_action == "exit":
             WIN = False
         fps.record_fps()
-
