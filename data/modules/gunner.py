@@ -206,10 +206,10 @@ class Gunner(pg.sprite.Sprite):
         if ennemy_rect is rect is not None:
             if colliderect(rect, ennemy_rect):
                 self.physics["collide"] = True
-                print("collision")
+                # print("collision")
             else:
                 self.physics["collide"] = False
-                print("non")
+                # print("non")
 
     def move(self, dlt):
         """déplace le gunner

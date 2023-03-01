@@ -73,7 +73,6 @@ def main():
     """ Cette fonction créée une boucle d'affichage du menu pygame, et
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
-    print("Entrée dans le menu choix")
 
     coo = (36, 126)
 

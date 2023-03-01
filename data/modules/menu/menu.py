@@ -46,7 +46,6 @@ class Bouton:
             else:
                 if self.presse is True:
                     self.presse = False
-                    print('g')
                     # Bouton jouer
                     if pos_souri[1] < 335:
                         return "choix_perso"

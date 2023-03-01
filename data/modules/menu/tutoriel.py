@@ -103,14 +103,12 @@ def main():
                 # Permet de changer les pages du tuto en appuyant sur
                 # des touches
                 if event.key == pygame.K_RIGHT:
-                    print("d")
                     i += 1
                     if i == 4:
                         i = 0
                     tuto = tab_tuto[i]
 
                 if event.key == pygame.K_LEFT:
-                    print("q")
                     i -= 1
                     if i == -1:
                         i = 0
