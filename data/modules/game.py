@@ -395,18 +395,19 @@ class Jeu:
         """
         Degats contre kim
         """
-        limit = self.elms["pkg"]["surface"].get_height()
-        if self.name[ennemy.number] == "kim":
-            if self.name[0] == "kim":
-                striker = self.players[1]
-            if self.name[1] == "kim":
-                striker = self.players[0]
-            ennemy.damage_self(10)
-            if 0 < ennemy.physics["pos"][0] < limit:
-                if self.elms["right"][striker.number]:
-                    ennemy.physics["pos"][0] += 10
-                else:
-                    ennemy.physics["pos"][0] -= 10
+        if self.collision():
+            limit = self.elms["pkg"]["surface"].get_height()
+            if self.name[ennemy.number] == "kim":
+                if self.name[0] == "kim":
+                    striker = self.players[1]
+                if self.name[1] == "kim":
+                    striker = self.players[0]
+                ennemy.damage_self(10)
+                if 0 < ennemy.physics["pos"][0] < limit:
+                    if self.elms["right"][striker.number]:
+                        ennemy.physics["pos"][0] += 10
+                    else:
+                        ennemy.physics["pos"][0] -= 10
 
     def update_stats(self):
         """
