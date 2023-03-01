@@ -164,7 +164,6 @@ class BaseLevel:
         # màj l'état des personnages
         end = self.cls["end"]
         end_response = end.update(game[1], music, delta)
-        #print(end_response)
 
         if end_response is None:
             self.update_list.append(end_response)

@@ -1,4 +1,6 @@
+"""Contient une fonction de musique de menu."""
 from data.modules.settings import read_settings
+
 
 class Music:
     """joue de la musique en fonction du type de musique de manière plus simple"""

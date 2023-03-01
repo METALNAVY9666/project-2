@@ -3,6 +3,7 @@ from random import randint
 from data.modules.audio import SFX
 from data.modules.texture_loader import GFX
 
+
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
 
@@ -113,10 +114,10 @@ class End:
                 # SFX["events"][f"win_{name}"].play()
                 self.lock = False
             return self.pkg["surface"].blit(txt, pos), None
-        
+
         reponse = self.fade.update()
         return None, reponse
-    
+
     def update(self, players, music, delta):
         """met à jour l'état de la partie"""
         self.players = players
@@ -130,13 +131,14 @@ class End:
                 return self.death(self.players[1 - ind], music, delta)
         return None
 
+
 class FadeOut:
     """fondu en fermeture"""
     def __init__(self, pkg):
         self.pkg = pkg
         self.alpha = 0
         self.init_image()
-        
+
     def init_image(self):
         """initialise le fond noir"""
         dimensions = self.pkg["dimensions"]
