@@ -70,8 +70,12 @@ class Fighter(pg.sprite.Sprite):
                                self.settings['dims'][1]) // 100
         self.settings['size_max'] = self.settings['dims'][1] - \
             self.settings['dims'][1] // 12 - self.vals['ground']
-        self.vals["keymap"] = read_settings()["keys"][self.number]
+        self.init_keymap()
         self.vals["speed"] = self.settings['dims'][0] // 128
+
+    def init_keymap(self):
+        """initialise les touches du gunner"""
+        self.vals["keymap"] = read_settings()["keys"][self.number]
 
     # Déplacement horizontal du joueur
 

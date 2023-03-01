@@ -12,16 +12,16 @@ from data.modules.controllers import SimpleController
 class Gunner(pg.sprite.Sprite):
     """créee un objet joueur"""
 
-    def __init__(self, game, pkg, prop, id):
+    def __init__(self, game, pkg, prop, iden):
         """initialise les propriétés du joueur"""
         super().__init__()
         self.pkg = pkg
         self.prop = prop
-        self.number = id
+        self.number = iden
         self.game = game
 
         self.init_physics()
-        self.init_player(id)
+        self.init_player(iden)
         self.init_graphics()
         self.init_weapons()
 
@@ -159,7 +159,7 @@ class Gunner(pg.sprite.Sprite):
         '''permet de s'infliger des dégtas'''
         dmg = deepcopy(dmg)
         if self.player["block"]:
-            dmg // 2
+            dmg /= 2
         self.update_health()
         self.player["hp"] -= dmg
 
@@ -279,7 +279,7 @@ class Gunner(pg.sprite.Sprite):
 
     def check_combos(self, pause, busy, buttons):
         """vérifie les combos présents"""
-        if not pause:
+        if pause is busy is False:
             combos = self.player["combos"]
             ultimate = "block" in combos and "h_attack" in combos
             if not ultimate:
@@ -290,7 +290,7 @@ class Gunner(pg.sprite.Sprite):
                 self.player["ult"]["time"] = self.pkg["FPS"] * 5
                 self.player["ult"]["status"] = True
 
-    def ult_animation(self, music, busy):
+    def ult_animation(self, music):
         fps = self.pkg["FPS"]
         frame = 7 * fps - self.player["ult"]["load"]
         rect = None
@@ -305,7 +305,6 @@ class Gunner(pg.sprite.Sprite):
         else:
             self.player["ult"]["load"] = 0
             music.pause(False)
-            busy = False
         self.player["ult"]["delta"] -= 1
         if self.player["ult"]["delta"] == 0:
             self.player["ult"]["load"] -= 1
@@ -314,7 +313,7 @@ class Gunner(pg.sprite.Sprite):
 
     def update_ulti(self, pause, music, busy):
         """met à jour l'ultime de kim"""
-        if not pause:
+        if pause is busy is False:
             if self.player["ult"]["status"]:
                 if self.player["ult"]["load"] == 0:
                     self.player["ult"]["time"] -= 1
@@ -333,7 +332,7 @@ class Gunner(pg.sprite.Sprite):
                         else:
                             self.player["cooldown"]["rocket"] -= 1
                 else:
-                    return self.ult_animation(music, busy)
+                    return self.ult_animation(music)
             else:
                 if self.player["hp_list"][-1] != self.player["hp"]:
                     delta = self.player["hp_list"][-1] - self.player["hp"]
@@ -341,11 +340,11 @@ class Gunner(pg.sprite.Sprite):
 
     def update_health(self):
         """met à jour la vie"""
-        hp = deepcopy(self.player["hp"])
+        health = deepcopy(self.player["hp"])
         if len(self.player["hp_list"]) > 32:
             self.player["hp_list"].pop(0)
-        if self.player["hp_list"][-1] != hp:
-            self.player["hp_list"].append(hp)
+        if self.player["hp_list"][-1] != health:
+            self.player["hp_list"].append(health)
 
     def get_pressed(self):
         """renvoie les boutons pressés"""
