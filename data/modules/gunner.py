@@ -41,6 +41,7 @@ class Gunner(pg.sprite.Sprite):
         level = self.prop["ground_level"]
         dims = self.pkg["dimensions"]
         self.physics["ground"] = (level * dims[1]) // 100
+        self.physics["collide"] = False
 
     def init_player(self, iden):
         """initialise les propriétés du joueur"""
@@ -198,6 +199,18 @@ class Gunner(pg.sprite.Sprite):
 
     # ------ Physiques ------
 
+    def test_collision(self, ennemy_rect):
+        """teste la collision entre un ennemi"""
+        colliderect = self.pkg["Rect"].colliderect
+        rect = self.get_rect()
+        if ennemy_rect is rect is not None:
+            if colliderect(rect, ennemy_rect):
+                self.physics["collide"] = True
+                print("collision")
+            else:
+                self.physics["collide"] = False
+                print("non")
+
     def move(self, dlt):
         """déplace le gunner
         l'ideal serait un truc du style:
@@ -333,7 +346,6 @@ class Gunner(pg.sprite.Sprite):
             self.player["hp_list"].pop(0)
         if self.player["hp_list"][-1] != hp:
             self.player["hp_list"].append(hp)
-            print(self.player["hp_list"])
 
     def get_pressed(self):
         """renvoie les boutons pressés"""
@@ -471,12 +483,13 @@ class Gunner(pg.sprite.Sprite):
         rect = self.blit_sprite(GFX["kim"]["lost"], self.physics["pos"])
         return rect
 
-    def update(self, dlt, pause, busy, other, music):
+    def update(self, dlt, pause, busy, other, music, ennemy_rect):
         """met à jour le sprite du joueur"""
         self.check_ground()
         self.gravity()
         rects = []
         if self.player["hp"] > 0:
+            self.test_collision(ennemy_rect)
             self.update_jump()
             self.update_cooldowns(dlt)
             buttons = self.physics["controller"].update()

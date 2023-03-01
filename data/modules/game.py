@@ -33,6 +33,7 @@ class Jeu:
         self.elms["side"] = ["left", "left"]
         self.elms["pkg"] = pkg
         self.elms["prop"] = prop
+        self.elms["rects"] = []
 
     def init_players(self, pkg, prop):
         """Initialisation des personnages"""
@@ -606,25 +607,29 @@ class Jeu:
                 self.update_stats()
         self.update_health(screen, busy)
 
-    def rect_append_gunner(self, rects, dlt, pause, busy, music):
+    def rect_append_gunner(self, dlt, pause, busy, music, ennemy_rect):
         """
         Rect des gunners
         """
+        new_rects = []
         if self.name[0] == "kim":
-            rects.append(self.player_0.update(
-                dlt, pause, busy, self.player_1, music))
+            new_rects.append(self.player_0.update(
+                dlt, pause, busy, self.player_1, music, ennemy_rect))
         elif self.name[1] == "kim":
-            rects.append(self.player_1.update(
-                dlt, pause, busy, self.player_0, music))
+            new_rects.append(self.player_1.update(
+                dlt, pause, busy, self.player_0, music, ennemy_rect))
+        return new_rects
 
-    def rect_append_fighter(self, rects, screen, dlt, pause):
+    def rect_append_fighter(self, screen, dlt, pause):
         """
         rect des fighters
         """
+        new_rects = []
         if self.name[0] != "kim":
-            rects.append(self.player_0.blit_sprite(screen, dlt, pause))
+            new_rects.append(self.player_0.blit_sprite(screen, dlt, pause))
         if self.name[1] != "kim":
-            rects.append(self.player_1.blit_sprite(screen, dlt, pause))
+            new_rects.append(self.player_1.blit_sprite(screen, dlt, pause))
+        return new_rects
 
     def reset_player_settings(self):
         """réinitialise les paramètres des joueurs"""
@@ -638,8 +643,15 @@ class Jeu:
         du jeu.'''
         # Affiche le personnage sur l'écran
         rects = []
-        self.rect_append_gunner(rects, dlt, pause, busy, music)
-        self.rect_append_fighter(rects, screen, dlt, pause)
+        
+        temp_rects = self.rect_append_fighter(screen, dlt, pause)
+        for rect in temp_rects:
+            rects.append(rect)
+
+        temp_rects = self.rect_append_gunner(dlt, pause, busy, music, rects[0])
+        for rect in temp_rects:
+            rects.append(rect)
+
         for element in self.update_header(screen, busy):
             rects.append(element)
         # Gère les inputs
