@@ -191,7 +191,6 @@ def main():
         aff_surface.blit(fond1, (0, 0))
 
         # Dessin des Boutons
-        Bouton1.dessin()
 
         Bouton2.dessin()
 
