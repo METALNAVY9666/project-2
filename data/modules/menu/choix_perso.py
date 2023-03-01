@@ -88,13 +88,13 @@ def main():
     # Liste des coordonnées que peut prendre coo_a et coo_b
     list_pos = [([(67, 143), (205, 143), (343, 143), (481, 143)],
                  [(67, 312), (67, 312), (67, 312), (67, 312)]),
-                 ([(698, 143), (838, 143), (979, 143), (1120, 143)],
+                ([(698, 143), (838, 143), (979, 143), (1120, 143)],
                  [(698, 312), (698, 312), (698, 312), (698, 312)])]
 
     list_perso = [(["goku", "vegeta", "kim", "luffy"],
-              ["itachi", "itachi", "itachi", "itachi"]),
-              (["goku", "vegeta", "kim", "luffy"],
-              ["itachi", "itachi", "itachi", "itachi"])]
+                   ["itachi", "itachi", "itachi", "itachi"]),
+                  (["goku", "vegeta", "kim", "luffy"],
+                   ["itachi", "itachi", "itachi", "itachi"])]
 
     # Tableau des grandes images des personnages
     tab_grand_perso = [([goku_grand_r, vegeta_grand_r, kim_grand_r,
@@ -102,8 +102,8 @@ def main():
                         [itachi_grand_r, itachi_grand_r, itachi_grand_r,
                          itachi_grand_r]),
 
-                         ([goku_grand_b, vegeta_grand_b, kim_grand_b,
-                        luffy_grand_b],
+                       ([goku_grand_b, vegeta_grand_b, kim_grand_b,
+                         luffy_grand_b],
                         [itachi_grand_b, itachi_grand_b, itachi_grand_b,
                          itachi_grand_b])]
 
