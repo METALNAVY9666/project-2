@@ -234,7 +234,7 @@ class Gunner(pg.sprite.Sprite):
             if not on_the_right and side == -1:
                 pos[0] += int(speed * side)
         else:
-            if pos[0] >= self.pkg["dimensions"][0] - self.get_rect().width:
+            if pos[0] >= map_x - self.get_rect().width:
                 self.physics["collide"]["direction"] = "right"
             elif pos[0] <= 0:
                 self.physics["collide"]["direction"] = "left"

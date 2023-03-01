@@ -34,7 +34,6 @@ class Animate():
 
     def append_update(self, screen, fade, element):
         """Ajout des choses à mettre à jour dans une liste"""
-        width = screen.get_width() - (self.vals["image"].get_width() * 2)
         height = screen.get_height() // 2
         self.rect_update.append(screen.blit(fade, (0, 0)))
         self.rect_update.append(self.txt_blit(screen, height, element))

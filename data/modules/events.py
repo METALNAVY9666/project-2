@@ -156,6 +156,7 @@ class FadeOut:
         display.update(rect)
 
     def update(self):
+        """Met à jour l'alpha de l'outro"""
         if self.alpha <= 255:
             self.display()
             self.alpha += 1
