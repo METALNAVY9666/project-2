@@ -6,6 +6,7 @@ from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
 from data.modules.controllers import manage_controller, manage_joysticks
 from data.modules.menu.main import debut as menu
+from data.modules.menu.music import Music
 pygame.joystick.init()
 pygame.init()
 
@@ -43,12 +44,20 @@ pygame.mixer.init()
 
 while True:
     WIN = True
+    
+    pack_pygame["mixer"].init()
+    music = Music(pack_pygame["mixer"], "all_good_in_the_hood")
+    music.play()
 
     level_name, players = menu()
+    
+    music.stop()
 
     pack_pygame["surface"] = pygame.display.set_mode(dimensions)
 
+    
     level = read_levels()[level_name]
+    
 
     current_map = BaseLevel(pack_pygame, level, game_settings, players)
     fps = FPS(pack_pygame)
