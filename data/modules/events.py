@@ -1,7 +1,7 @@
 """contient la classe permettant de créer des évènements aléatoires"""
 from random import randint
 from data.modules.audio import SFX
-
+from data.modules.texture_loader import GFX
 
 class AE86:
     """fait drifter une ae86 sur la map highway, inflige des dégâts"""
@@ -89,10 +89,9 @@ class End:
         self.prop = prop
         self.settings = settings
         self.players = None
-        self.font = pkg["pygame"].font.Font(
-            'data/gfx/fonts/04B_19__.TTF', 60)
         self.lock = True
         self.delta_sum = 0
+        self.fade = FadeOut(pkg)
 
     def death(self, player, music, delta):
         """lance la fonction quand un joueur meurt"""
@@ -103,7 +102,7 @@ class End:
             elif player_name == "Gunner":
                 name = player.player["name"]
 
-            txt = self.font.render(name + " wins", True, (0, 0, 0))
+            txt = GFX["paladins"].render(name + " wins", True, (0, 0, 0))
             width = self.settings["display"]["horizontal"]
             height = self.settings["display"]["vertical"]
             pos = (width // 2, height // 2)
@@ -114,8 +113,10 @@ class End:
                 # SFX["events"][f"win_{name}"].play()
                 self.lock = False
             return self.pkg["surface"].blit(txt, pos), None
-        return None, "menu"
-
+        
+        reponse = self.fade.update()
+        return None, reponse
+    
     def update(self, players, music, delta):
         """met à jour l'état de la partie"""
         self.players = players
@@ -128,3 +129,33 @@ class End:
             if health_point <= 0:
                 return self.death(self.players[1 - ind], music, delta)
         return None
+
+class FadeOut:
+    """fondu en fermeture"""
+    def __init__(self, pkg):
+        self.pkg = pkg
+        self.alpha = 0
+        self.init_image()
+        
+    def init_image(self):
+        """initialise le fond noir"""
+        dimensions = self.pkg["dimensions"]
+        surface = self.pkg["pygame"].Surface
+        self.image = surface(dimensions)
+        self.image.convert()
+        self.image.fill((0, 0, 0))
+
+    def display(self):
+        """affiche le fond noir"""
+        self.image.set_alpha(self.alpha)
+        surface = self.pkg["surface"]
+        display = self.pkg["display"]
+        rect = surface.blit(self.image, (0, 0))
+        display.update(rect)
+
+    def update(self):
+        if self.alpha <= 255:
+            self.display()
+            self.alpha += 1
+            return None
+        return "exit"

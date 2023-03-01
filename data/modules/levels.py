@@ -164,6 +164,7 @@ class BaseLevel:
         # màj l'état des personnages
         end = self.cls["end"]
         end_response = end.update(game[1], music, delta)
+        print(end_response)
 
         if end_response is None:
             self.update_list.append(end_response)
@@ -179,5 +180,14 @@ class BaseLevel:
         self.clear_rect_list()
         self.pkg["display"].update(self.update_list)
         self.update_list = []
+
+        try:
+            if end_response[1] is not None:
+                next_op = end_response[1]
+        except TypeError:
+            pass
+
+        if next_op == "exit":
+            self.pkg["mouse"].set_visible(True)
 
         return next_op
