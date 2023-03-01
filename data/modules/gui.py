@@ -83,7 +83,7 @@ class PauseMenu:
                 case "PauseMenu":
                     classe.bg_music.reset_volume()
 
-    def update(self):
+    def update(self, events):
         """met à jour le menu pause"""
         update_l = []
         if self.bool:
@@ -100,7 +100,7 @@ class PauseMenu:
                 update_l.append(exit_rect)
                 rects = [["exit", exit_rect]]
 
-            settings_rect = self.settings.update()
+            settings_rect = self.settings.update(events)
             update_l.append(settings_rect)
 
             on_button = self.menu_clicks(rects)
@@ -158,8 +158,12 @@ class SettingsMenu:
         dims = pkg["dimensions"]
         self.pos = (dims[0] // 64, 2 * dims[1] // 64 + dims[1] // 10)
         self.asks = {}
-        self.asks["effects"] = IntInput(
-            pkg, read_settings(), ["audio", "effects"], "extremum")
+        settings = read_settings()
+        self.asks["effects"] = IntInput(pkg, settings, [0, 100], ["audio", "effects"])
+        self.asks["music"] = IntInput(pkg, settings, [0, 100], ["audio", "music"])
+        self.asks["horizontal"] = IntInput(pkg, settings, [640, 7680], ["display", "horizontal"])
+        self.asks["vertical"] = IntInput(pkg, settings, [480, 4320], ["display", "vertical"])
+        self.asks["FPS"] = IntInput(pkg, settings, [1, 1000], ["display", "FPS"])
 
     def check_click(self, rect):
         """vérifie si le le bouton paramètres est préssé"""
@@ -215,7 +219,15 @@ class SettingsMenu:
         SFX["ui"]["click"].play()
         self.sub_menu = None
 
-    def update_audio(self):
+    def update_settings(self, domain, subdomain, value):
+        """reset les paramètres avec les nouvelles, valeurs"""
+        if value is None:
+            return
+        dico = read_settings()
+        dico[domain][subdomain] = value
+        write_settings(dico)
+
+    def update_audio(self, events):
         """met à jour le menu audio"""
         rects = []
 
@@ -225,20 +237,22 @@ class SettingsMenu:
 
         for button in ["effects", "music"]:
             rect = self.blit(GFX["btn"][button], pos)
+            self.asks[button].pos = [pos[0] + dims[0] // 8, pos[1]]
             pos[1] += space
-            args = ["audio", button, 0, 100]
             old = self.old_pressed_buttons[button]
-            self.old_pressed_buttons[button] = check(
-                self.pkg, rect, old, self.askint, args)
+            func = self.asks[button].switch_active
+            self.old_pressed_buttons[button] = check(self.pkg, rect, old, func, [])
+            rect, value = self.asks[button].update(events)
+            rects.append(rect)
+            self.update_settings("audio", button, value)
 
         rect = self.blit(GFX["btn"]["return"], pos)
         old = self.old_pressed_buttons["return"]
-        self.old_pressed_buttons["return"] = check(
-            self.pkg, rect, old, self.goback, [])
+        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
 
         return rects
 
-    def update_screen(self):
+    def update_screen(self, events):
         """met à jour le menu écran"""
         rects = []
 
@@ -246,28 +260,20 @@ class SettingsMenu:
         space = dims[1] // 64 + dims[1] // 10
         pos = [dims[0] // 64, dims[1] // 64]
 
-        for button in ["horizontal", "vertical", "FPS", "fullscreen"]:
+        for button in ["horizontal", "vertical", "FPS"]:
             rect = self.blit(GFX["btn"][button], pos)
+            self.asks[button].pos = [pos[0] + dims[0] // 8, pos[1]]
             pos[1] += space
-            func = self.askint
-            match button:
-                case "horizontal":
-                    args = ["display", button, 480, 7680]
-                case "vertical":
-                    args = ["display", button, 360, 4320]
-                case "FPS":
-                    args = ["display", button, 0, 300000]
-                case "fullscreen":
-                    args = ["display", button]
-                    func = self.askbool
+            func = self.asks[button].switch_active
             old = self.old_pressed_buttons[button]
-            self.old_pressed_buttons[button] = check(
-                self.pkg, rect, old, func, args)
+            self.old_pressed_buttons[button] = check(self.pkg, rect, old, func, [])
+            rect, value = self.asks[button].update(events)
+            rects.append(rect)
+            self.update_settings("display", button, value)
 
         rect = self.blit(GFX["btn"]["return"], pos)
         old = self.old_pressed_buttons["return"]
-        self.old_pressed_buttons["return"] = check(
-            self.pkg, rect, old, self.goback, [])
+        self.old_pressed_buttons["return"] = check(self.pkg, rect, old, self.goback, [])
 
         return rects
 
@@ -455,7 +461,7 @@ class SettingsMenu:
             rects.append(rect)
         return rects
 
-    def update(self):
+    def update(self, events):
         """met à jour le menu paramètres"""
         blit_surface = self.pkg["surface"].blit
         if self.in_menu:
@@ -463,9 +469,9 @@ class SettingsMenu:
                 case None:
                     rects = self.update_main()
                 case "audio":
-                    rects = self.update_audio()
+                    rects = self.update_audio(events)
                 case "screen":
-                    rects = self.update_screen()
+                    rects = self.update_screen(events)
                 case "keyboard":
                     rects = self.update_keyboard()
         else:
@@ -477,15 +483,15 @@ class SettingsMenu:
 
 
 class IntInput:
-    """flemme"""
+    """récupère l'entrée clavier"""
 
-    def __init__(self, pkg, settings, types, extremums):
+    def __init__(self, pkg, settings, extremums, path):
         self.pkg = pkg
         self.settings = settings
         self.active = False
-        self.string = ""
-        self.types = types
+        self.string = str(settings[path[0]][path[1]])
         self.extremums = extremums
+        self.pos = [0, 0]
 
     def switch_active(self):
         """active ou désactive l'entrée"""
@@ -496,19 +502,48 @@ class IntInput:
 
     def return_int(self):
         """renvoie la valeur en int"""
-        return int(self.string)
+        value = int(self.string)
+        extremums = self.extremums
+        if value < extremums[0]:
+            return extremums[0]
+        elif value > extremums[1]:
+            return extremums[1]
+        return value
 
-    def update(self):
-        """met à jour"""
-        events = self.pkg["events"]()
+    def show_value(self):
+        """affiche la valeur à l'écran"""
+        blit = self.pkg["surface"].blit
+        display_settings = self.settings["display"]
+        width, height = display_settings["horizontal"], display_settings["vertical"]
+        string = "Valeur : " + self.string + " ('Entrée' pour confirmer)"
+        image = GFX["small_paladins"].render(string, True, (255, 255, 255))
+        return blit(image, self.pos)
+
+    def add_letter(self, letter):
+        """ajoute une lettre à la string"""
+        zero_to_nine = [str(num) for num in range(10)]
+        if letter in zero_to_nine:
+            self.string += letter
+
+    def check_keys(self, events):
+        """vérifie les pressions de touches"""
         pg = self.pkg["pygame"]
         keydown = pg.KEYDOWN
         backspace = pg.K_BACKSPACE
+        enter = pg.K_RETURN
+        for event in events:
+            if event.type == keydown:
+                if event.key == backspace:
+                    if len(self.string) > 0:
+                        self.string = self.string[:-1]
+                elif event.key == enter:
+                    self.switch_active()
+                    return self.return_int()
+                else:
+                    self.add_letter(event.unicode)
+
+    def update(self, events):
+        """met à jour"""
         if self.active:
-            for event in events:
-                if event.type == keydown:
-                    if event.key == backspace:
-                        if len(self.string) > 0:
-                            self.string = self.string[:-1]
-                    else:
-                        self.string += event.unicode
+            return self.show_value(), self.check_keys(events)
+        return None, None

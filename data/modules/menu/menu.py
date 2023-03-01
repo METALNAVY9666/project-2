@@ -1,7 +1,9 @@
 # Menu projet 2
 
 """ Ce module est le menu de démarage du jeu. """
-
+from platform import platform
+from os import system
+from sys import exit
 import pygame
 from data.modules.menu.textures import fond1
 from data.modules.menu.tutoriel import main as tuto
@@ -127,18 +129,26 @@ class BoutonCredit:
         aff_surface.blit(self.text_surf, self.text_rect)
         self.check_click()
 
+    def launch_credits(self):
+        """fonction permettant de démarrer les crédits"""
+        indic = "start"
+        if "Linux" in platform():
+            indic = "xdg-open"
+        system(f"{indic} data/gfx/events/test/test.mp4")
+        exit()
+
     # Fonction qui va vérifier le click de la souri sur le bouton
     def check_click(self):
         """ Cette fonction permet de detecter le clic sur les boutons de
             l'utilisateur. """
-        pos_souri = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(pos_souri):
+        pos_souris = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(pos_souris):
             self.top_color = (122, 193, 31)
             if pygame.mouse.get_pressed()[0]:
                 self.presse = True
             else:
                 if self.presse is True:
-                    pass
+                    self.launch_credits()
         else:
             self.top_color = (31, 151, 193)
 

@@ -88,7 +88,7 @@ win_scale = (X, Y)
 fps = prop["display"]["FPS"]
 
 pg.display.init()
-surface = pg.display.set_mode(win_scale)
+surface = pg.display.set_mode([1280, 720])
 
 
 UI_PATH = "data/gfx/ui/"
@@ -115,6 +115,7 @@ pg.display.update(loading_rect)
 pg.font.init()
 GFX["font"] = pg.font.Font(GFX_PATH + 'fonts/04B_19__.TTF', 60)
 GFX["paladins"] = pg.font.Font('data/gfx/fonts/paladins.ttf', 60)
+GFX["small_paladins"] = pg.font.Font('data/gfx/fonts/paladins.ttf', 20)
 
 # chargement des boutons et du menu pause.
 GFX["blur"] = load_image(UI_PATH + "blur", win_scale).convert_alpha()

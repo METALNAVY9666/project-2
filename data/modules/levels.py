@@ -130,7 +130,7 @@ class BaseLevel:
                 rects.append(rect)
         self.update_list = rects
 
-    def update(self, delta, actions, contro):
+    def update(self, delta, actions, contro, events):
         """met à jour le niveau, renvoie si le niveau est terminé ou
         non, et le score"""
         # met à jour les touches
@@ -173,7 +173,7 @@ class BaseLevel:
             self.update_list.append(end_response[0])
 
         # met à jour le menu pause
-        next_op, pause_rects = self.cls["pause"].update()
+        next_op, pause_rects = self.cls["pause"].update(events)
         if pause_rects is not None:
             for rect in pause_rects:
                 self.update_list.append(rect)

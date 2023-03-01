@@ -24,7 +24,7 @@ pack_pygame = {
     "pygame": pygame,
     "FPS": game_settings["display"]["FPS"],
     "display": pygame.display,
-    "surface": pygame.display.set_mode(dimensions),
+    "surface": pygame.display.set_mode([1280, 720]),
     "Rect": pygame.Rect,
     "mixer": pygame.mixer,
     "clock": pygame.time.Clock(),
@@ -47,6 +47,8 @@ while True:
     WIN = True
 
     level_name, players = menu()
+
+    pack_pygame["surface"] = pygame.display.set_mode(dimensions)
 
     level = read_levels()[level_name]
 
@@ -71,7 +73,7 @@ while True:
                 joysticks = manage_joysticks()
                 contro = manage_controller([])
         # actualise la map, si elle renvoie "quit", alors quitter
-        next_action = current_map.update(dlt, actions, contro)
+        next_action = current_map.update(dlt, actions, contro, actions)
         if next_action == "exit":
             WIN = False
         fps.record_fps()

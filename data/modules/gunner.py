@@ -84,7 +84,6 @@ class Gunner(pg.sprite.Sprite):
         self.gfx["current"] = "wait"
         self.gfx["animations"] = {}
         self.gfx["animations"]["kick"] = 166
-        # current est [nom_sprite, temps_animation]
 
     def init_keymap(self):
         """initialise les touches du gunner"""
