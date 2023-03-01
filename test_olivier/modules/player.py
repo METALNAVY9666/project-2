@@ -58,18 +58,18 @@ class Player(pg.sprite.Sprite):
         # Vérifie s'il n'y a pas de collisions
         test = not self.game.collision(self, self.game.all_objects)
         if test:
-                if valeur / 1500 < -0.15 and self.rect.x > 0:
-                    self.motion[0] = valeur / 2500
-                    self.rect.x += self.motion[0]
-                    # On change l'image du joueur
-                    self.change_animation('left')
-                    self.vals['pause'] = False
+            if valeur / 1500 < -0.15 and self.rect.x > 0:
+                self.motion[0] = valeur / 2500
+                self.rect.x += self.motion[0]
+                # On change l'image du joueur
+                self.change_animation('left')
+                self.vals['pause'] = False
 
-                elif valeur / 1500 > 0.15 and self.rect.x < 950:
-                    self.motion[0] = valeur / 2500
-                    self.rect.x += self.motion[0]
-                    self.vals['pause'] = False
-                    self.change_animation('right')
+            elif valeur / 1500 > 0.15 and self.rect.x < 950:
+                self.motion[0] = valeur / 2500
+                self.rect.x += self.motion[0]
+                self.vals['pause'] = False
+                self.change_animation('right')
 
     def attack(self, event, choice):
         '''Cette fonction permet de gérer l'attaque d'un perso.'''
@@ -96,29 +96,29 @@ class Player(pg.sprite.Sprite):
         # A voir ~~~~~
 
     def attack_controller(self, choice):
-            '''Cette fonction permet de gérer l'attaque d'un perso.'''
-            collide = self.game.collision(self, self.game.all_objects)
-            controller = manage_controller()
-            # Le joueur fait une action
-            if controller.get_button(2):
-                self.combo('attack', 'nbr_combo_q')
-                self.attack_up(choice)
-                self.attack_down(choice)
-            elif controller.get_button(1):
-                self.combo('impact', 'nbr_combo_w')
-            if self.vals['nbr_combo_w'] == 2 and self.vals['nbr_combo_q'] == 2:
-                # pg.time.wait(1000)
-                print('AAAAAAAAH')
-                self.game.dict_game['side'] = 'spe'
-                self.game.object.rect.x -= 200
-                self.vals['nbr_combo_w'] = 0
-                self.vals['nb_combo_q'] = 0
-            print(self.vals['nbr_combo'], self.vals['nbr_combo_w'], 
-            self.vals['nbr_combo_q'])
-            if not collide:
-                self.vals['nbr_combo'] = 0
-                self.vals['nbr_combo_w'] = 0
-                self.vals['nbr_combo_q'] = 0
+        '''Cette fonction permet de gérer l'attaque d'un perso.'''
+        collide = self.game.collision(self, self.game.all_objects)
+        controller = manage_controller()
+        # Le joueur fait une action
+        if controller.get_button(2):
+            self.combo('attack', 'nbr_combo_q')
+            self.attack_up(choice)
+            self.attack_down(choice)
+        elif controller.get_button(1):
+            self.combo('impact', 'nbr_combo_w')
+        if self.vals['nbr_combo_w'] == 2 and self.vals['nbr_combo_q'] == 2:
+            # pg.time.wait(1000)
+            print('AAAAAAAAH')
+            self.game.dict_game['side'] = 'spe'
+            self.game.object.rect.x -= 200
+            self.vals['nbr_combo_w'] = 0
+            self.vals['nb_combo_q'] = 0
+        print(self.vals['nbr_combo'], self.vals['nbr_combo_w'],
+              self.vals['nbr_combo_q'])
+        if not collide:
+            self.vals['nbr_combo'] = 0
+            self.vals['nbr_combo_w'] = 0
+            self.vals['nbr_combo_q'] = 0
 
     def jump(self):
         '''Fonction saut'''
@@ -137,11 +137,10 @@ class Player(pg.sprite.Sprite):
         # Fonction saut a la manette
         if jumpCount >= -8:
             self.rect.y -= (jumpCount * abs(jumpCount)) * 0.5
-            self.vals['current_height'] +=(jumpCount * abs(jumpCount)) * 0.5
+            self.vals['current_height'] += (jumpCount * abs(jumpCount)) * 0.5
             jumpCount -= 1
-        else: 
+        else:
             jumpCount = 8
-            
 
     def gravity(self):
         '''Fonction qui simule une gravité'''

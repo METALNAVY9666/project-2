@@ -537,6 +537,9 @@ class Fighter(pg.sprite.Sprite):
         '''Fonction qui gère les dommages'''
         ennemy_side = self.game.elms["right"][ennemy.number]
         limit = 0 < self.rect.x < self.vals["surface_height"]
+        if self.game.name[self.number] == "vegeta" and (
+                not self.game.ulti.can_spe["vegeta"]):
+            self.vals["attacked"] = True
         if not self.vals['attacked']:
             self.vals['health'] -= 10
             if ennemy_side and limit:
@@ -586,7 +589,8 @@ class Fighter(pg.sprite.Sprite):
         if self.game.name[self.number] in ["goku", "vegeta"]:
             if self.vals["percent_ult"] < 130:
                 self.vals["jumping"] = False
-                self.vals["percent_ult"] += 0.1
+                self.vals["percent_ult"] += 0.6
+                print(self.game.name[self.number], self.vals["percent_ult"])
                 self.game.elms["side"][self.number] = "ki"
             else:
                 self.vals["jumping"] = True

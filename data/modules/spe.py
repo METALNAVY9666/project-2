@@ -31,6 +31,8 @@ class Special(pg.sprite.Sprite):
                 self.spe_itachi(screen, element)
             case "luffy":
                 self.spe_luffy(screen, element)
+            case "vegeta":
+                self.spe_vegeta(element)
 
     def spe_luffy(self, screen, element):
         """
@@ -75,16 +77,14 @@ class Special(pg.sprite.Sprite):
             victime = self.game.players[0]
         return victime
 
-    def spe_vegeta(self):
+    def spe_vegeta(self, element):
         """
         Attaque spéciale de vegeta
         """
         SFX["vegeta"]["spe"].play()
-        """On passe un boulééen sur True."""
-        """On charge une variable random."""
-        """A chaque attaque, si le bouléen est sur True"""
-        """ Si les attaque touches et que le random est sur 2."""
-        """lE joueur Adverse ne peut pas bouger."""
+        self.can_spe["vegeta"] = False
+        if element.vals["percent_ult"] > 0:
+            element.vals["attacked"] = True
 
     def spe_goku(self, screen):
         """
@@ -100,7 +100,7 @@ class Special(pg.sprite.Sprite):
                     SFX["goku"]["transfo"].play()
                     self.game.name[element.number] = "revive"
                     self.animate.fade(screen.get_width(),
-                                      screen.get_height(), screen)
+                                      screen.get_height(), screen, element)
                     self.game.elms["side"][element.number] = "transfo"
                     element.upgrade_stats()
                     element.vals["percent_ult"] = 0

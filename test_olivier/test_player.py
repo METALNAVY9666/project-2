@@ -49,11 +49,12 @@ def main_window():
     # dlt est le delta time: càd le temps entre 2 frames
     dlt = clock.tick(jeu.dict_game['fps'])
 
-    pg.joystick.init() #initialise le module joystick
-    joysticks = [pg.joystick.Joystick(i) for i in range(pg.joystick.get_count())]
-    #Permet de savoir le nombre de manettes utilisés
+    pg.joystick.init()  # initialise le module joystick
+    joysticks = [pg.joystick.Joystick(i)
+                 for i in range(pg.joystick.get_count())]
+    # Permet de savoir le nombre de manettes utilisés
     for joystick in joysticks:
-        print(joystick.get_name()) #Permet de connaitre la manette utilisée.
+        print(joystick.get_name())  # Permet de connaitre la manette utilisée.
 
     # Boucle du jeu
     while test:
@@ -66,7 +67,8 @@ def main_window():
         if not square.choosen or not jeu.dict_game['is_playing']:
             # On change par le nom du perso choisi
             jeu.name = square.menu_update(screen, actions)
-            if square.choosen: jeu.dict_game['is_playing'] = True
+            if square.choosen:
+                jeu.dict_game['is_playing'] = True
         elif square.choosen and jeu.dict_game['is_playing']:
             # Mise à jour du jeu
             liste_update.append(jeu.update(screen, dlt, actions))

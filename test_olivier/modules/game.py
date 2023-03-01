@@ -7,7 +7,6 @@ from modules.texture_loader import images
 from modules.controller import manage_controller
 
 
-
 class Jeu:
     '''Cette classe a pour but de lancer le jeu, l'arrêter, de gérer les collisions,
     les dessins, les dégats etc...'''
@@ -59,7 +58,6 @@ class Jeu:
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
-
     def handle_input_controller(self, actions):
         """
         Cette fonction récupère les actions effectuées à la manette et 
@@ -75,11 +73,11 @@ class Jeu:
         # Gère le bloquage
         if contro.get_button(3):
             self.player.block()
-            
+
         # Gère les mouvements à la manette
         if contro.get_axis(0) / 3500 > 5 or contro.get_axis(0) / 3500 < -5:
             self.player.move_controller(contro.get_axis(0))
-        
+
         # Gère les sauts
         if contro.get_button(0) and self.player.vals['current_height'] < 400:
             self.player.jump_controller(8)
@@ -88,7 +86,6 @@ class Jeu:
             pass
 
         self.loop_input(actions)
-
 
     def loop_input(self, actions):
         '''Fonction qui gère les saisie de l'utilisateur avec une boucle for.
@@ -108,7 +105,6 @@ class Jeu:
             if event.type == pg.JOYBUTTONDOWN:
                 self.player.attack_controller(choice)
 
-
     def collision(self, sprite, group):
         '''Cette fonction renvoi un bouléen,
         qui est sur True quand il y a une collision entre
@@ -117,7 +113,6 @@ class Jeu:
         # Vérifie si il y a collision ou non
         return pg.sprite.spritecollide(sprite, group,
                                        False, pg.sprite.collide_mask)
-
 
     def update(self, screen, dlt, actions):
         '''Cette fonction permet de mettre à jour les événements
@@ -129,15 +124,15 @@ class Jeu:
         # Renvoi le rectangle du joueur
         self.update_health(screen)
 
-        #Gère mes inputs à la manette
+        # Gère mes inputs à la manette
         # Si il y a au moins une manette de connecté:
-        if manage_controller() != None: 
+        if manage_controller() != None:
             self.handle_input_controller(actions)
 
         # Dommages
         self.player.damages()
         # Affiche les pv
-        #print(self.player.update_pv())
+        # print(self.player.update_pv())
         return self.rect
 
     def add_groups(self):

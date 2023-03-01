@@ -175,7 +175,7 @@ bro_tab = ["C'est quoi la blague ?",
 
 GFX["kim"] = load_dir("data/gfx/players/kim/", (X // 8, Y // 8))
 GFX["kim_face"] = load_image(BOX_PATH + "kim", (X // 15, X // 15)).convert_alpha()
-
+GFX["blast"] = load_image(EFFECTS_PATH + "blast", (X // 2, Y // 3))
 GFX["luffy"] = load_image(BOX_PATH + "luffy", (X // 15, X // 15)).convert_alpha()
 GFX["itachi"] = load_image(BOX_PATH + "itachi", (X // 15, X // 15)).convert_alpha()
 GFX["goku"] = load_image(BOX_PATH + "goku", (X // 15, X // 15)).convert_alpha()

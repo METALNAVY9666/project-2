@@ -424,15 +424,25 @@ class Jeu:
                 if element.vals["percent_ult"] <= 0:
                     self.name[element.number] = "luffy"
                     element.reset_stats()
-            elif self.name[element.number] == "itachi":
-                if self.ulti.can_spe["itachi"] and (
-                        element.vals["percent_ult"] <= 130):
-                    element.vals["percent_ult"] += 0.1
-                else:
-                    if self.players[0] == "itachi":
-                        self.players[1].reset_stats()
-                    elif self.players[1] == "itachi":
-                        self.players[0].reset_stats()
+            self.update_spe_itachi(element)
+            self.update_spe_vegeta(element)
+
+    def update_spe_itachi(self, element):
+        if self.name[element.number] == "itachi":
+            if self.ulti.can_spe["itachi"] and (
+                    element.vals["percent_ult"] <= 130):
+                element.vals["percent_ult"] += 0.1
+            else:
+                if self.players[0] == "itachi":
+                    self.players[1].reset_stats()
+                elif self.players[1] == "itachi":
+                    self.players[0].reset_stats()
+
+    def update_spe_vegeta(self, element):
+        if self.name[element.number] == "vegeta" and not self.ulti.can_spe["vegeta"]:
+            if element.vals["percent_ult"] >= 0:
+                element.vals["attacked"] = True
+                element.vals["percent_ult"] -= 0.1
 
     def update_objects(self, screen):
         '''Met à jour l'image del'objet'''
