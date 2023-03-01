@@ -378,7 +378,6 @@ class Fighter(pg.sprite.Sprite):
                 if len(self.vals['tab']) < 8:
                     self.vals['tab'].append(117)
                     self.vals['tab'].append(117)
-                    print(self.vals['tab'])
                 else:
                     self.vals['tab'] = []
             else:
@@ -394,7 +393,6 @@ class Fighter(pg.sprite.Sprite):
                 if len(self.vals['tab']) < 8:
                     self.vals['tab'].append(121)
                     self.vals['tab'].append(121)
-                    print(self.vals['tab'])
                 else:
                     self.vals['tab'] = []
             else:
@@ -408,7 +406,6 @@ class Fighter(pg.sprite.Sprite):
         """
         if len(self.vals['sp_tab']) < 9:
             self.vals['sp_tab'].append(event.key)
-            print(event.key)
         else:
             temp = self.vals['sp_tab'][len(self.vals['tab']) - 1]
             self.vals['sp_tab'] = []
@@ -524,7 +521,6 @@ class Fighter(pg.sprite.Sprite):
         Attaque en bas à la manette
         """
         if self.game.collision():
-            print("sol")
             self.game.elms["side"][self.number] = 'down'
             SFX[self.vals["name"]]["h_attack"].play()
             while ennemy.rect.y <= self.settings['size_max']:
@@ -589,7 +585,7 @@ class Fighter(pg.sprite.Sprite):
             if self.vals["percent_ult"] < 130:
                 self.vals["jumping"] = False
                 self.vals["percent_ult"] += 0.6
-                print(self.game.name[self.number], self.vals["percent_ult"])
+                # print(self.game.name[self.number], self.vals["percent_ult"])
                 self.game.elms["side"][self.number] = "ki"
             else:
                 self.vals["jumping"] = True

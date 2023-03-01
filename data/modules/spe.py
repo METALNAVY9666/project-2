@@ -11,7 +11,7 @@ class Special(pg.sprite.Sprite):
         super().__init__()
         self.game = game
         self.animate = Animate(self)
-        print('la spé de', self.game.name, 'est chargée.')
+        # print('la spé de', self.game.name, 'est chargée.')
         # self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
         self.init_dict()
 
@@ -27,7 +27,6 @@ class Special(pg.sprite.Sprite):
     def spe_manager(self, screen, element):
         "Gestion des attaque spéciales"
         name = element.game.name[element.number]
-        print(name)
         match name:
             case "itachi":
                 self.spe_itachi(screen, element)

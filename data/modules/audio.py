@@ -65,7 +65,6 @@ class Music:
         """ Joue l'audio """
         if self.folder:
             for elt in range(1, len(self.playlist)):
-                print(self.music + self.playlist[elt])
                 self.loader.queue(self.music + self.playlist[elt])
             self.loader.play()
         else:
