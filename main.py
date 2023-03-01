@@ -40,7 +40,6 @@ pack_pygame = {
 icon = pygame.image.load("data/gfx/icon.png")
 
 pygame.mixer.init()
-pygame.display.set_icon(icon)
 
 while True:
     WIN = True
@@ -55,6 +54,8 @@ while True:
     fps = FPS(pack_pygame)
 
     pack_pygame["mouse"].set_visible(True)
+    pack_pygame["display"].set_caption(f"Moissan Fighters - {level_name}")
+    pygame.display.set_icon(icon)
 
     while WIN:
         # dt est le temps qui s'écoule entre chaque image,
@@ -62,6 +63,7 @@ while True:
         dlt = pack_pygame["clock"].tick(pack_pygame["FPS"])
         current_map.delta = dlt
         # Récupère les événements courants
+        
         actions = pygame.event.get()
         # vérifie les évènements
         for event in actions:

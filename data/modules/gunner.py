@@ -205,7 +205,6 @@ class Gunner(pg.sprite.Sprite):
     def test_collision(self, ennemy_rect):
         """teste la collision entre un ennemi"""
         colliderect = self.pkg["Rect"].colliderect
-        gravity = self.physics["gravity"]
         rect = self.get_rect()
         if ennemy_rect is not None and rect is not None:
             if colliderect(rect, ennemy_rect):
@@ -222,13 +221,12 @@ class Gunner(pg.sprite.Sprite):
                 self.physics["collide"]["bool"] = False
                 self.physics["collide"]["direction"] = None
 
-        print(self.physics["collide"]["direction"])
-
     def move(self, dlt):
         """déplace le gunner"""
         side = self.physics["side"]
         speed = self.physics["speed"]
         pos = self.physics["pos"]
+        map_x = self.pkg["dimensions"][0]
         if self.physics["collide"]["bool"]:
             on_the_right = self.physics["collide"]["direction"] == "right"
             if on_the_right and side == 1:
@@ -236,7 +234,18 @@ class Gunner(pg.sprite.Sprite):
             if not on_the_right and side == -1:
                 pos[0] += int(speed * side)
         else:
-            pos[0] += int(speed * side)
+            if pos[0] >= self.pkg["dimensions"][0] - self.get_rect().width:
+                self.physics["collide"]["direction"] = "right"
+            elif pos[0] <= 0:
+                self.physics["collide"]["direction"] = "left"
+            direction = self.physics["collide"]["direction"]
+            if direction is None or direction == "top":
+                pos[0] += int(speed * side)
+            elif direction == "right" and side == -1:
+                pos[0] += int(speed * side)
+            elif direction == "left" and side == 1:
+                pos[0] += int(speed * side)
+
         return self.play_animation("run", dlt)
 
     def gravity(self):
@@ -389,7 +398,12 @@ class Gunner(pg.sprite.Sprite):
     def check_keyboard(self, dlt, other):
         """vérifie les touches du clavier"""
         pressed = self.get_pressed()
-        sprite = GFX["kim"]["wait"]
+        grounded = self.physics["grounded"]
+        on_top = self.physics["collide"]["direction"] == "top"
+        if grounded or on_top:
+            sprite = GFX["kim"]["wait"]
+        else:
+            sprite = GFX["kim"]["run_1"]
         pack = []
         # verifie les touches du clavier
         for couple in pressed:
