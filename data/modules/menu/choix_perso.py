@@ -80,37 +80,36 @@ def main():
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
     print("Entrée dans le menu choix")
-    # Coordonnées des images des personnages 
+    # Coordonnées des images des personnages
     coo_a = (67, 143)
     coo_b = (698, 143)
 
     posok = (3000, 3000)
-    # Liste des coordonnées que peut prendre coo_a
-    list_pos1 = ([(67, 143), (205, 143), (343, 143), (481, 143)],
-                 [(67, 312), (67, 312), (67, 312), (67, 312)])
+    # Liste des coordonnées que peut prendre coo_a et coo_b
+    list_pos = [([(67, 143), (205, 143), (343, 143), (481, 143)],
+                 [(67, 312), (67, 312), (67, 312), (67, 312)]),
+                 ([(698, 143), (838, 143), (979, 143), (1120, 143)],
+                 [(698, 312), (698, 312), (698, 312), (698, 312)])]
 
-    perso1 = (["goku", "vegeta", "kim", "luffy"],
-              ["itachi", "itachi", "itachi", "itachi"])
-    # Liste des coordonnées que peut prendre coo_b
-    list_pos2 = ([(698, 143), (838, 143), (979, 143), (1120, 143)],
-                 [(698, 312), (698, 312), (698, 312), (698, 312)])
+    list_perso = [(["goku", "vegeta", "kim", "luffy"],
+              ["itachi", "itachi", "itachi", "itachi"]),
+              (["goku", "vegeta", "kim", "luffy"],
+              ["itachi", "itachi", "itachi", "itachi"])]
 
-    perso2 = (["goku", "vegeta", "kim", "luffy"],
-              ["itachi", "itachi", "itachi", "itachi"])
     # Tableau des grandes images des personnages
-    tab1_grand_perso = ([goku_grand_r, vegeta_grand_r, kim_grand_r,
+    tab_grand_perso = [([goku_grand_r, vegeta_grand_r, kim_grand_r,
                         luffy_grand_r],
                         [itachi_grand_r, itachi_grand_r, itachi_grand_r,
-                         itachi_grand_r])
+                         itachi_grand_r]),
 
-    tab2_grand_perso = ([goku_grand_b, vegeta_grand_b, kim_grand_b,
+                         ([goku_grand_b, vegeta_grand_b, kim_grand_b,
                         luffy_grand_b],
                         [itachi_grand_b, itachi_grand_b, itachi_grand_b,
-                         itachi_grand_b])
+                         itachi_grand_b])]
 
-    grand_perso1 = tab1_grand_perso[0][0]
-    grand_perso2 = tab2_grand_perso[0][0]
-    
+    grand_perso1 = tab_grand_perso[0][0][0]
+    grand_perso2 = tab_grand_perso[1][0][0]
+
     ind_i = 0
     ind_j = 0
 
@@ -166,70 +165,70 @@ def main():
                     ind_j += 1
                     if ind_j == 4:
                         ind_j = 4 - 1
-                    coo_b = list_pos2[ind_z][ind_j]
-                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
+                    coo_b = list_pos[1][ind_z][ind_j]
+                    grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_LEFT:
                     print("gauche")
                     ind_j -= 1
                     if ind_j == -1:
                         ind_j = 0
-                    coo_b = list_pos2[ind_z][ind_j]
-                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
+                    coo_b = list_pos[1][ind_z][ind_j]
+                    grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_d:
                     print("d")
                     ind_i += 1
                     if ind_i == 4:
                         ind_i = 4 - 1
-                    coo_a = list_pos1[ind_x][ind_i]
-                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
+                    coo_a = list_pos[0][ind_x][ind_i]
+                    grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_q:
                     print("q")
                     ind_i -= 1
                     if ind_i == -1:
                         ind_i = 0
-                    coo_a = list_pos1[ind_x][ind_i]
-                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
+                    coo_a = list_pos[0][ind_x][ind_i]
+                    grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_SPACE:
                     print("espace")
-                    if perso1[ind_x][ind_i] != perso2[ind_z][ind_j]:
-                        print(perso1[ind_x][ind_i], perso2[ind_z][ind_j])
+                    if list_perso[0][ind_x][ind_i] != list_perso[1][ind_z][ind_j]:
+                        print(list_perso[0][ind_x][ind_i], list_perso[1][ind_z][ind_j])
                         posok = (200, 200)
-                        return (perso1[ind_x][ind_i], perso2[ind_z][ind_j], "suivant")
+                        return (list_perso[0][ind_x][ind_i], list_perso[1][ind_z][ind_j], "suivant")
 
                 if event.key == pygame.K_DOWN:
                     print("bas")
                     ind_z = ind_z + 1
-                    if ind_z == len(list_pos2):
+                    if ind_z == len(list_pos[1]):
                         ind_z = ind_z - 1
-                    coo_b = list_pos2[ind_z][ind_j]
-                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
+                    coo_b = list_pos[1][ind_z][ind_j]
+                    grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_s:
                     print("s")
                     ind_x = ind_x + 1
-                    if ind_x == len(list_pos1):
+                    if ind_x == len(list_pos[0]):
                         ind_x = ind_x - 1
-                    coo_a = list_pos1[ind_x][ind_i]
-                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
+                    coo_a = list_pos[0][ind_x][ind_i]
+                    grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_UP:
                     print("haut")
                     ind_z = ind_z - 1
                     if ind_z == -1:
                         ind_z = 0
-                    coo_b = list_pos2[ind_z][ind_j]
-                    grand_perso2 = tab2_grand_perso[ind_z][ind_j]
+                    coo_b = list_pos[1][ind_z][ind_j]
+                    grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_z:
                     print("z")
                     ind_x = ind_x - 1
                     if ind_x == -1:
                         ind_x = 0
-                    coo_a = list_pos1[ind_x][ind_i]
-                    grand_perso1 = tab1_grand_perso[ind_x][ind_i]
+                    coo_a = list_pos[0][ind_x][ind_i]
+                    grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
             pygame.display.update()
