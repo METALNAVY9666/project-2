@@ -104,22 +104,25 @@ class Jeu:
         for element in self.players:
             if not pause and not busy and self.name[element.number] != "kim":
                 # Récupère les touches préssées actuellement
-                element.vals['pause'] = True
-                # Modifie les animations en fonction de l'input
-                element.vals["attacked"] = False
-                if choice[self.convert_key("right", element)]:
-                    if choice[self.convert_key("jump", element)]:
-                        element.jump()
-                    element.move()
-                    self.elms['right'][element.number] = True
-                elif choice[self.convert_key("left", element)]:
-                    if choice[self.convert_key("jump", element)]:
-                        element.jump()
-                    element.move()
-                    self.elms['right'][element.number] = False
-                    if self.name in ['goku', 'vegeta']:
-                        self.elms["side"][element.number] = 'left'
-                self.handle_input_part2(choice, element, actions, screen)
+                if element.vals["health"] > 0:
+                    element.vals['pause'] = True
+                    # Modifie les animations en fonction de l'input
+                    element.vals["attacked"] = False
+                    if choice[self.convert_key("right", element)] and (
+                        not choice[self.convert_key("block", element)]):
+                        if choice[self.convert_key("jump", element)]:
+                            element.jump()
+                        element.move()
+                        self.elms['right'][element.number] = True
+                    elif choice[self.convert_key("left", element)] and (
+                        not choice[self.convert_key("block", element)]):
+                        if choice[self.convert_key("jump", element)]:
+                            element.jump()
+                        element.move()
+                        self.elms['right'][element.number] = False
+                        if self.name in ['goku', 'vegeta']:
+                            self.elms["side"][element.number] = 'left'
+                    self.handle_input_part2(choice, element, actions, screen)
 
     def handle_input_part2(self, choice, element, actions, screen):
         """
@@ -195,7 +198,7 @@ class Jeu:
             if self.player_0.vals['current_height'] > 40 and (
                     event.type == JOYBUTTONDOWN and event.button == 1):
                 self.player_0.dash_attack_up_controller()
-                
+
             # Attaque au sol
             elif (contro[num].get_axis(1) / 3500 > 5 and
                   event.type == JOYBUTTONDOWN and event.button == 2):
@@ -352,15 +355,16 @@ class Jeu:
                 # Le perso tombe
                 for element in self.players:
                     if self.name[element.number] != "kim":
-                        element.vals["fall"] = True
-                        element.attack(event)
-                        element.move_manager(event)
-                        element.vanish(choice)
-                        element.is_dashing(choice, event)
-                        element.dash_attack_up(choice, event)
-                    if event.type == pg.KEYUP and (
-                            self.elms["side"][element.number] == 'run'):
-                        element.vals['nbr_sprite'] = 5
+                        if element.vals["health"] > 0:
+                            element.vals["fall"] = True
+                            element.attack(event)
+                            element.move_manager(event)
+                            element.vanish(choice)
+                            element.is_dashing(choice, event)
+                            element.dash_attack_up(choice, event)
+                        if event.type == pg.KEYUP and (
+                                self.elms["side"][element.number] == 'run'):
+                            element.vals['nbr_sprite'] = 5
 
     def collision(self):
         '''Cette fonction renvoi un bouléen,
@@ -425,23 +429,24 @@ class Jeu:
                     else:
                         ennemy.physics["pos"][0] -= 10
 
-    def update_stats(self):
+    def update_stats(self, pause):
         """
         Met à jour les caractéristiques spéciale comme les barres,
         les attaques spéciales, et les stats.
         """
-        for element in self.players:
-            if self.name[element.number] == "luffy" and (
-                    element.vals["percent_ult"] <= 130):
-                element.vals["percent_ult"] += 0.1
-            elif self.name[element.number] == "gear4" and (
-                    element.vals["percent_ult"] > 0):
-                element.vals["percent_ult"] -= 0.1
-                if element.vals["percent_ult"] <= 0:
-                    self.name[element.number] = "luffy"
-                    element.reset_stats()
-            self.update_spe_itachi(element)
-            self.update_spe_vegeta(element)
+        if not pause:
+            for element in self.players:
+                if self.name[element.number] == "luffy" and (
+                        element.vals["percent_ult"] <= 130):
+                    element.vals["percent_ult"] += 0.1
+                elif self.name[element.number] == "gear4" and (
+                        element.vals["percent_ult"] > 0):
+                    element.vals["percent_ult"] -= 0.1
+                    if element.vals["percent_ult"] <= 0:
+                        self.name[element.number] = "luffy"
+                        element.reset_stats()
+                self.update_spe_itachi(element)
+                self.update_spe_vegeta(element)
 
     def update_spe_itachi(self, element):
         """
@@ -604,17 +609,21 @@ class Jeu:
         rect_update.append(screen.blit(
             face2["image"], (face2["rect"])))
 
-    def update_players(self, screen, busy):
+    def update_players(self, screen, busy, pause):
         """
         Mis à jour des persos
         """
         for element in self.players:
             if self.name[element.number] != "kim":
-                element.gravity()
-                element.dash()
-                self.ulti.spe_goku(screen)
-                self.update_stats()
-        self.update_health(screen, busy)
+                if element.vals["health"] > 0:
+                    element.gravity()
+                    element.dash()
+                    self.ulti.spe_goku(screen)
+                    self.update_stats(pause)
+                elif element.vals["health"] <= 0 and (
+                    self.name[element.number] == "goku"):
+                    self.ulti.spe_goku(screen)
+                self.update_health(screen, busy)
 
     def rect_append_gunner(self, dlt, pause, busy, music, ennemy_rect):
         """
@@ -673,5 +682,5 @@ class Jeu:
             elif contro is not None and len(contro) == 1:
                 self.handle_input_controller(actions, screen, busy, contro)
         # Renvoi le rectangle du joueur
-        self.update_players(screen, busy)
+        self.update_players(screen, busy, pause)
         return rects, self.players

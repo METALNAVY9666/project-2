@@ -255,6 +255,8 @@ class Fighter(pg.sprite.Sprite):
             if self.vals['nbr_sprite'] >= 5:
                 self.vals['nbr_sprite'] = 0
                 self.game.elms["side"][self.number] = 'left'
+            if self.vals["health"] <= 0:
+                self.game.elms["side"][self.number] = "dead"
 
     def get_rect(self):
         """renvoie le rect du fighter"""
