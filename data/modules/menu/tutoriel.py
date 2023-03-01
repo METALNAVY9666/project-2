@@ -69,9 +69,9 @@ Bouton = BoutonQuit("QUITTER", 100, 50, (0, 670))
 
 
 def main():
-    """ Cette fonction créée une boucle d'affichage du menu pygame, et
+    """ Cette fonction créée une boucle d'affichage du tutoriel, et
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
-        le programme. """
+        le programme, et change les pages du tutoriel """
 
     tab_tuto = [tuto1, tuto2, tuto3, tuto4]
 
@@ -99,7 +99,8 @@ def main():
                 pygame.quit()
 
             if event.type == pygame.KEYDOWN:
-
+                # Permet de changer les pages du tuto en appuyant sur
+                # des touches
                 if event.key == pygame.K_RIGHT:
                     print("d")
                     i += 1

@@ -80,24 +80,24 @@ def main():
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
     print("Entrée dans le menu choix")
-
+    # Coordonnées des images des personnages
     coo_a = (67, 143)
     coo_b = (698, 143)
 
     posok = (3000, 3000)
-
+    # Liste des coordonnées que peut prendre coo_a
     list_pos1 = ([(67, 143), (205, 143), (343, 143), (481, 143)],
                  [(67, 312), (67, 312), (67, 312), (67, 312)])
 
     perso1 = (["goku", "vegeta", "kim", "luffy"],
               ["itachi", "itachi", "itachi", "itachi"])
-
+    # Liste des coordonnées que peut prendre coo_b
     list_pos2 = ([(698, 143), (838, 143), (979, 143), (1120, 143)],
                  [(698, 312), (698, 312), (698, 312), (698, 312)])
 
     perso2 = (["goku", "vegeta", "kim", "luffy"],
               ["itachi", "itachi", "itachi", "itachi"])
-
+    # Tableau des grandes images des personnages
     tab1_grand_perso = ([goku_grand_r, vegeta_grand_r, kim_grand_r,
                         luffy_grand_r],
                         [itachi_grand_r, itachi_grand_r, itachi_grand_r,
@@ -124,7 +124,7 @@ def main():
 
     test = True
     while test:
-
+        # Affichage des images
         aff_surface.blit(fond2, (0, 0))
 
         aff_surface.blit(cadre2, coo_a)
@@ -160,7 +160,7 @@ def main():
                 pygame.quit()
 
             if event.type == pygame.KEYDOWN:
-
+                # Actions effectué si une touche est pressée
                 if event.key == pygame.K_RIGHT:
                     print("droit")
                     ind_j += 1

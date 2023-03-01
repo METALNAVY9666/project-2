@@ -93,7 +93,7 @@ def main():
 
     test = True
     while test:
-
+        # affichage des images des maps
         aff_surface.blit(fond3, (0, 0))
 
         aff_surface.blit(cadre3, coo)
@@ -114,13 +114,13 @@ def main():
 
         if retour:
             return "retour"
-        # boucle permettant de détecter les touchent pressées :
+        # boucle permettant de détecter les touches pressées :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
             if event.type == pygame.KEYDOWN:
-
+                # actions produite si une touche est préssée
                 if event.key == pygame.K_d:
                     print("d")
                     i += 1
