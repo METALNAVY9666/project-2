@@ -211,6 +211,9 @@ def main():
             pygame.display.update()
             # boucle pour quitter ou pas la console du menu
             for event in pygame.event.get():
+                
+                if event.type == pygame.QUIT:
+                    exit()
 
                 if event.type == pygame.display.quit:
                     return "suivant"

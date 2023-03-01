@@ -2,6 +2,7 @@
     pour pouvoir avoir toutes les information pour jouer
     au jeu. """
 
+from sys import exit
 import pygame
 from data.modules.menu.textures import (tuto1, tuto2, tuto3, tuto4)
 
@@ -96,7 +97,7 @@ def main():
         # boucle permettant de détecter les touchent pressées :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 # Permet de changer les pages du tuto en appuyant sur

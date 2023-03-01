@@ -1,5 +1,6 @@
 """ Ce module permet à l'utilisateur de choisir la carte dans laquelle il veut
 effectuer ca partie."""
+from sys import exit
 import pygame
 from data.modules.menu.textures import (titre, map4, map3, map2, map1, cadre3,
                                         fond3, map1bis, map2bis, map3bis,
@@ -117,12 +118,11 @@ def main():
         # boucle permettant de détecter les touches pressées :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 # actions produite si une touche est préssée
                 if event.key == pygame.K_d:
-                    print("d")
                     i += 1
                     if i == 4:
                         i = 4 - 1
@@ -130,7 +130,6 @@ def main():
                     carte = tabmap[i]
 
                 if event.key == pygame.K_q:
-                    print("q")
                     i -= 1
                     if i == -1:
                         i = 0
@@ -138,8 +137,6 @@ def main():
                     carte = tabmap[i]
 
                 if event.key == pygame.K_SPACE:
-                    print("espace")
-                    print(mapchoisi[i])
                     return (mapchoisi[i], "fini")
 
             pygame.display.update()

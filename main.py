@@ -54,6 +54,9 @@ while True:
 
     current_map = BaseLevel(pack_pygame, level, game_settings, players)
     fps = FPS(pack_pygame)
+
+    pack_pygame["mouse"].set_visible(True)
+
     while WIN:
         # dt est le temps qui s'écoule entre chaque image,
         # important pour que le jeu reste fluide

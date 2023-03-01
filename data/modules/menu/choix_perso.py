@@ -1,5 +1,6 @@
 """ Ce module permet aux utilisateurs de choisir les personnages avec
 lesquelles ils veulent effectuer ca partie."""
+from sys import exit
 import pygame
 from data.modules.menu.textures import (ok, itachibleu, itachired, luffybleu,
                                         luffyred, kimbleu, kimred, vegetableu,
@@ -155,7 +156,7 @@ def main():
         # boucle permettant de détecter les touchent pressées :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 # Actions effectué si une touche est pressée
