@@ -85,6 +85,7 @@ class Special(pg.sprite.Sprite):
         self.can_spe["vegeta"] = False
         if element.vals["percent_ult"] > 0:
             element.vals["attacked"] = True
+            element.upgrade_stats()
 
     def spe_goku(self, screen):
         """

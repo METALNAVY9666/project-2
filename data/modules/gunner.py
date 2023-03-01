@@ -435,7 +435,13 @@ class Gunner(pg.sprite.Sprite):
         colliderect = self.pkg["Rect"].colliderect
         if colliderect(self.get_rect(), player):
             player_type = type(player).__name__
+            player_name = player.game.name[player.number]
             if player_type == "Fighter":
+                if player_name == "vegeta" and (
+                    not self.game.ulti.can_spe["vegeta"]):
+                    player.vals["attacked"] = True
+                    player.vals["nbr_sprite"] = 0
+                    player.game.elms["side"][player.number] = "ult"
                 if player.vals["attacked"]:
                     dmg /= 4
                 player.vals["health"] -= dmg

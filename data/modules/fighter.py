@@ -540,6 +540,8 @@ class Fighter(pg.sprite.Sprite):
         if self.game.name[self.number] == "vegeta" and (
                 not self.game.ulti.can_spe["vegeta"]):
             self.vals["attacked"] = True
+            self.vals["nbr_sprite"] = 0
+            self.game.elms["side"][self.number] = "ult"
         if not self.vals['attacked']:
             self.vals['health'] -= 10
             if ennemy_side and limit:
