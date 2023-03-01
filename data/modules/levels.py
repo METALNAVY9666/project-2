@@ -110,10 +110,11 @@ class BaseLevel:
             height = self.settings["display"]["vertical"]
             pos = [(width // 2) - (width // 3), height // 1.5]
             return surface.blit(GFX["platform"], pos)
+        return None
 
-    def is_list_or_tuple(self, object):
+    def is_list_or_tuple(self, machin):
         """renvoie True si l'objet est une liste ou un tuple"""
-        return str(type(object)).split("'")[1] in ["list", "tuple"]
+        return str(type(machin)).split("'")[1] in ["list", "tuple"]
 
     def clear_rect_list(self):
         """nettoie la liste des rects"""
@@ -135,8 +136,7 @@ class BaseLevel:
         non, et le score"""
         # met à jour les touches
         next_op = None
-        keys = [self.pkg["pygame"].K_ESCAPE]
-        self.cls["key"].check_keys(keys)
+        self.cls["key"].check_keys([self.pkg["pygame"].K_ESCAPE])
 
         # met à jour le fond
         self.update_list.append(self.cls["bg"].update())
@@ -165,11 +165,9 @@ class BaseLevel:
         end = self.cls["end"]
         end_response = end.update(game[1], music, delta)
 
-        plus = None
         if end_response is None:
             self.update_list.append(end_response)
         else:
-            plus = end_response[1]
             self.update_list.append(end_response[0])
 
         # met à jour le menu pause
@@ -182,6 +180,4 @@ class BaseLevel:
         self.pkg["display"].update(self.update_list)
         self.update_list = []
 
-        if plus == "menu":
-            return "menu"
         return next_op

@@ -195,16 +195,19 @@ class Jeu:
             if self.player_0.vals['current_height'] > 40 and (
                     event.type == JOYBUTTONDOWN and event.button == 1):
                 self.player_0.dash_attack_up_controller()
+                
             # Attaque au sol
             elif (contro[num].get_axis(1) / 3500 > 5 and
                   event.type == JOYBUTTONDOWN and event.button == 2):
                 choice = "Sol"
                 self.player_0.attack_controller(choice, contro[num])
+
             # Attaque en haut
             elif (contro[num].get_axis(1) / 3500 < -5 and
                   event.type == JOYBUTTONDOWN and event.button == 1):
                 choice = "Air"
                 self.player_0.attack_controller(choice, contro[num])
+
             # Attaques normales
             elif event.type == JOYBUTTONDOWN and event.button == 1:
                 self.player_0.attack_controller(
@@ -257,9 +260,11 @@ class Jeu:
         # Gère les mouvements à la manette
         elif contro[num].get_axis(0) // 3500 < -5 or (
                 contro[num].get_axis(0) // 3500 > 5):
+            # Droite
             if contro[num].get_axis(0) > 0:
                 self.player_1.move()
                 self.elms['right'][self.player_1.number] = True
+            # Gauche
             else:
                 self.player_1.move()
                 self.elms['right'][self.player_1.number] = False
@@ -329,7 +334,7 @@ class Jeu:
 
             # Gère les spés
             if contro[num].get_button(9) and contro[num].get_button(10):
-                self.ulti.spe_manager(screen, self.player_0)
+                self.ulti.spe_manager(screen, self.player_1)
 
             # Esquive du joueur
             if contro[num].get_button(10):

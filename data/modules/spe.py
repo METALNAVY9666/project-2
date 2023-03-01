@@ -16,6 +16,8 @@ class Special(pg.sprite.Sprite):
         self.init_dict()
 
     def init_dict(self):
+        """Initialise un dictionnaire permettant de savoir si les peronnages
+        peuvent utiliser leur spé."""
         self.can_spe = {}
         self.can_spe["goku"] = True
         self.can_spe["itachi"] = True
