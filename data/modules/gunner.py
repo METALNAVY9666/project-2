@@ -1,10 +1,10 @@
 """contient la classe d'un joueur"""
-import pygame as pg
 from copy import deepcopy
 from random import randint
+import pygame as pg
 from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
-from data.modules.keyboard import azerty_to_qwerty, NUMPAD
+from data.modules.keyboard import azerty_to_qwerty, get_numpad
 from data.modules.settings import read_settings
 from data.modules.controllers import SimpleController
 
@@ -291,6 +291,7 @@ class Gunner(pg.sprite.Sprite):
                 self.player["ult"]["status"] = True
 
     def ult_animation(self, music):
+        """met à jour l'animation de l'ultime de kim"""
         fps = self.pkg["FPS"]
         frame = 7 * fps - self.player["ult"]["load"]
         rect = None
@@ -337,6 +338,7 @@ class Gunner(pg.sprite.Sprite):
                 if self.player["hp_list"][-1] != self.player["hp"]:
                     delta = self.player["hp_list"][-1] - self.player["hp"]
                     self.player["ult"]["power"] += randint(delta, int(2.5 * delta))
+        return None
 
     def update_health(self):
         """met à jour la vie"""
@@ -367,7 +369,7 @@ class Gunner(pg.sprite.Sprite):
                 # alors renvoyer le code depuis un dictionnnaire
                 # car pygame ne prend pas en compte le numpad
                 try:
-                    pressed.append([key, choice[NUMPAD[keys[key]]]])
+                    pressed.append([key, choice[get_numpad()[keys[key]]]])
                 except KeyError:
                     print(f"Problème de touche ({keys[key]})")
         return pressed
@@ -548,7 +550,6 @@ class Bullet:
             rect = None
             if colliderect(bullet_rect, player.get_rect()):
                 name = type(player).__name__
-                self.speed = 0
                 self.specs["show"] = False
                 if name == "Fighter":
                     if self.specs["type"] == "rocket":
@@ -565,6 +566,7 @@ class Bullet:
                 if self.specs["type"] == "rocket":
                     self.explosion()
             return rect
+        return None
 
     def nuzzle(self):
         """affiche une explosion de tir"""
@@ -575,6 +577,7 @@ class Bullet:
             pos[1] += dims[1] // 36
             if self.specs["life"] <= 15:
                 return self.blit(self.textures[1], pos)
+        return None
 
     def explosion(self):
         """kaboom"""
@@ -587,6 +590,7 @@ class Bullet:
             self.specs["explosion"] -= 1
             return rect
         self.specs["out"] = True
+        return None
 
     def update(self, pause, other, ground_lvl):
         """met à jour la balle"""
@@ -610,3 +614,4 @@ class Bullet:
             if self.specs["type"] == "rocket":
                 return self.explosion()
             self.specs["out"] = True
+        return None

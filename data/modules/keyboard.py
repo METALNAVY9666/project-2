@@ -1,6 +1,4 @@
 """cotient les fonctions permettant de gérer les touches du claiver"""
-import pygame
-
 
 class KeyChecker:
     """contient les fonction permettant de tester les touches"""
@@ -50,15 +48,12 @@ def azerty_to_qwerty(key, reverse=False):
     return qwerty[ind]
 
 
-NUMPAD = {
-    "kp_0": pygame.K_KP0,
-    "kp_1": pygame.K_KP1,
-    "kp_2": pygame.K_KP2,
-    "kp_3": pygame.K_KP3,
-    "kp_4": pygame.K_KP4,
-    "kp_5": pygame.K_KP5,
-    "kp_6": pygame.K_KP6,
-    "kp_7": pygame.K_KP7,
-    "kp_8": pygame.K_KP8,
-    "kp_9": pygame.K_KP9
-}
+def get_numpad():
+    """renvoie les touches associées au numpad"""
+    numpad = {}
+    code = 1073741922
+    for nombre in range(10):
+        cle = f"kp_{nombre}"
+        numpad[cle] = code
+        code += 1
+    return numpad
