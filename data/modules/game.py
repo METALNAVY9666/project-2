@@ -228,7 +228,6 @@ class Jeu:
         """
         if not busy and self.name[0] != "kim":
             if self.player_0.rect.y < self.player_0.vals["max_height"]:
-                print("OHHH")
                 self.player_0.vals["fall"] = True
             if len(contro) < 2:
                 num = 0
@@ -301,11 +300,6 @@ class Jeu:
             if self.player_1.vals['current_height'] > 40 and (
                     event.type == JOYBUTTONDOWN and event.button == 1):
                 self.player_1.dash_attack_up_controller()
-            # Attaque au sol
-            elif (contro[num].get_axis(1) / 3500 > 5 and
-                  contro[num].get_button(2)):
-                choice = "Sol"
-                self.player_1.attack_controller(choice, contro[num])
             # Attaque en haut
             elif (contro[num].get_axis(1) / 3500 < -5 and
                   event.type == JOYBUTTONDOWN and event.button == 1):

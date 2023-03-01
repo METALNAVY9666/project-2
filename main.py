@@ -6,12 +6,8 @@ from data.modules.settings import read_settings, read_levels
 from data.modules.debug import FPS
 from data.modules.controllers import manage_controller, manage_joysticks
 from data.modules.menu.main import debut as menu
-from data.modules.menu.music import Music
-
-
 pygame.joystick.init()
 pygame.init()
-pygame.mixer.init()
 
 contro = []
 contro = manage_controller(contro)
@@ -49,10 +45,7 @@ pygame.display.set_icon(icon)
 while True:
     WIN = True
 
-    music_menu = Music(pack_pygame["mixer"], "all_good_in_the_hood")
-    music_menu.play()
     level_name, players = menu()
-    music_menu.stop()
 
     pack_pygame["surface"] = pygame.display.set_mode(dimensions)
 

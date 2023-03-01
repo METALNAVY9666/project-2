@@ -201,7 +201,6 @@ class Fighter(pg.sprite.Sprite):
         Fonction saut a la manette
         """
         if jumpcount >= -8:
-            print(jumpcount)
             self.rect.y -= (jumpcount * abs(jumpcount)) * 0.39
             self.vals['current_height'] += (jumpcount * abs(jumpcount)) * 0.39
             jumpcount -= 1
@@ -362,13 +361,9 @@ class Fighter(pg.sprite.Sprite):
         """
         Attaques de base à la manette selon les paramètres du joueur
         """
-        if choice == "Sol":
-            SFX[self.vals["name"]]["l_attack"].play()
-            self.attack_down_controller(ennemy)
-
         if choice == "Air":
             SFX[self.vals["name"]]["h_attack"].play()
-            self.attack_up_controller(ennemy)
+            self.attack_up()
 
         elif contro.get_button(1):
             self.move_back(ennemy)
@@ -516,16 +511,6 @@ class Fighter(pg.sprite.Sprite):
                 SFX[self.game.name[ennemy.number]]["damage"].play()
                 while ennemy.rect.y <= self.settings['size_max']:
                     ennemy.rect.y += 1
-
-    def attack_down_controller(self, ennemy):
-        """
-        Attaque en bas à la manette
-        """
-        if self.game.collision():
-            self.game.elms["side"][self.number] = 'down'
-            SFX[self.vals["name"]]["h_attack"].play()
-            while ennemy.rect.y <= self.settings['size_max']:
-                ennemy.rect.y += 1
 
     def damages(self, ennemy):
         '''Fonction qui gère les dommages'''
