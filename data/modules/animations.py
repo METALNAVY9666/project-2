@@ -50,7 +50,7 @@ class Animate():
                   "revive": "Ce n'est toujours pas fini...",
                   "kim": "Mouais mouais"}
         self.vals["font"] = pg.font.Font(
-            'test_olivier/gfx/fonts/04B_19__.TTF', 30)
+            'data/gfx/fonts/04B_19__.TTF', 30)
         if element.game.name[element.number] != "kim":
             if element.vals["health"] <= 0:
                 dead = element

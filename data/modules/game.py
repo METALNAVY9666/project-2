@@ -214,7 +214,8 @@ class Jeu:
                 self.player_0.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller(self, actions, pause, busy, contro):
+    def handle_input_controller(self, actions, pause, busy, contro, screen,
+                                num):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 1.
@@ -222,10 +223,7 @@ class Jeu:
         si la touche correspondante au nombre n est pressé
         """
         choice = pg.key.get_pressed()
-        num = 1
         if not pause and not busy and self.name[0] != "kim":
-            if len(contro) < 2:
-                num = 0
             self.handle_input_contro_part1(contro, choice, num)
             self.handle_input_contro_attacks(actions, contro, num)
             # Recharge l'énergie
@@ -236,7 +234,9 @@ class Jeu:
                 self.player_0.vanish_controller()
 
         if len(contro) == 2:
-            self.handle_input_controller_player2(pause, actions, busy, contro)
+            self.handle_input_controller_player2(pause, choice, actions,
+                                                 busy, contro, screen,
+                                                 num=0)
 
     def handle_input_contro_player1_part1(self, contro, choice, num):
         """
@@ -305,15 +305,14 @@ class Jeu:
                 self.player_1.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller_player2(self, pause, actions, busy, contro):
+    def handle_input_controller_player2(self, pause, choice, actions,
+                                        busy, contro, screen, num):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 2.
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        num = 0
-        choice = pg.key.get_pressed()
         if not pause and not busy and self.name[1] != "kim":
             self.handle_input_contro_player1_part1(contro, choice, num)
             self.handle_input_contro_player1_attacks(actions, contro, num)
@@ -361,20 +360,18 @@ class Jeu:
                                                    self.all_players_1,
                                                    False,
                                                    pg.sprite.collide_mask)
-                if element.number == 1:
+                elif element.number == 1:
                     return pg.sprite.spritecollide(element,
                                                    self.all_players_0,
                                                    False,
                                                    pg.sprite.collide_mask)
-            else:
-                if self.name[element.number] == "kim":
-                    if element.number == 0:
-                        return element.pkg["Rect"].colliderect(
-                            element.get_rect(), self.player_1)
-                    if element.number == 1:
-                        return element.pkg["Rect"].colliderect(
-                            element.get_rect(), self.player_0)
-        return None
+            elif self.name[element.number] == "kim":
+                if element.number == 0:
+                    return element.pkg["Rect"].colliderect(
+                        element.get_rect(), self.player_1)
+                elif element.number == 1:
+                    return element.pkg["Rect"].colliderect(
+                        element.get_rect(), self.player_0)
 
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
@@ -430,7 +427,9 @@ class Jeu:
             self.update_spe_vegeta(element)
 
     def update_spe_itachi(self, element):
-        
+        """
+        Met à jour l'attaque spéciale de itachi
+        """
         if self.name[element.number] == "itachi":
             if self.ulti.can_spe["itachi"] and (
                     element.vals["percent_ult"] <= 130):
@@ -442,7 +441,11 @@ class Jeu:
                     self.players[0].reset_stats()
 
     def update_spe_vegeta(self, element):
-        if self.name[element.number] == "vegeta" and not self.ulti.can_spe["vegeta"]:
+        """
+        Met à jour l'attaque spéciale de vegeta
+        """
+        if self.name[element.number] == "vegeta" and (
+                not self.ulti.can_spe["vegeta"]):
             if element.vals["percent_ult"] >= 0:
                 element.vals["attacked"] = True
                 element.vals["percent_ult"] -= 0.1
@@ -570,26 +573,26 @@ class Jeu:
         """
         # Visage
         if self.name[0] == "kim":
-            self.face = {
+            face = {
                 "image": GFX[self.name[self.player_0.number] + "_face"]}
         else:
-            self.face = {"image": GFX[self.name[self.player_0.number]]}
-        self.face["rect"] = self.face["image"].get_rect()
-        self.face["rect"].x = screen.get_width() // 20
-        self.face["rect"].y = screen.get_height() // 20
+            face = {"image": GFX[self.name[self.player_0.number]]}
+        face["rect"] = face["image"].get_rect()
+        face["rect"].x = screen.get_width() // 20
+        face["rect"].y = screen.get_height() // 20
         rect_update.append(screen.blit(
-            self.face["image"], (self.face["rect"])))
+            face["image"], (face["rect"])))
         # Visage
         if self.name[1] == "kim":
-            self.face2 = {
+            face2 = {
                 "image": GFX[self.name[self.player_1.number] + "_face"]}
         else:
-            self.face2 = {"image": GFX[self.name[self.player_1.number]]}
-        self.face2["rect"] = self.face2["image"].get_rect()
-        self.face2["rect"].x = screen.get_width() - 150
-        self.face2["rect"].y = screen.get_height() // 20
+            face2 = {"image": GFX[self.name[self.player_1.number]]}
+        face2["rect"] = face2["image"].get_rect()
+        face2["rect"].x = screen.get_width() - 150
+        face2["rect"].y = screen.get_height() // 20
         rect_update.append(screen.blit(
-            self.face2["image"], (self.face2["rect"])))
+            face2["image"], (face2["rect"])))
 
     def update_players(self, screen, busy):
         """
@@ -644,9 +647,11 @@ class Jeu:
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
         if contro is not None and len(contro) == 2:
-            self.handle_input_controller(actions, pause, busy, contro)
+            self.handle_input_controller(actions, pause, busy, contro, screen,
+                                         1)
         elif contro is not None and len(contro) == 1:
-            self.handle_input_controller(actions, pause, busy, contro)
+            self.handle_input_controller(actions, pause, busy, contro, screen,
+                                         0)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players

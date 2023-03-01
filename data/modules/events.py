@@ -88,7 +88,7 @@ class End:
         self.settings = settings
         self.players = None
         self.font = pkg["pygame"].font.Font(
-            'test_olivier/gfx/fonts/04B_19__.TTF', 60)
+            'data/gfx/fonts/04B_19__.TTF', 60)
         self.lock = True
         self.delta_sum = 0
 

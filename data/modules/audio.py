@@ -72,7 +72,7 @@ class Music:
             self.loader.queue(self.get_segment("loop"), loops=-1)
 
     def pause(self, condition):
-        
+
         if condition:
             self.loader.pause()
         else:
