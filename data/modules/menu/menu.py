@@ -53,9 +53,6 @@ class Bouton:
                     # Bouton règle du jeu
                     if 340 < pos_souri[1] < 430:
                         tuto()
-                    # Bouton Test perso
-                    elif pos_souri[1] > 430:
-                        pass
 
                 self.presse = False
         else:
@@ -170,8 +167,6 @@ pygame.display.set_caption('Menu')
 
 # Police graphique
 police = pygame.font.Font(None, 30)
-
-Bouton1 = Bouton("ENTRAINEMENT", 350, 70, (860, 430))
 
 Bouton2 = Bouton("TUTORIEL", 350, 70, (860, 340))
 
