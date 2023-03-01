@@ -2,7 +2,6 @@
 from data.modules.texture_loader import GFX
 from data.modules.audio import SFX
 from data.modules.settings import read_settings, write_settings
-from tkinter import Tk, Button, Entry, Label
 import keyboard
 
 traductions = {
@@ -421,15 +420,13 @@ class IntInput:
         extremums = self.extremums
         if value < extremums[0]:
             return extremums[0]
-        elif value > extremums[1]:
+        if value > extremums[1]:
             return extremums[1]
         return value
 
     def show_value(self):
         """affiche la valeur à l'écran"""
         blit = self.pkg["surface"].blit
-        display_settings = self.settings["display"]
-        width, height = display_settings["horizontal"], display_settings["vertical"]
         string = "Valeur : " + self.string + " ('Entrée' pour confirmer)"
         image = GFX["small_paladins"].render(string, True, (255, 255, 255))
         return blit(image, self.pos)
@@ -442,10 +439,10 @@ class IntInput:
 
     def check_keys(self, events):
         """vérifie les pressions de touches"""
-        pg = self.pkg["pygame"]
-        keydown = pg.KEYDOWN
-        backspace = pg.K_BACKSPACE
-        enter = pg.K_RETURN
+        pyg = self.pkg["pygame"]
+        keydown = pyg.KEYDOWN
+        backspace = pyg.K_BACKSPACE
+        enter = pyg.K_RETURN
         for event in events:
             if event.type == keydown:
                 if event.key == backspace:
@@ -456,6 +453,7 @@ class IntInput:
                     return self.return_int()
                 else:
                     self.add_letter(event.unicode)
+        return None
 
     def update(self, events):
         """met à jour"""

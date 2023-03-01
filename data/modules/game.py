@@ -79,7 +79,6 @@ class Jeu:
             if type(player).__name__ == "Fighter":
                 self.elms["keymap"].append(
                     read_settings()["keys"][player.number])
-        self.ulti = Special(self)
         # self.object = PunchingBall(self)
 
     def get_code(self, key):
@@ -463,13 +462,6 @@ class Jeu:
                 element.vals["attacked"] = True
                 element.vals["percent_ult"] -= 0.1
 
-    """def update_objects(self, screen):
-        '''Met à jour l'image del'objet'''
-        self.object.forward()
-        self.object.gravity_object()
-        # Met le punching ball à jour
-        return screen.blit(self.object.image, (self.object.rect))"""
-
     def update_health(self, surface, busy):
         '''Cette fonction dessine la barre de vie, d'énergie, et de défense du
         perso.Chaque barre possède une longueur propre au montant de sa
@@ -655,7 +647,7 @@ class Jeu:
         du jeu.'''
         # Affiche le personnage sur l'écran
         rects = []
-        
+
         temp_rects = self.rect_append_fighter(screen, dlt, pause)
         for rect in temp_rects:
             rects.append(rect)

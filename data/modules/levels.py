@@ -3,7 +3,7 @@ from data.modules.texture_loader import GFX
 from data.modules.gui import PauseMenu
 from data.modules.keyboard import KeyChecker
 from data.modules.audio import Music
-from data.modules import events
+from data.modules.events import Countdown, AE86, End
 from data.modules.game import Jeu
 
 
@@ -72,11 +72,11 @@ class BaseLevel:
 
     def init_events(self):
         """initialise les évènements"""
-        self.cls["countdown"] = events.Countdown(self.pkg, self.prop)
-        self.cls["end"] = events.End(self.pkg, self.prop, self.settings)
+        self.cls["countdown"] = Countdown(self.pkg, self.prop)
+        self.cls["end"] = End(self.pkg, self.prop, self.settings)
         self.cls["events"] = {}
         if "ae86" in self.prop["events"]:
-            self.cls["events"]["ae86"] = events.AE86(self.pkg, self.prop, GFX)
+            self.cls["events"]["ae86"] = AE86(self.pkg, self.prop, GFX)
 
     def update_events(self, pause=bool, busy=bool):
         """met à jour les évènements du niveau"""
