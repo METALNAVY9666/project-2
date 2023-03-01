@@ -209,8 +209,8 @@ class Gunner(pg.sprite.Sprite):
         rect = self.get_rect()
         if ennemy_rect is not None and rect is not None:
             if colliderect(rect, ennemy_rect):
-                if rect.y < ennemy_rect.y:
-                    self.physics["pos"][1] -= gravity
+                if rect.y + rect.height // 1.1 <= ennemy_rect.y:
+                    self.physics["collide"]["direction"] = "top"
                 else:
                     self.physics["collide"]["bool"] = True
                     if rect.x <= ennemy_rect.x:
@@ -220,6 +220,9 @@ class Gunner(pg.sprite.Sprite):
                 
             else:
                 self.physics["collide"]["bool"] = False
+                self.physics["collide"]["direction"] = None
+
+        print(self.physics["collide"]["direction"])
 
     def move(self, dlt):
         """déplace le gunner"""
@@ -228,7 +231,6 @@ class Gunner(pg.sprite.Sprite):
         pos = self.physics["pos"]
         if self.physics["collide"]["bool"]:
             on_the_right = self.physics["collide"]["direction"] == "right"
-            print(on_the_right, side)
             if on_the_right and side == 1:
                 pos[0] += int(speed * side)
             if not on_the_right and side == -1:
@@ -280,7 +282,10 @@ class Gunner(pg.sprite.Sprite):
                     self.physics["falling"] = True
             else:
                 if self.physics["falling"]:
-                    pos[1] -= ((jump_height - delta) ** (0.5)) * 0.9
+                    if self.physics["collide"]["direction"] == "top":
+                        pos[1] -= gravity
+                    else:
+                        pos[1] -= ((jump_height - delta) ** (0.5)) * 0.9
         else:
             self.physics["falling"] = False
 
