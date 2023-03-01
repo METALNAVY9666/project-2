@@ -4,7 +4,7 @@
 
 from sys import exit
 import pygame
-from data.modules.menu.textures import (tuto1, tuto2, tuto3, tuto4)
+from data.modules.menu.textures import (tuto1, tuto2, tuto3, tuto4, manette)
 
 
 class BoutonQuit:
@@ -74,7 +74,7 @@ def main():
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme, et change les pages du tutoriel """
 
-    tab_tuto = [tuto1, tuto2, tuto3, tuto4]
+    tab_tuto = [tuto1, tuto2, tuto3, tuto4, manette]
 
     tuto = tab_tuto[0]
 
@@ -104,7 +104,7 @@ def main():
                 # des touches
                 if event.key == pygame.K_RIGHT:
                     i += 1
-                    if i == 4:
+                    if i == 5:
                         i = 0
                     tuto = tab_tuto[i]
 
