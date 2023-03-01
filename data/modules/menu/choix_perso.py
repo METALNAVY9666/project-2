@@ -79,7 +79,6 @@ def main():
     """ Cette fonction créée une boucle d'affichage du menu pygame, et
         s'arrête lorsque l'utilisateur clique sur le bouton pour quitter
         le programme. """
-    print("Entrée dans le menu choix")
     # Coordonnées des images des personnages
     coo_a = (67, 143)
     coo_b = (698, 143)
@@ -161,7 +160,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 # Actions effectué si une touche est pressée
                 if event.key == pygame.K_RIGHT:
-                    print("droit")
+
                     ind_j += 1
                     if ind_j == 4:
                         ind_j = 4 - 1
@@ -169,7 +168,6 @@ def main():
                     grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_LEFT:
-                    print("gauche")
                     ind_j -= 1
                     if ind_j == -1:
                         ind_j = 0
@@ -177,7 +175,6 @@ def main():
                     grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_d:
-                    print("d")
                     ind_i += 1
                     if ind_i == 4:
                         ind_i = 4 - 1
@@ -185,7 +182,6 @@ def main():
                     grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_q:
-                    print("q")
                     ind_i -= 1
                     if ind_i == -1:
                         ind_i = 0
@@ -193,14 +189,11 @@ def main():
                     grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_SPACE:
-                    print("espace")
                     if list_perso[0][ind_x][ind_i] != list_perso[1][ind_z][ind_j]:
-                        print(list_perso[0][ind_x][ind_i], list_perso[1][ind_z][ind_j])
                         posok = (200, 200)
                         return (list_perso[0][ind_x][ind_i], list_perso[1][ind_z][ind_j], "suivant")
 
                 if event.key == pygame.K_DOWN:
-                    print("bas")
                     ind_z = ind_z + 1
                     if ind_z == len(list_pos[1]):
                         ind_z = ind_z - 1
@@ -208,7 +201,6 @@ def main():
                     grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_s:
-                    print("s")
                     ind_x = ind_x + 1
                     if ind_x == len(list_pos[0]):
                         ind_x = ind_x - 1
@@ -216,7 +208,6 @@ def main():
                     grand_perso1 = tab_grand_perso[0][ind_x][ind_i]
 
                 if event.key == pygame.K_UP:
-                    print("haut")
                     ind_z = ind_z - 1
                     if ind_z == -1:
                         ind_z = 0
@@ -224,7 +215,6 @@ def main():
                     grand_perso2 = tab_grand_perso[1][ind_z][ind_j]
 
                 if event.key == pygame.K_z:
-                    print("z")
                     ind_x = ind_x - 1
                     if ind_x == -1:
                         ind_x = 0
