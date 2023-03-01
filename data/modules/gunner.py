@@ -216,7 +216,7 @@ class Gunner(pg.sprite.Sprite):
                         self.physics["collide"]["direction"] = "left"
                     else:
                         self.physics["collide"]["direction"] = "right"
-                
+
             else:
                 self.physics["collide"]["bool"] = False
                 self.physics["collide"]["direction"] = None
@@ -476,8 +476,8 @@ class Gunner(pg.sprite.Sprite):
             player_type = type(player).__name__
             player_name = player.game.name[player.number]
             if player_type == "Fighter":
-                if player_name == "vegeta" and (
-                    not self.game.ulti.can_spe["vegeta"]):
+                not_ulti = not self.game.ulti.can_spe["vegeta"]
+                if player_name == "vegeta" and not_ulti:
                     player.vals["attacked"] = True
                     player.vals["nbr_sprite"] = 0
                     player.game.elms["side"][player.number] = "ult"

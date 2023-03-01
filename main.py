@@ -44,20 +44,18 @@ pygame.mixer.init()
 
 while True:
     WIN = True
-    
+
     pack_pygame["mixer"].init()
     music = Music(pack_pygame["mixer"], "all_good_in_the_hood")
     music.play()
 
     level_name, players = menu()
-    
+
     music.stop()
 
     pack_pygame["surface"] = pygame.display.set_mode(dimensions)
 
-    
     level = read_levels()[level_name]
-    
 
     current_map = BaseLevel(pack_pygame, level, game_settings, players)
     fps = FPS(pack_pygame)
@@ -72,7 +70,7 @@ while True:
         dlt = pack_pygame["clock"].tick(pack_pygame["FPS"])
         current_map.delta = dlt
         # Récupère les événements courants
-        
+
         actions = pygame.event.get()
         # vérifie les évènements
         for event in actions:
