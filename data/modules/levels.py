@@ -16,7 +16,7 @@ class Background:
         self.pos = [0, 0]
         self.dims = pkg["dimensions"]
         self.scl = self.prop["scale"]
-        self.bg = self.scale(GFX[self.prop["bg"]]["bg"], self.dims)
+        self.backg = self.scale(GFX[self.prop["bg"]]["bg"], self.dims)
 
     def scale(self, obj, dims):
         """renvoie une image avec la taille changée"""
@@ -24,7 +24,7 @@ class Background:
 
     def update(self):
         """met à jour le fond"""
-        bg_rect = self.pkg["surface"].blit(self.bg, self.pos)
+        bg_rect = self.pkg["surface"].blit(self.backg, self.pos)
         return bg_rect
 
 
