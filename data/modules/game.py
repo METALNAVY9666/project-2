@@ -227,11 +227,13 @@ class Jeu:
         si la touche correspondante au nombre n est pressé
         """
         if not busy and self.name[0] != "kim" and self.name[1] != "kim":
+            if self.player_0.rect.y < self.player_0.vals["max_height"]:
+                print("OHHH")
+                self.player_0.vals["fall"] = True
             if len(contro) < 2:
                 num = 0
             if len(contro) == 2:
                 num = 1
-                print(num)
             self.handle_input_contro_part1(contro, num)
             self.handle_input_contro_attacks(actions, contro, num)
 
@@ -328,6 +330,8 @@ class Jeu:
             num = 0
             if self.name[0] == "kim":
                 num = 1
+            if self.player_1.rect.y < self.player_1.vals["max_height"]:
+                self.player_1.vals["fall"] = True
             self.handle_input_contro_player1_part1(contro, num)
             self.handle_input_contro_player1_attacks(actions, contro, num)
 

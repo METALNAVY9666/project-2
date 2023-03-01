@@ -182,7 +182,7 @@ class Fighter(pg.sprite.Sprite):
     def jump(self):
         '''Fonction saut'''
         if self.vals["jumping"]:
-            # Vérfie si ale perso est inférieur à la hauteur de saut mx
+            # Vérfie si le perso est inférieur à la hauteur de saut max
             if self.vals['current_height'] <= self.vals['max_height']:
                 # Vérifie si le perso n'a pas déjà sauté deux fois
                 if self.vals['jumps'] < 2:
@@ -201,11 +201,10 @@ class Fighter(pg.sprite.Sprite):
         Fonction saut a la manette
         """
         if jumpcount >= -8:
+            print(jumpcount)
             self.rect.y -= (jumpcount * abs(jumpcount)) * 0.39
             self.vals['current_height'] += (jumpcount * abs(jumpcount)) * 0.39
             jumpcount -= 1
-        else:
-            jumpcount = 8
 
     def gravity(self):
         '''Fonction qui simule une gravité'''
@@ -378,8 +377,8 @@ class Fighter(pg.sprite.Sprite):
             self.game.elms["side"][self.number] = 'attack'
             if self.game.collision():
                 if len(self.vals['tab']) < 8:
-                    self.vals['tab'].append(117)
-                    self.vals['tab'].append(117)
+                    self.vals['tab'].append(121)
+                    self.vals['tab'].append(121)
                 else:
                     self.vals['tab'] = []
             else:
@@ -393,8 +392,8 @@ class Fighter(pg.sprite.Sprite):
             self.game.elms["side"][self.number] = 'impact'
             if self.game.collision():
                 if len(self.vals['tab']) < 8:
-                    self.vals['tab'].append(121)
-                    self.vals['tab'].append(121)
+                    self.vals['tab'].append(117)
+                    self.vals['tab'].append(117)
                 else:
                     self.vals['tab'] = []
             else:
@@ -587,7 +586,6 @@ class Fighter(pg.sprite.Sprite):
             if self.vals["percent_ult"] < 130:
                 self.vals["jumping"] = False
                 self.vals["percent_ult"] += 0.6
-                # print(self.game.name[self.number], self.vals["percent_ult"])
                 self.game.elms["side"][self.number] = "ki"
             else:
                 self.vals["jumping"] = True

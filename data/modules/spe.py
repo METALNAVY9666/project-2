@@ -11,8 +11,6 @@ class Special(pg.sprite.Sprite):
         super().__init__()
         self.game = game
         self.animate = Animate(self)
-        # print('la spé de', self.game.name, 'est chargée.')
-        # self.pl1_speed = self.game.player_1.pkg["dimensions"][0] / 1920 * 3
         self.init_dict()
 
     def init_dict(self):

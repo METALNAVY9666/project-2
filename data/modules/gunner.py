@@ -212,17 +212,7 @@ class Gunner(pg.sprite.Sprite):
                 # print("non")
 
     def move(self, dlt):
-        """déplace le gunner
-        l'ideal serait un truc du style:
-        if not self.game.collision():
-            side = self.physics["side"]
-        speed = self.physics["speed"]
-        pos = self.physics["pos"]
-        print(self.game.collision())
-        print(self.rect)
-        pos[0] += int(speed * side)
-        self.rect.x = pos[0]
-        return self.play_animation("run", dlt)"""
+        """déplace le gunner"""
 
         side = self.physics["side"]
         speed = self.physics["speed"]
