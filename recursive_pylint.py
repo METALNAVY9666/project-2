@@ -9,3 +9,4 @@ for subdir, dirs, files in os.walk(rootdir):
         filepath = subdir + os.sep + file
         if filepath.endswith(".py"):
             os.system(f"pylint {filepath}")
+            input()
