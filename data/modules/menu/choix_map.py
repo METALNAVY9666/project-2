@@ -93,7 +93,7 @@ def main():
 
     test = True
     while test:
-        # affichege des images des maps
+        # affichage des images des maps
         aff_surface.blit(fond3, (0, 0))
 
         aff_surface.blit(cadre3, coo)

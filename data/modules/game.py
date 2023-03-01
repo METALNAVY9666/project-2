@@ -93,6 +93,7 @@ class Jeu:
         if self.name[element.number] != "kim":
             keymap = self.elms["keymap"][element.number]
             return pg.key.key_code(azerty_to_qwerty(keymap[key]))
+        return None
 
     def handle_input(self, actions, pause, busy, screen):
         '''Cette fonction a pour but de récupérer les touches préssées.
@@ -146,7 +147,7 @@ class Jeu:
         # Actions qui nécessitent une boucle 'for'
         self.loop_input(actions)
 
-    def handle_input_contro_part1(self, contro, choice, num):
+    def handle_input_contro_part1(self, contro, num):
         """
         Gère une partie des actions à la manette. (Blocage, mouvement,
         sauts, dash)
@@ -161,12 +162,10 @@ class Jeu:
                 contro[num].get_axis(0) // 3500 > 5):
             # Droite
             if contro[num].get_axis(0) > 0:
-                choice[self.convert_key("right", self.players[0])]
                 self.player_0.move()
                 self.elms['right'][self.player_0.number] = True
             # Gauche
             else:
-                choice[self.convert_key("left", self.players[0])]
                 self.player_0.move()
                 self.elms['right'][self.player_0.number] = False
 
@@ -214,17 +213,18 @@ class Jeu:
                 self.player_0.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller(self, actions, pause, busy, contro, screen,
-                                num):
+    def handle_input_controller(self, actions, pause, busy, contro):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 1.
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        choice = pg.key.get_pressed()
+        num = 1
         if not pause and not busy and self.name[0] != "kim":
-            self.handle_input_contro_part1(contro, choice, num)
+            if len(contro) < 2:
+                num = 0
+            self.handle_input_contro_part1(contro, num)
             self.handle_input_contro_attacks(actions, contro, num)
             # Recharge l'énergie
             if contro[num].get_button(7):
@@ -234,11 +234,9 @@ class Jeu:
                 self.player_0.vanish_controller()
 
         if len(contro) == 2:
-            self.handle_input_controller_player2(pause, choice, actions,
-                                                 busy, contro, screen,
-                                                 num=0)
+            self.handle_input_controller_player2(pause, actions, busy, contro)
 
-    def handle_input_contro_player1_part1(self, contro, choice, num):
+    def handle_input_contro_player1_part1(self, contro, num):
         """
         Gère une partie des actions à la manette pour le joueur 2.
         (Blocage, mouvement, sauts, dash)
@@ -252,11 +250,9 @@ class Jeu:
         elif contro[num].get_axis(0) // 3500 < -5 or (
                 contro[num].get_axis(0) // 3500 > 5):
             if contro[num].get_axis(0) > 0:
-                choice[self.convert_key("right", self.players[1])]
                 self.player_1.move()
                 self.elms['right'][self.player_1.number] = True
             else:
-                choice[self.convert_key("left", self.players[1])]
                 self.player_1.move()
                 self.elms['right'][self.player_1.number] = False
 
@@ -305,16 +301,17 @@ class Jeu:
                 self.player_1.attack_controller(
                     contro[num].get_button(2), contro[num])
 
-    def handle_input_controller_player2(self, pause, choice, actions,
-                                        busy, contro, screen, num):
+    def handle_input_controller_player2(self, pause, actions, busy, contro):
         """
         Cette fonction récupère les actions effectuées à la manette et
         effectue des opérations spécifiques correspondantes pour le joueur 2.
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
+        num = 0
         if not pause and not busy and self.name[1] != "kim":
-            self.handle_input_contro_player1_part1(contro, choice, num)
+            
+            self.handle_input_contro_player1_part1(contro, num)
             self.handle_input_contro_player1_attacks(actions, contro, num)
 
             # Charge l'énergie
@@ -360,7 +357,7 @@ class Jeu:
                                                    self.all_players_1,
                                                    False,
                                                    pg.sprite.collide_mask)
-                elif element.number == 1:
+                if element.number == 1:
                     return pg.sprite.spritecollide(element,
                                                    self.all_players_0,
                                                    False,
@@ -369,9 +366,10 @@ class Jeu:
                 if element.number == 0:
                     return element.pkg["Rect"].colliderect(
                         element.get_rect(), self.player_1)
-                elif element.number == 1:
+                if element.number == 1:
                     return element.pkg["Rect"].colliderect(
                         element.get_rect(), self.player_0)
+        return None
 
     def add_groups(self):
         '''Ajoute un objet au groupe de sprites.'''
@@ -648,11 +646,9 @@ class Jeu:
         # Gère les inputs à la manette
         # Si il y a au moins une manette de connecté:
         if contro is not None and len(contro) == 2:
-            self.handle_input_controller(actions, pause, busy, contro, screen,
-                                         1)
+            self.handle_input_controller(actions, pause, busy, contro)
         elif contro is not None and len(contro) == 1:
-            self.handle_input_controller(actions, pause, busy, contro, screen,
-                                         0)
+            self.handle_input_controller(actions, pause, busy, contro)
         # Renvoi le rectangle du joueur
         self.update_players(screen, busy)
         return rects, self.players
