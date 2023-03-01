@@ -41,7 +41,10 @@ class Gunner(pg.sprite.Sprite):
         level = self.prop["ground_level"]
         dims = self.pkg["dimensions"]
         self.physics["ground"] = (level * dims[1]) // 100
-        self.physics["collide"] = False
+
+        self.physics["collide"] = {}
+        self.physics["collide"]["bool"] = False
+        self.physics["collide"]["direction"] = None
 
     def init_player(self, iden):
         """initialise les propriétés du joueur"""
@@ -202,22 +205,36 @@ class Gunner(pg.sprite.Sprite):
     def test_collision(self, ennemy_rect):
         """teste la collision entre un ennemi"""
         colliderect = self.pkg["Rect"].colliderect
+        gravity = self.physics["gravity"]
         rect = self.get_rect()
-        if ennemy_rect is rect is not None:
+        if ennemy_rect is not None and rect is not None:
             if colliderect(rect, ennemy_rect):
-                self.physics["collide"] = True
-                # print("collision")
+                if rect.y < ennemy_rect.y:
+                    self.physics["pos"][1] -= gravity
+                else:
+                    self.physics["collide"]["bool"] = True
+                    if rect.x <= ennemy_rect.x:
+                        self.physics["collide"]["direction"] = "left"
+                    else:
+                        self.physics["collide"]["direction"] = "right"
+                
             else:
-                self.physics["collide"] = False
-                # print("non")
+                self.physics["collide"]["bool"] = False
 
     def move(self, dlt):
         """déplace le gunner"""
-
         side = self.physics["side"]
         speed = self.physics["speed"]
         pos = self.physics["pos"]
-        pos[0] += int(speed * side)
+        if self.physics["collide"]["bool"]:
+            on_the_right = self.physics["collide"]["direction"] == "right"
+            print(on_the_right, side)
+            if on_the_right and side == 1:
+                pos[0] += int(speed * side)
+            if not on_the_right and side == -1:
+                pos[0] += int(speed * side)
+        else:
+            pos[0] += int(speed * side)
         return self.play_animation("run", dlt)
 
     def gravity(self):

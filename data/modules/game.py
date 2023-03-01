@@ -226,7 +226,7 @@ class Jeu:
         La fonction get.button(n) avec n un nombre entier permet de savoir
         si la touche correspondante au nombre n est pressé
         """
-        if not busy and self.name[0] != "kim" and self.name[1] != "kim":
+        if not busy and self.name[0] != "kim":
             if self.player_0.rect.y < self.player_0.vals["max_height"]:
                 print("OHHH")
                 self.player_0.vals["fall"] = True
@@ -629,15 +629,17 @@ class Jeu:
                     self.ulti.spe_goku(screen)
                 self.update_health(screen, busy)
 
-    def rect_append_gunner(self, dlt, pause, busy, music, ennemy_rect):
+    def rect_append_gunner(self, dlt, pause, busy, music):
         """
         Rect des gunners
         """
         new_rects = []
         if self.name[0] == "kim":
+            ennemy_rect = self.player_1.get_rect()
             new_rects.append(self.player_0.update(
                 dlt, pause, busy, self.player_1, music, ennemy_rect))
         elif self.name[1] == "kim":
+            ennemy_rect = self.player_0.get_rect()
             new_rects.append(self.player_1.update(
                 dlt, pause, busy, self.player_0, music, ennemy_rect))
         return new_rects
@@ -670,7 +672,7 @@ class Jeu:
         for rect in temp_rects:
             rects.append(rect)
 
-        temp_rects = self.rect_append_gunner(dlt, pause, busy, music, rects[0])
+        temp_rects = self.rect_append_gunner(dlt, pause, busy, music)
         for rect in temp_rects:
             rects.append(rect)
 
